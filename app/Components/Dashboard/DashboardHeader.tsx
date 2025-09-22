@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { useState } from 'react';
 import { FaSearch, FaBell, FaUser, FaSignOutAlt, FaTree } from 'react-icons/fa';
