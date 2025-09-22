@@ -151,7 +151,7 @@ export default function TopSection(){
                             <FaTree className="text-2xl text-white" />
                         </div>
                         <h3 className="text-xl font-bold text-[#1c756b] mb-3">Tree Tracking</h3>
-                        <p className="text-gray-600">Every student's tree plantation record is tracked and displayed</p>
+                        <p className="text-gray-600">Every students tree plantation record is tracked and displayed</p>
                     </div>
                     
                     <div className="text-center p-6">

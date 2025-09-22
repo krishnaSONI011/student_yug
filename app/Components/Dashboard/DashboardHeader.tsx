@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { FaSearch, FaBell, FaUser, FaSignOutAlt, FaTree } from 'react-icons/fa';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function DashboardHeader() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -77,13 +78,13 @@ export default function DashboardHeader() {
                   My Trees
                 </a>
                 <hr className="my-2" />
-                <a
+                <Link
                   href="/"
                   className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 transition-colors"
                 >
                   <FaSignOutAlt className="text-sm" />
                   Logout
-                </a>
+                </Link>
               </div>
             )}
           </div>
