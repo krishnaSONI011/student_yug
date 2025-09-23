@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaFacebook, FaGoogle, FaIdCard } from 'react-icons/fa';
+
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash,FaIdCard } from 'react-icons/fa';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -254,20 +254,20 @@ export default function RegisterPage() {
             {/* User Type */}
             <div>
               <label htmlFor="userType" className="block text-sm font-medium text-white mb-2">
-                I am a
+                Mobile
               </label>
-              <select
-                id="userType"
-                name="userType"
-                value={formData.userType}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-lg border-2 border-white/30 bg-white/90 backdrop-blur-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300"
-              >
-                <option value="student">Student</option>
-                <option value="coach">Coach/Mentor</option>
-                <option value="school">School/Institution</option>
-                <option value="partner">Partner/Sponsor</option>
-              </select>
+              <input
+                    id="aadhaarId"
+                    name="aadhaarId"
+                    type="text"
+                    value={formData.aadhaarId}
+                    onChange={handleInputChange}
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${
+                      errors.aadhaarId ? 'border-red-500' : 'border-white/30'
+                    }`}
+                    placeholder="1234 5678 90"
+                    maxLength={14}
+                  />
             </div>
 
             {/* Password Fields */}
@@ -386,28 +386,10 @@ export default function RegisterPage() {
           </form>
 
           {/* Divider */}
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/30" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-transparent text-white">Or continue with</span>
-              </div>
-            </div>
-          </div>
+        
 
           {/* Social Registration Buttons */}
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <button className="w-full inline-flex justify-center py-3 px-4 border border-white/30 rounded-lg shadow-sm bg-white/10 text-sm font-medium text-white hover:bg-white/20 transition-all duration-300">
-              <FaFacebook className="mr-2" />
-              Facebook
-            </button>
-            <button className="w-full inline-flex justify-center py-3 px-4 border border-white/30 rounded-lg shadow-sm bg-white/10 text-sm font-medium text-white hover:bg-white/20 transition-all duration-300">
-              <FaGoogle className="mr-2" />
-              Google
-            </button>
-          </div>
+         
         </div>
 
         {/* Login Link */}

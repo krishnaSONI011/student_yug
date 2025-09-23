@@ -24,6 +24,7 @@ export default function Sidebar() {
     { id: 'achievements', label: 'Achievements', icon: FaTrophy },
     { id: 'locations', label: 'Locations', icon: FaMapMarkerAlt },
     { id: 'analytics', label: 'Analytics', icon: FaChartLine },
+    { id: 'tree list', label: 'Tree List', icon: FaTree },
     { id: 'settings', label: 'Settings', icon: FaCog },
   ];
 

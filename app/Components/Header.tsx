@@ -37,7 +37,7 @@ export default function Header(){
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity duration-300">
                 <Image src={"/fina.jpg"} width={120} height={100} alt="StudentYug Logo" className="rounded-full" />
                 <div>
-                    <h1 className="text-2xl font-bold text-[#1c756b]">StudentYug Never End</h1>
+                    <h1 className="text-2xl font-bold text-[#1c756b]">StudentYug , Never End</h1>
                     <p className="text-xs text-gray-600">One Student, One Tree, One Sport</p>
                 </div>
             </Link>
