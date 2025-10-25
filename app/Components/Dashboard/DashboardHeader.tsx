@@ -9,7 +9,7 @@ export default function DashboardHeader() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 sticky top-0 z-40">
+    <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 sticky top-0 z-20">
       <div className="flex items-center justify-between">
         {/* Logo and Title */}
         <div className="flex items-center gap-3">
@@ -70,13 +70,7 @@ export default function DashboardHeader() {
                   <FaUser className="text-sm" />
                   Profile
                 </a>
-                <a
-                  href="#"
-                  className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <FaTree className="text-sm" />
-                  My Trees
-                </a>
+              
                 <hr className="my-2" />
                 <Link
                   href="/"

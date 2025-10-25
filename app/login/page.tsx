@@ -14,6 +14,7 @@ export default function LoginPage() {
     email: '',
     rememberMe: false
   });
+  const [loginAadhar , setAadhar] = useState(false)
   const [otpData, setOtpData] = useState({
     otp: '',
     isOtpSent: false,
@@ -53,7 +54,13 @@ export default function LoginPage() {
       }));
     }
   };
-  
+  const hendalAAdhar = ()=>{
+    
+    if(loginAadhar){
+    return   setAadhar(false)
+      }
+    setAadhar(true)
+  }
   const validateStep1 = () => {
     const newErrors: {[key: string]: string} = {};
     
@@ -257,7 +264,10 @@ export default function LoginPage() {
               {/* Aadhaar ID Field */}
               <div>
                 <label htmlFor="aadhaarId" className="block text-sm font-medium text-white mb-2">
-                  Apaar ID <span className="text-red-300">*</span>
+                  {
+                    loginAadhar ? <>Aadhar Id<span className="text-red-300">*</span></> :<> Apaar ID <span className="text-red-300">*</span></>
+                  }
+                  
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -322,6 +332,11 @@ export default function LoginPage() {
                   </label>
                 </div>
               </div>
+                <div>
+                  <button className='text-amber-300 cursor-pointer' onClick={hendalAAdhar}>Login With 
+                    {loginAadhar ? " Aadhar Id" : " Aapar Id"}
+                  </button>
+                </div>
 
               {/* Submit Button */}
               <button

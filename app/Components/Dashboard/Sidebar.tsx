@@ -6,26 +6,31 @@ import {
   FaTree, 
   FaUsers, 
   FaTrophy, 
-  FaMapMarkerAlt, 
-  FaCog,
-  FaUser,
   FaLeaf,
-  FaChartLine
+  FaChartLine,
+  
 } from 'react-icons/fa';
+import { GiPoliceBadge } from "react-icons/gi";
+
+import { MdSportsBasketball } from "react-icons/md";
 import Image from 'next/image';
+import Link from 'next/link';
+
 
 export default function Sidebar() {
   const [activeTab, setActiveTab] = useState('home');
 
   const menuItems = [
-    { id: 'home', label: 'Home', icon: FaHome },
-    { id: 'trees', label: 'My Trees', icon: FaTree },
-    { id: 'community', label: 'Community', icon: FaUsers },
-    { id: 'achievements', label: 'Achievements', icon: FaTrophy },
-    { id: 'locations', label: 'Locations', icon: FaMapMarkerAlt },
-    { id: 'analytics', label: 'Analytics', icon: FaChartLine },
-    { id: 'tree list', label: 'Tree List', icon: FaTree },
-    { id: 'settings', label: 'Settings', icon: FaCog },
+    { id: 'home', label: 'Home', Link:"/dashboard", icon: FaHome },
+    { id: 'trees', label: 'My Trees', Link:"/dashboard/my-trees", icon: FaTree },
+    { id: 'sport', label: 'My Sport', Link:"#", icon: MdSportsBasketball },
+    { id: 'community', label: 'Community', Link:"#", icon: FaUsers },
+    { id: 'achievements', label: 'Achievements', Link:"#", icon: FaTrophy },
+  
+    { id: 'analytics', label: 'Analytics', Link:"#", icon: FaChartLine },
+    { id: 'tree list', label: 'Tree List', Link:"#", icon: FaTree },
+    { id: 'sport list', label: 'Sport List', Link:"#", icon: MdSportsBasketball},
+    
   ];
 
   return (
@@ -57,10 +62,17 @@ export default function Sidebar() {
           </div>
           <div className="stat-card p-3 rounded-lg text-white text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
-              <FaTrophy className="text-sm" />
-              <span className="text-lg font-bold">5</span>
+            <GiPoliceBadge className="text-sm" />
+             Sliver
             </div>
             <p className="text-xs opacity-90">Badges</p>
+          </div>
+          <div className="stat-card p-3 rounded-lg text-white text-center">
+            <div className="flex items-center justify-center gap-1 mb-1">
+            <MdSportsBasketball className="text-sm" />
+             2
+            </div>
+            <p className="text-xs opacity-90">Sports</p>
           </div>
         </div>
       </div>
@@ -71,7 +83,8 @@ export default function Sidebar() {
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
-              <li key={item.id}>
+              <Link key={item.id} href={item.Link}>
+              <li>
                 <button
                   onClick={() => setActiveTab(item.id)}
                   className={`sidebar-item w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-all duration-200 ${
@@ -84,6 +97,7 @@ export default function Sidebar() {
                   <span className="font-medium">{item.label}</span>
                 </button>
               </li>
+              </Link>
             );
           })}
         </ul>
