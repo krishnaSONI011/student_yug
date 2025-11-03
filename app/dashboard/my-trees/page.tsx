@@ -195,7 +195,7 @@ export default function MyTreesPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-900">4</p>
-                  <p className="text-sm text-gray-600">Classes</p>
+                  <p className="text-sm text-gray-600">Years</p>
                 </div>
               </div>
             </div>

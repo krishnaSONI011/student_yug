@@ -6,8 +6,8 @@ import {
   FaTree, 
   FaUsers, 
   FaTrophy, 
-  FaLeaf,
-  FaChartLine,
+  FaLeaf, 
+  FaChartLine, 
   
 } from 'react-icons/fa';
 import { GiPoliceBadge } from "react-icons/gi";
@@ -28,7 +28,7 @@ export default function Sidebar() {
     { id: 'achievements', label: 'Achievements', Link:"#", icon: FaTrophy },
   
     { id: 'analytics', label: 'Analytics', Link:"#", icon: FaChartLine },
-    { id: 'tree list', label: 'Tree List', Link:"#", icon: FaTree },
+    { id: 'tree list', label: 'Tree List', Link:"/dashboard/tree-list", icon: FaTree },
     { id: 'sport list', label: 'Sport List', Link:"#", icon: MdSportsBasketball},
     
   ];
@@ -52,11 +52,11 @@ export default function Sidebar() {
         </div>
         
         {/* User Stats */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="stat-card p-3 rounded-lg text-white text-center">
+        <div className="grid grid-cols-3 gap-2">
+          <div className="stat-card p-2 rounded-lg text-white text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <FaTree className="text-sm" />
-              <span className="text-lg font-bold">12</span>
+              <span className="text-lg font-bold">4</span>
             </div>
             <p className="text-xs opacity-90">Trees Planted</p>
           </div>

@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { FaArrowLeft, FaCheckCircle, FaIdCard, FaCalendarAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 
 export default function LoginPage() {
-  const [currentStep, setCurrentStep] = useState(1); // 1: Aadhaar+DOB, 2: Contact Method, 3: OTP
+  const [currentStep, setCurrentStep] = useState(0); // 0: Login Type Selection, 1: Aadhaar/Aapar+DOB, 2: Contact Method, 3: OTP
+  const [loginType, setLoginType] = useState<'aadhaar' | 'aapar' | ''>(''); // 'aadhaar' or 'aapar'
   const [formData, setFormData] = useState({
     aadhaarId: '',
     dateOfBirth: '',
@@ -14,7 +15,6 @@ export default function LoginPage() {
     email: '',
     rememberMe: false
   });
-  const [loginAadhar , setAadhar] = useState(false)
   const [otpData, setOtpData] = useState({
     otp: '',
     isOtpSent: false,
@@ -54,20 +54,19 @@ export default function LoginPage() {
       }));
     }
   };
-  const hendalAAdhar = ()=>{
-    
-    if(loginAadhar){
-    return   setAadhar(false)
-      }
-    setAadhar(true)
-  }
+  const handleLoginTypeSelect = (type: 'aadhaar' | 'aapar') => {
+    setLoginType(type);
+    setCurrentStep(1);
+  };
+
   const validateStep1 = () => {
     const newErrors: {[key: string]: string} = {};
+    const idType = loginType === 'aadhaar' ? 'Aadhaar' : 'Aapar';
     
     if (!formData.aadhaarId) {
-      newErrors.aadhaarId = 'Aadhaar ID is required';
+      newErrors.aadhaarId = `${idType} ID is required`;
     } else if (!/^\d{12}$/.test(formData.aadhaarId.replace(/\s/g, ''))) {
-      newErrors.aadhaarId = 'Please enter a valid 12-digit Aadhaar ID';
+      newErrors.aadhaarId = `Please enter a valid 12-digit ${idType} ID`;
     }
     
     if (!formData.dateOfBirth) {
@@ -205,6 +204,9 @@ export default function LoginPage() {
 
   const goBackToStep = (step: number) => {
     setCurrentStep(step);
+    if (step === 0) {
+      setLoginType('');
+    }
     setOtpData(prev => ({
       ...prev,
       isOtpSent: false,
@@ -234,40 +236,108 @@ export default function LoginPage() {
           <p className="text-gray-200">Sign in to continue your journey of growth</p>
           
           {/* Progress Steps */}
-          <div className="flex justify-center mt-4 mb-6">
-            <div className="flex items-center space-x-2">
-              {[1, 2, 3].map((step) => (
-                <div key={step} className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                    currentStep >= step 
-                      ? 'bg-yellow-400 text-gray-900' 
-                      : 'bg-white/20 text-white'
-                  }`}>
-                    {step}
+          {currentStep > 0 && (
+            <div className="flex justify-center mt-4 mb-6">
+              <div className="flex items-center space-x-2">
+                {[1, 2, 3].map((step) => (
+                  <div key={step} className="flex items-center">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+                      currentStep >= step 
+                        ? 'bg-yellow-400 text-gray-900' 
+                        : 'bg-white/20 text-white'
+                    }`}>
+                      {step}
+                    </div>
+                    {step < 3 && (
+                      <div className={`w-8 h-0.5 mx-2 ${
+                        currentStep > step ? 'bg-yellow-400' : 'bg-white/20'
+                      }`}></div>
+                    )}
                   </div>
-                  {step < 3 && (
-                    <div className={`w-8 h-0.5 mx-2 ${
-                      currentStep > step ? 'bg-yellow-400' : 'bg-white/20'
-                    }`}></div>
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Multi-Step Form */}
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
-          {/* Step 1: Aadhaar ID and Date of Birth */}
+          {/* Step 0: Login Type Selection */}
+          {currentStep === 0 && (
+            <div className="space-y-6">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-semibold text-white mb-2">Choose Login Method</h3>
+                <p className="text-gray-200">Select how you would like to sign in</p>
+              </div>
+
+              {/* Login Type Options */}
+              <div className="space-y-4">
+                <div 
+                  className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
+                    loginType === 'aadhaar' 
+                      ? 'border-yellow-400 bg-yellow-400/10' 
+                      : 'border-white/30 hover:border-white/50'
+                  }`}
+                  onClick={() => handleLoginTypeSelect('aadhaar')}
+                >
+                  <div className="flex items-center space-x-4">
+                    <FaIdCard className="text-white text-2xl" />
+                    <div>
+                      <p className="text-white font-medium text-lg">Login with Aadhaar</p>
+                      <p className="text-gray-300 text-sm">Use your Aadhaar ID to sign in</p>
+                    </div>
+                  </div>
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                    loginType === 'aadhaar' 
+                      ? 'border-yellow-400 bg-yellow-400' 
+                      : 'border-white/50'
+                  }`}>
+                    {loginType === 'aadhaar' && (
+                      <div className="w-3 h-3 rounded-full bg-gray-900"></div>
+                    )}
+                  </div>
+                </div>
+                
+                <div 
+                  className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
+                    loginType === 'aapar' 
+                      ? 'border-yellow-400 bg-yellow-400/10' 
+                      : 'border-white/30 hover:border-white/50'
+                  }`}
+                  onClick={() => handleLoginTypeSelect('aapar')}
+                >
+                  <div className="flex items-center space-x-4">
+                    <FaIdCard className="text-white text-2xl" />
+                    <div>
+                      <p className="text-white font-medium text-lg">Login with Aapar</p>
+                      <p className="text-gray-300 text-sm">Use your Aapar ID to sign in</p>
+                    </div>
+                  </div>
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                    loginType === 'aapar' 
+                      ? 'border-yellow-400 bg-yellow-400' 
+                      : 'border-white/50'
+                  }`}>
+                    {loginType === 'aapar' && (
+                      <div className="w-3 h-3 rounded-full bg-gray-900"></div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 1: Aadhaar/Aapar ID and Date of Birth */}
           {currentStep === 1 && (
             <form className="space-y-6" onSubmit={handleStep1Submit}>
-              {/* Aadhaar ID Field */}
+              {/* Aadhaar/Aapar ID Field */}
               <div>
                 <label htmlFor="aadhaarId" className="block text-sm font-medium text-white mb-2">
-                  {
-                    loginAadhar ? <>Aadhar Id<span className="text-red-300">*</span></> :<> Apaar ID <span className="text-red-300">*</span></>
-                  }
-                  
+                  {loginType === 'aadhaar' ? (
+                    <>Aadhaar ID <span className="text-red-300">*</span></>
+                  ) : (
+                    <>Aapar ID <span className="text-red-300">*</span></>
+                  )}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -332,11 +402,16 @@ export default function LoginPage() {
                   </label>
                 </div>
               </div>
-                <div>
-                  <button className='text-amber-300 cursor-pointer' onClick={hendalAAdhar}>Login With 
-                    {loginAadhar ? " Aadhar Id" : " Aapar Id"}
-                  </button>
-                </div>
+
+              {/* Back Button */}
+              <button
+                type="button"
+                onClick={() => goBackToStep(0)}
+                className="w-full flex justify-center items-center py-3 px-4 border border-white/30 rounded-lg shadow-sm text-sm font-medium text-white hover:bg-white/10 transition-all duration-300"
+              >
+                <FaArrowLeft className="mr-2" />
+                Back
+              </button>
 
               {/* Submit Button */}
               <button
