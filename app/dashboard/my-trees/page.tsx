@@ -3,11 +3,36 @@
 import { useState } from 'react';
 import { FaTree, FaCalendarAlt, FaMapMarkerAlt, FaLeaf, FaSeedling, FaTrophy, FaHeart, FaEye } from 'react-icons/fa';
 import { GiPoliceBadge } from 'react-icons/gi';
-import Image from 'next/image';
+
+interface Tree {
+  id: number;
+  name: string;
+  scientificName: string;
+  plantedDate: string;
+  class: string;
+  subject: string;
+  location: string;
+  coordinates: string;
+  status: string;
+  height: string;
+  health: string;
+  image: string;
+  description: string;
+  impact: {
+    co2Reduced: number;
+    oxygenProduced: number;
+    carbonStored: number;
+  };
+  care: {
+    lastWatered: string;
+    nextWatering: string;
+    fertilizer: string;
+  };
+}
 
 export default function MyTreesPage() {
   const [selectedFilter, setSelectedFilter] = useState('all');
-  const [selectedTree, setSelectedTree] = useState(null);
+  const [selectedTree, setSelectedTree] = useState<Tree | null>(null);
 
   // Sample tree data - in real app, this would come from API
   const treesData = [
