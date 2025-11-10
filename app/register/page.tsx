@@ -11,8 +11,8 @@ export default function RegisterPage() {
     lastName: '',
     email: '',
     aadhaarId: '',
-    password: '',
-    confirmPassword: '',
+    class: '',
+    DOB: '',
     userType: 'student',
     agreeToTerms: false
   });
@@ -75,15 +75,9 @@ export default function RegisterPage() {
       }
     }
     
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
+  
     
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
+  
     
     if (!formData.agreeToTerms) {
       newErrors.agreeToTerms = 'You must agree to the terms and conditions';
@@ -273,33 +267,27 @@ export default function RegisterPage() {
             {/* Password Fields */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                Password
+                Class
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaLock className="h-5 w-5 text-gray-400" />
-                </div>
+                
                 <input
                   id="password"
                   name="password"
-                  type={showPassword ? "text" : "password"}
-                  value={formData.password}
+                  type="text"
+                  value={formData.class}
                   onChange={handleInputChange}
                   className={`w-full pl-10 pr-12 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${
                     errors.password ? 'border-red-500' : 'border-white/30'
                   }`}
-                  placeholder="Create a password"
+                  placeholder="Enter Your Class"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 >
-                  {showPassword ? (
-                    <FaEyeSlash className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                  ) : (
-                    <FaEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                  )}
+                  
                 </button>
               </div>
               {errors.password && (
@@ -309,33 +297,27 @@ export default function RegisterPage() {
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-white mb-2">
-                Confirm Password
+                Date Of Birth
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaLock className="h-5 w-5 text-gray-400" />
-                </div>
+                
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  value={formData.confirmPassword}
+                  type="date"
+                  value={formData.DOB}
                   onChange={handleInputChange}
                   className={`w-full pl-10 pr-12 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${
                     errors.confirmPassword ? 'border-red-500' : 'border-white/30'
                   }`}
-                  placeholder="Confirm your password"
+                 
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 >
-                  {showConfirmPassword ? (
-                    <FaEyeSlash className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                  ) : (
-                    <FaEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                  )}
+                  
                 </button>
               </div>
               {errors.confirmPassword && (
