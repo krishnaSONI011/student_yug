@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   FaTree, 
   FaSeedling, 
@@ -46,6 +46,9 @@ interface Tree {
 export default function TreeListPage() {
   const [selectedTree, setSelectedTree] = useState<Tree | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [trees, setTrees] = useState([]);
+const [loading, setLoading] = useState(true);
+
 
   // Available trees that students can choose to plant
   const availableTrees: Tree[] = [
@@ -351,6 +354,29 @@ export default function TreeListPage() {
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+
+  useEffect(() => {
+  const fetchTrees = async () => {
+    try {
+      const response = await fetch("http://irisinformatics.net/studentyug/wb/get_all_trees");
+      const data = await response.json();
+
+      if (data.status === "1") {
+        setTrees(data.data);   // all trees
+      } else {
+        console.error("Error fetching trees:", data.message);
+      }
+    } catch (error) {
+      console.error("Network Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchTrees();
+}, []);
+
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
