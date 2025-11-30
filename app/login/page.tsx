@@ -6,12 +6,12 @@ import { FaArrowLeft, FaCheckCircle, FaIdCard, FaCalendarAlt, FaPhone, FaEnvelop
 
 export default function LoginPage() {
   const [currentStep, setCurrentStep] = useState(0); // 0: Login Type Selection, 1: Aadhaar/Aapar+DOB, 2: Contact Method, 3: OTP
-  const [loginType, setLoginType] = useState<'aadhaar' | 'aapar' | ''>(''); // 'aadhaar' or 'aapar'
+  const [loginType, setLoginType] = useState<'aadhaar' | 'apaar' | ''>(''); // 'aadhaar' or 'aapar'
   const [formData, setFormData] = useState({
     aadhaarId: '',
     dateOfBirth: '',
     contactMethod: '', // 'phone' or 'email'
-    phoneNumber: '',
+    mobile: '',
     email: '',
     rememberMe: false
   });
@@ -54,14 +54,14 @@ export default function LoginPage() {
       }));
     }
   };
-  const handleLoginTypeSelect = (type: 'aadhaar' | 'aapar') => {
+  const handleLoginTypeSelect = (type: 'aadhaar' | 'apaar') => {
     setLoginType(type);
     setCurrentStep(1);
   };
 
   const validateStep1 = () => {
     const newErrors: {[key: string]: string} = {};
-    const idType = loginType === 'aadhaar' ? 'Aadhaar' : 'Aapar';
+    const idType = loginType === 'aadhaar' ? 'Aadhaar' : 'Apaar';
     
     if (!formData.aadhaarId) {
       newErrors.aadhaarId = `${idType} ID is required`;
@@ -114,12 +114,56 @@ export default function LoginPage() {
     if (!validateStep1()) return;
     
     setIsLoading(true);
+
+
+
+  
     
     // Simulate API call to verify Aadhaar and DOB
-    setTimeout(() => {
-      setIsLoading(false);
-      setCurrentStep(2);
-    }, 1000);
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   setCurrentStep(2);
+    // }, 1000);
+
+
+try {
+  const response = await fetch(
+    "https://irisinformatics.net/studentyug/wb/verify_user",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // JSON payload
+      },
+      body: JSON.stringify({
+        type: loginType, // "aadhaar" or "apaar"
+        apaar_id: formData.aadhaarId.replace(/\s/g, ""), // remove spaces
+        dob: formData.dateOfBirth,
+      }),
+    }
+  );
+
+  const data = await response.json();
+
+  if (response.ok && data.status === "1") {
+    setFormData((prev) => ({
+      ...prev,
+      mobile: data.data?.mobile || "",
+      email: data.data?.email || "",
+    }));
+    setCurrentStep(2);
+  } else {
+    alert(data.message || "Verification failed.");
+    setErrors({ general: data.message || "Verification failed." });
+  }
+} catch (error) {
+  console.error("API Error:", error);
+  alert("Network error.");
+  setErrors({ general: "Network error." });
+} finally {
+  setIsLoading(false);
+}
+
+
   };
 
   const handleStep2Submit = async (e: React.FormEvent) => {
@@ -128,28 +172,63 @@ export default function LoginPage() {
     if (!validateStep2()) return;
     
     setIsLoading(true);
+
+    try {
+      const response = await fetch('https://irisinformatics.net/studentyug/wb/send_otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          type: formData.contactMethod, 
+          value: formData.contactMethod === "email" ? formData.email : formData.mobile,
+          // contactMethod: formData.contactMethod 
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Success: OTP initiated by server
+        setOtpData(prev => ({
+          ...prev,
+          isOtpSent: true,
+          otpTimer: 60 // Set a longer timer for production
+        }));
+        setCurrentStep(3);
+        alert(`OTP successfully sent via ${formData.contactMethod}! (Demo: Use 123456)`);
+      } else {
+        setErrors({ general: data.error || 'Failed to send OTP. Please try again.' });
+        alert(data.error || 'Failed to send OTP. Please try again.');
+      }
+    } catch (error) {
+      console.error('Step 2 API Error:', error);
+      setErrors({ general: 'Network error. Could not send OTP.' });
+      alert('Network error. Could not send OTP.');
+    } finally {
+      setIsLoading(false);
+    }
+  
     
     // Simulate API call for sending OTP
-    setTimeout(() => {
-      setOtpData(prev => ({
-        ...prev,
-        isOtpSent: true,
-        otpTimer: 30
-      }));
-      setCurrentStep(3);
-      setIsLoading(false);
+    // setTimeout(() => {
+    //   setOtpData(prev => ({
+    //     ...prev,
+    //     isOtpSent: true,
+    //     otpTimer: 30
+    //   }));
+    //   setCurrentStep(3);
+    //   setIsLoading(false);
       
-      // Start countdown timer
-      const timer = setInterval(() => {
-        setOtpData(prev => {
-          if (prev.otpTimer <= 1) {
-            clearInterval(timer);
-            return { ...prev, otpTimer: 0 };
-          }
-          return { ...prev, otpTimer: prev.otpTimer - 1 };
-        });
-      }, 1000);
-    }, 1500);
+    //   // Start countdown timer
+    //   const timer = setInterval(() => {
+    //     setOtpData(prev => {
+    //       if (prev.otpTimer <= 1) {
+    //         clearInterval(timer);
+    //         return { ...prev, otpTimer: 0 };
+    //       }
+    //       return { ...prev, otpTimer: prev.otpTimer - 1 };
+    //     });
+    //   }, 1000);
+    // }, 1500);
   };
 
   const handleOtpSubmit = async (e: React.FormEvent) => {
@@ -158,13 +237,42 @@ export default function LoginPage() {
     if (!validateOtp()) return;
     
     setIsLoading(true);
+
+try {
+  const response = await fetch('https://irisinformatics.net/studentyug/wb/verify_otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+      type: formData.contactMethod, // "email" or "phone"
+      value: formData.contactMethod === "email" ? formData.email : formData.mobile, // actual contact
+      otp: otpData.otp.replace(/\D/g, '') // digits only
+    }),
+  });
+
+  const data = await response.json();
+
+  if (response.ok && data.status === "1") {
+    alert('Login successful! Redirecting to dashboard.');
+    window.location.href = data.redirectUrl || '/dashboard';
+  } else {
+    setErrors({ otp: data.message || 'Invalid or expired OTP.' });
+    alert(data.message || 'Invalid or expired OTP.');
+  }
+} catch (error) {
+  console.error('OTP Verification Error:', error);
+  setErrors({ general: 'Network error. Could not verify OTP.' });
+  alert('Network error. Could not verify OTP.');
+} finally {
+  setIsLoading(false);
+}
+
     
-    // Simulate OTP verification
-    setTimeout(() => {
-      setIsLoading(false);
-      // Redirect to dashboard on successful login
-      window.location.href = '/dashboard';
-    }, 1000);
+    // // Simulate OTP verification
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   // Redirect to dashboard on successful login
+    //   window.location.href = '/dashboard';
+    // }, 1000);
   };
 
   const resendOtp = async () => {
@@ -174,7 +282,7 @@ export default function LoginPage() {
     
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      const contactInfo = formData.contactMethod === 'phone' ? '98xxxxxxxx98' : 'xxxxxx@gmail.com';
+      const contactInfo = formData.contactMethod === 'mobile' ? '98xxxxxxxx98' : 'xxxxxx@gmail.com';
       console.log('Resending OTP to:', contactInfo);
       
       setOtpData(prev => ({
@@ -300,11 +408,11 @@ export default function LoginPage() {
                 
                 <div 
                   className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
-                    loginType === 'aapar' 
+                    loginType === 'apaar' 
                       ? 'border-yellow-400 bg-yellow-400/10' 
                       : 'border-white/30 hover:border-white/50'
                   }`}
-                  onClick={() => handleLoginTypeSelect('aapar')}
+                  onClick={() => handleLoginTypeSelect('apaar')}
                 >
                   <div className="flex items-center space-x-4">
                     <FaIdCard className="text-white text-2xl" />
@@ -314,11 +422,11 @@ export default function LoginPage() {
                     </div>
                   </div>
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                    loginType === 'aapar' 
+                    loginType === 'apaar' 
                       ? 'border-yellow-400 bg-yellow-400' 
                       : 'border-white/50'
                   }`}>
-                    {loginType === 'aapar' && (
+                    {loginType === 'apaar' && (
                       <div className="w-3 h-3 rounded-full bg-gray-900"></div>
                     )}
                   </div>
@@ -327,7 +435,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Step 1: Aadhaar/Aapar ID and Date of Birth */}
+          {/* Step 1: Aadhaar/apaar ID and Date of Birth */}
           {currentStep === 1 && (
             <form className="space-y-6" onSubmit={handleStep1Submit}>
               {/* Aadhaar/Aapar ID Field */}
@@ -443,26 +551,26 @@ export default function LoginPage() {
               <div className="space-y-4">
                 <div 
                   className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
-                    formData.contactMethod === 'phone' 
+                    formData.contactMethod === 'mobile' 
                       ? 'border-yellow-400 bg-yellow-400/10' 
                       : 'border-white/30 hover:border-white/50'
                   }`}
-                  onClick={() => setFormData(prev => ({ ...prev, contactMethod: 'phone' }))}
+                  onClick={() => setFormData(prev => ({ ...prev, contactMethod: 'mobile' }))}
                 >
                   <div className="flex items-center space-x-3">
                     <input
-                      id="phone"
+                      id="mobile"
                       name="contactMethod"
                       type="radio"
-                      value="phone"
-                      checked={formData.contactMethod === 'phone'}
+                      value="mobile"
+                      checked={formData.contactMethod === 'mobile'}
                       onChange={handleInputChange}
                       className="h-4 w-4 text-yellow-400 focus:ring-yellow-400 border-gray-300"
                     />
                     <FaPhone className="text-white" />
                     <div>
                       <p className="text-white font-medium">Phone Number</p>
-                      <p className="text-gray-300 text-sm">98xxxxxxxx98</p>
+                      <p className="text-gray-300 text-sm">{formData.mobile}</p>
                     </div>
                   </div>
                 </div>
@@ -488,7 +596,7 @@ export default function LoginPage() {
                     <FaEnvelope className="text-white" />
                     <div>
                       <p className="text-white font-medium">Email Address</p>
-                      <p className="text-gray-300 text-sm">xxxxxx@gmail.com</p>
+                      <p className="text-gray-300 text-sm">{formData.email}</p>
                     </div>
                   </div>
                 </div>
@@ -533,11 +641,11 @@ export default function LoginPage() {
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FaCheckCircle className="text-2xl text-green-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">Verify Your {formData.contactMethod === 'phone' ? 'Phone' : 'Email'}</h3>
+                <h3 className="text-xl font-semibold text-white mb-2">Verify Your {formData.contactMethod === 'mobile' ? 'Mobile' : 'Email'}</h3>
                 <p className="text-gray-200">
                   We&apos;ve sent a 6-digit code to <br />
                   <span className="font-semibold text-yellow-300">
-                    {formData.contactMethod === 'phone' 
+                    {formData.contactMethod === 'mobile' 
                       ? '+91 98xxxxxxxx98' 
                       : 'xxxxxx@gmail.com'
                     }

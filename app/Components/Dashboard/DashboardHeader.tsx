@@ -1,12 +1,23 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaSearch, FaBell, FaUser, FaSignOutAlt, FaTree } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function DashboardHeader() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const [userName, setUserName] = useState<string>(''); // State for user name
+
+      // Get user name from localStorage on component mount
+useEffect(() => {
+  const user = localStorage.getItem("loggedInUser");
+  if (user) {
+    const parsedUser = JSON.parse(user);
+    setUserName(parsedUser.name || "User");
+  }
+}, []);
+
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 sticky top-0 z-20">
@@ -57,7 +68,7 @@ export default function DashboardHeader() {
                 alt="Profile"
                 className="rounded-full"
               />
-              <span className="text-sm font-medium text-gray-700">John Doe</span>
+              <span className="text-sm font-medium text-gray-700">{userName}</span>
             </button>
 
             {/* Profile Dropdown */}

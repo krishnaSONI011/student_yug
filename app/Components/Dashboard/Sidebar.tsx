@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   FaHome, 
   FaTree, 
@@ -19,6 +19,17 @@ import Link from 'next/link';
 
 export default function Sidebar() {
   const [activeTab, setActiveTab] = useState('home');
+
+      const [userName, setUserName] = useState<string>(''); // State for user name
+  
+        // Get user name from localStorage on component mount
+  useEffect(() => {
+    const user = localStorage.getItem("loggedInUser");
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      setUserName(parsedUser.name || "User");
+    }
+  }, []);
 
   const menuItems = [
     { id: 'home', label: 'Home', Link:"/dashboard", icon: FaHome },
@@ -46,7 +57,7 @@ export default function Sidebar() {
             className="rounded-full"
           />
           <div>
-            <h3 className="font-semibold text-gray-900">John Doe</h3>
+            <h3 className="font-semibold text-gray-900">{userName}</h3>
             <p className="text-sm text-gray-500">Student</p>
           </div>
         </div>
