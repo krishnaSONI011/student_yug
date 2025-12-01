@@ -1,12 +1,11 @@
 'use client';
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from 'react';
 import { FaPlus, FaImage, FaMapMarkerAlt, FaHeart, FaComment, FaShare } from 'react-icons/fa';
 import Image from 'next/image';
 import axios from 'axios';
 
-interface postData {
+interface PostData {
   id: string;
   location: string;
   description: string;
@@ -14,12 +13,17 @@ interface postData {
   img: string;
 }
 
+interface UserData {
+  user_id: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+}
+
 export default function Dashboard() {
-  const user = localStorage.getItem("user")
-  let userData : any ; 
-  if(user) userData = JSON.parse(user)
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [showCreatePost, setShowCreatePost] = useState(false);
-  const [posts, setPosts] = useState<postData[]>([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
   const [loadedImages, setLoadedImages] = useState<{ [key: string]: boolean }>({});
 
   const [newPost, setNewPost] = useState({
@@ -29,23 +33,35 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    getThePost()
+    // Load user from localStorage safely
+    const user = localStorage.getItem('user');
+    if (user) {
+      try {
+        setUserData(JSON.parse(user) as UserData);
+      } catch {
+        setUserData(null);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    getThePost();
 
     const interval = setInterval(() => {
-      getThePost()
-    }, 2000)
+      getThePost();
+    }, 2000);
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
   async function getThePost() {
     try {
-      const response = await axios.get("https://irisinformatics.net/studentyug/wb/get_all_posts")
-      if (response.data.status == "1") {
-        setPosts(response.data.data)
+      const response = await axios.get('https://irisinformatics.net/studentyug/wb/get_all_posts');
+      if (response.data.status === '1') {
+        setPosts(response.data.data);
       }
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
   }
 
@@ -58,40 +74,50 @@ export default function Dashboard() {
 
   const handleCreatePost = async () => {
     if (!newPost.content || !newPost.location || !newPost.image) {
-      alert("Please fill all fields and select an image");
+      alert('Please fill all fields and select an image');
       return;
     }
-  
+
+    if (!userData?.user_id) {
+      alert('User not found');
+      return;
+    }
+
     const formData = new FormData();
-    formData.append("user_id", userData.user_id); // change if dynamic
-    formData.append("location", newPost.location);
-    formData.append("description", newPost.content);
-    formData.append("img", newPost.image); // SAME KEY AS POSTMAN
-  
+    formData.append('user_id', userData.user_id); // dynamic user_id
+    formData.append('location', newPost.location);
+    formData.append('description', newPost.content);
+    formData.append('img', newPost.image); // SAME KEY AS POSTMAN
+
     try {
       const response = await axios.post(
-        "https://irisinformatics.net/studentyug/wb/post_upload",
+        'https://irisinformatics.net/studentyug/wb/post_upload',
         formData
       );
-  
-      console.log("Upload Response:", response.data);
-  
-      if (response.data.status === "1") {
-        alert("Post uploaded successfully!");
-  
+
+      console.log('Upload Response:', response.data);
+
+      if (response.data.status === '1') {
+        alert('Post uploaded successfully!');
+
         // Refresh posts
         getThePost();
-  
-       
+
+        // Reset form
+        setNewPost({ content: '', image: null, location: '' });
+        setShowCreatePost(false);
       } else {
-        alert("Upload failed!");
+        alert('Upload failed!');
       }
-    } catch (error: any) {
-      console.log(error.response?.data || error.message);
-      alert("Server error while uploading");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error.response?.data || error.message);
+      } else {
+        console.log(error);
+      }
+      alert('Server error while uploading');
     }
   };
-  
 
   return (
     <div className="dashboard-container min-h-screen">
@@ -99,7 +125,7 @@ export default function Dashboard() {
 
         {/* Welcome Section */}
         <div className="bg-gradient-to-r from-[#1c756b] to-[#2a8b7f] rounded-2xl p-6 text-white mb-6">
-          <h2 className="text-2xl font-bold mb-2">Welcome back, John! 🌱</h2>
+          <h2 className="text-2xl font-bold mb-2">Welcome back, {userData?.first_name ?? 'User'}! 🌱</h2>
           <p className="text-green-100">
             Share your tree planting journey and inspire others to go green!
           </p>
@@ -258,15 +284,15 @@ export default function Dashboard() {
                   )}
 
                   {/* Actual Image */}
-                  <div className={``}>
+                  <div>
                     <Image
-                      src={"https://irisinformatics.net/studentyug/" + post.img}
+                      src={'https://irisinformatics.net/studentyug/' + post.img}
                       width={600}
                       height={400}
                       alt="Tree planting"
                       className="w-full h-[500px] rounded-lg object-cover"
                       onLoadingComplete={() => {
-                        setLoadedImages((prev) => ({ ...prev, [post.id]: true }))
+                        setLoadedImages((prev) => ({ ...prev, [post.id]: true }));
                       }}
                     />
                   </div>
