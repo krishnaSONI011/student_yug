@@ -1,5 +1,5 @@
 'use client'
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { FaSearch, FaBell, FaUser, FaSignOutAlt, FaTree } from 'react-icons/fa';
 import Image from 'next/image';

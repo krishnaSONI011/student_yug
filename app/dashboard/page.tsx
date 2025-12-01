@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from 'react';
 import { FaPlus, FaImage, FaMapMarkerAlt, FaHeart, FaComment, FaShare } from 'react-icons/fa';
@@ -43,8 +44,8 @@ export default function Dashboard() {
       if (response.data.status == "1") {
         setPosts(response.data.data)
       }
-    } catch (e: any) {
-      console.log(e.message)
+    } catch (e) {
+      console.log(e)
     }
   }
 

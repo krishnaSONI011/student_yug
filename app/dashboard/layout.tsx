@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+
 import "./dashboard.css";
 import DashboardHeader from "../Components/Dashboard/DashboardHeader";
 import Sidebar from "../Components/Dashboard/Sidebar";
 
-const poppins = Poppins({
-  weight: ["400", "500", "700"],
-  subsets: ["latin"],
-});
+
 
 export const metadata: Metadata = {
   title: "StudentYug Dashboard - Your Green Journey",
