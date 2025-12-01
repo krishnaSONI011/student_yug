@@ -127,6 +127,7 @@ export default function LoginPage() {
 
 
 try {
+  console.log(formData)
   const response = await fetch(
     "https://irisinformatics.net/studentyug/wb/verify_user",
     {
@@ -194,7 +195,7 @@ try {
           otpTimer: 60 // Set a longer timer for production
         }));
         setCurrentStep(3);
-        alert(`OTP successfully sent via ${formData.contactMethod}! (Demo: Use 123456)`);
+        alert(`OTP successfully sent via ${formData.contactMethod}! (Demo: Use ${data.data.otp})`);
       } else {
         setErrors({ general: data.error || 'Failed to send OTP. Please try again.' });
         alert(data.error || 'Failed to send OTP. Please try again.');
@@ -253,6 +254,15 @@ try {
 
   if (response.ok && data.status === "1") {
     alert('Login successful! Redirecting to dashboard.');
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        user_id:data.data.user_id ,
+        name: data.data.name,
+        email: data.data.email,
+        token : data.data.token
+      })
+    );
     window.location.href = data.redirectUrl || '/dashboard';
   } else {
     setErrors({ otp: data.message || 'Invalid or expired OTP.' });

@@ -7,21 +7,25 @@ import Link from 'next/link';
 
 export default function DashboardHeader() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-    const [userName, setUserName] = useState<string>(''); // State for user name
+  const [userData, setUserData] = useState<any>(null);
 
-      // Get user name from localStorage on component mount
-useEffect(() => {
-  const user = localStorage.getItem("loggedInUser");
-  if (user) {
-    const parsedUser = JSON.parse(user);
-    setUserName(parsedUser.name || "User");
-  }
-}, []);
+  // ✅ Safely access localStorage in useEffect
+  useEffect(() => {
+    const user = localStorage.getItem("user");
 
+    if (user) {
+      setUserData(JSON.parse(user));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+  };
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 sticky top-0 z-20">
       <div className="flex items-center justify-between">
+
         {/* Logo and Title */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-[#1c756b] rounded-full flex items-center justify-center">
@@ -47,6 +51,7 @@ useEffect(() => {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-4">
+
           {/* Notifications */}
           <button className="relative p-2 text-gray-600 hover:text-[#1c756b] transition-colors">
             <FaBell className="text-xl" />
@@ -68,23 +73,29 @@ useEffect(() => {
                 alt="Profile"
                 className="rounded-full"
               />
-              <span className="text-sm font-medium text-gray-700">{userName}</span>
+
+              {/* ✅ Safe user name */}
+              <span className="text-sm font-medium text-gray-700">
+                {userData?.name || "Guest"}
+              </span>
             </button>
 
             {/* Profile Dropdown */}
             {showProfileMenu && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                <a
-                  href="#"
+                <Link
+                  href="/profile"
                   className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
                 >
                   <FaUser className="text-sm" />
                   Profile
-                </a>
-              
+                </Link>
+
                 <hr className="my-2" />
+
                 <Link
                   href="/"
+                  onClick={handleLogout}
                   className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 transition-colors"
                 >
                   <FaSignOutAlt className="text-sm" />
@@ -93,6 +104,7 @@ useEffect(() => {
               </div>
             )}
           </div>
+
         </div>
       </div>
     </header>
