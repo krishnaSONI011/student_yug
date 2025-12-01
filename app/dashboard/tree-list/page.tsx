@@ -1,5 +1,7 @@
 'use client';
 
+import axios from 'axios';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { 
   FaTree, 
@@ -43,10 +45,24 @@ interface Tree {
   icon: string;
 }
 
+
+interface tree2{
+  name_en : string ; 
+  name_hi : string ;
+  name_sc : string ;
+  category : string  ; 
+  carbon : string ;
+  oxygen : string ;
+  status : string ;
+
+  img : string ; 
+  
+}
+
 export default function TreeListPage() {
   const [selectedTree, setSelectedTree] = useState<Tree | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [trees, setTrees] = useState([]);
+  const [trees, setTrees] = useState<tree2[]>([]);
 const [loading, setLoading] = useState(true);
 
 
@@ -359,13 +375,14 @@ const [loading, setLoading] = useState(true);
   useEffect(() => {
   const fetchTrees = async () => {
     try {
-      const response = await fetch("http://irisinformatics.net/studentyug/wb/get_all_trees");
-      const data = await response.json();
 
-      if (data.status === "1") {
-        setTrees(data.data);   // all trees
+      const response = await axios.get("https://irisinformatics.net/studentyug/wb/get_all_trees");
+      
+      
+      if (response.data.status === "1") {
+        setTrees(response.data.data);   // all trees
       } else {
-        console.error("Error fetching trees:", data.message);
+        console.error("Error fetching trees:", response.data.message);
       }
     } catch (error) {
       console.error("Network Error:", error);
@@ -410,40 +427,38 @@ const [loading, setLoading] = useState(true);
 
         {/* Trees Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTrees.map((tree) => (
+          {trees.map((tree , index) => (
             <div
-              key={tree.id}
+              key={index}
               className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
-              onClick={() => setSelectedTree(tree)}
+              
             >
               {/* Tree Icon/Image */}
-              <div className="h-48 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center relative">
-                <span className="text-8xl">{tree.icon}</span>
+              {/* <div className="h-48 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center relative">
+                <span className="text-8xl">{tree.img}</span>
                 <div className="absolute top-4 right-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getDifficultyColor(tree.plantingGuide.difficulty)}`}>
-                    {tree.plantingGuide.difficulty}
-                  </span>
+                 
                 </div>
-              </div>
+              </div> */}
+              <img src={`https://irisinformatics.net/studentyug/`+ tree.img} alt='' className='w-full'/> 
 
               {/* Tree Info */}
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name}</h3>
-                <p className="text-sm text-gray-600 italic mb-3">{tree.scientificName}</p>
-                <p className="text-gray-700 text-sm mb-4 line-clamp-2">{tree.description}</p>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name_en}</h3>
+                <p className="text-sm text-gray-600 italic mb-3">{tree.name_sc}</p>
+                <p className="text-gray-700 text-sm mb-4 line-clamp-2">{"the is the treen"}</p>
 
                 {/* Key Benefits */}
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">Key Benefits:</h4>
                   <div className="flex flex-wrap gap-2">
-                    {tree.benefits.slice(0, 3).map((benefit, idx) => (
+                    
                       <span
-                        key={idx}
                         className="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full"
                       >
-                        {benefit}
+                       {"three is Good"}
                       </span>
-                    ))}
+                   
                   </div>
                 </div>
 
@@ -451,11 +466,11 @@ const [loading, setLoading] = useState(true);
                 <div className="space-y-2 text-sm text-gray-600 mb-4">
                   <div className="flex items-center gap-2">
                     <FaCalendarAlt className="text-gray-400" />
-                    <span>{tree.plantingGuide.bestSeason}</span>
+                    <span>hh</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <FaSun className="text-gray-400" />
-                    <span>{tree.plantingGuide.sunlight}</span>
+                    <span>jj</span>
                   </div>
                 </div>
 
@@ -463,11 +478,11 @@ const [loading, setLoading] = useState(true);
                 <div className="grid grid-cols-2 gap-2 mb-4 p-3 bg-gray-50 rounded">
                   <div className="text-center">
                     <p className="text-xs text-gray-600">CO₂ Absorbed</p>
-                    <p className="text-sm font-semibold text-gray-900">{tree.environmentalImpact.co2Absorption}</p>
+                    <p className="text-sm font-semibold text-gray-900">{tree.carbon}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-600">O₂ Produced</p>
-                    <p className="text-sm font-semibold text-gray-900">{tree.environmentalImpact.oxygenProduction}</p>
+                    <p className="text-sm font-semibold text-gray-900">{tree.oxygen}</p>
                   </div>
                 </div>
 

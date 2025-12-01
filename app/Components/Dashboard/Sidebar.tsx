@@ -36,11 +36,11 @@ export default function Sidebar() {
     { id: 'trees', label: 'My Trees', Link:"/dashboard/my-trees", icon: FaTree },
     { id: 'sport', label: 'My Sport', Link:"#", icon: MdSportsBasketball },
     { id: 'community', label: 'Community', Link:"#", icon: FaUsers },
-    { id: 'achievements', label: 'Achievements', Link:"#", icon: FaTrophy },
+    { id: 'achievements', label: 'View Certificate', Link:"#", icon: FaTrophy },
   
-    { id: 'analytics', label: 'Analytics', Link:"#", icon: FaChartLine },
+    { id: 'analytics', label: 'Environmental Analysis', Link:"#", icon: FaChartLine },
     { id: 'tree list', label: 'Tree List', Link:"/dashboard/tree-list", icon: FaTree },
-    { id: 'sport list', label: 'Sport List', Link:"#", icon: MdSportsBasketball},
+    { id: 'sport list', label: 'Sport List', Link:"/dashboard/sports-list", icon: MdSportsBasketball},
     
   ];
 
