@@ -19,7 +19,7 @@ export default function TopSection(){
     return(
         <>  
         {/* Hero Section */}
-        <section className="min-h-screen bg-gradient-to-br from-[#1c756b] via-[#2a8b7f] to-[#1c756b] text-white relative overflow-hidden">
+        <section className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] text-white relative overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
                 <div className="absolute top-20 left-20 w-32 h-32 bg-white rounded-full"></div>
@@ -32,7 +32,7 @@ export default function TopSection(){
                 <div className="max-w-4xl mx-auto text-center">
                     <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
                         <span className="block">One Student,</span>
-                        <span className="block text-yellow-300">One Tree,</span>
+                        <span className="block text-yellow-[#83c042]">One Tree,</span>
                         <span className="block">One Sports</span>
                     </h1>
                     <p className="text-xl md:text-2xl mb-8 text-gray-100 leading-relaxed">
@@ -40,7 +40,7 @@ export default function TopSection(){
                         Every step in learning becomes a step for nature.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <button className="bg-yellow-400 text-[#1c756b] px-8 py-4 rounded-full text-lg font-semibold hover:bg-yellow-300 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                        <button className="bg-[#83c042] text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-yellow-[#83c042] transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
                             Join StudentYug
                         </button>
                         
@@ -53,7 +53,7 @@ export default function TopSection(){
         <section id="pillars" className="py-20 bg-gray-50">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-bold text-[#1c756b] mb-6">Our Two Pillars</h2>
+                    <h2 className="text-4xl md:text-5xl font-bold text-[#83c042] mb-6">Our Two Pillars</h2>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                         StudentYug is built on two powerful foundations that create lasting impact
                     </p>
@@ -66,7 +66,7 @@ export default function TopSection(){
                             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <FaLeaf className="text-4xl text-green-600" />
                             </div>
-                            <h3 className="text-2xl font-bold text-[#1c756b] mb-4">Environment & Tree Plantation</h3>
+                            <h3 className="text-2xl font-bold text-[#83c042] mb-4">Environment & Tree Plantation</h3>
                         </div>
                         <ul className="space-y-3 text-gray-700">
                             <li className="flex items-start gap-3">
@@ -94,7 +94,7 @@ export default function TopSection(){
                             <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <FaTrophy className="text-4xl text-blue-600" />
                             </div>
-                            <h3 className="text-2xl font-bold text-[#1c756b] mb-4">Student Sports Information</h3>
+                            <h3 className="text-2xl font-bold text-[#83c042] mb-4">Student Sports Information</h3>
                         </div>
                         <ul className="space-y-3 text-gray-700">
                             <li className="flex items-start gap-3">
@@ -123,7 +123,7 @@ export default function TopSection(){
         <section id="features" className="py-20 bg-white">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-bold text-[#1c756b] mb-6">Portal Features</h2>
+                    <h2 className="text-4xl md:text-5xl font-bold text-[#83c042] mb-6">Portal Features</h2>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                         Everything you need to grow as a student while contributing to the environment
                     </p>
@@ -131,50 +131,50 @@ export default function TopSection(){
                 
                 <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#1c756b] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
                             <FaChartBar className="text-2xl text-white" />
                         </div>
-                        <h3 className="text-xl font-bold text-[#1c756b] mb-3">Student Dashboard</h3>
+                        <h3 className="text-xl font-bold text-[#83c042] mb-3">Student Dashboard</h3>
                         <p className="text-gray-600">Track your profile, progress, and trees planted count in one place</p>
                     </div>
                     
                     <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#1c756b] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
                             <FaMapMarkerAlt className="text-2xl text-white" />
                         </div>
-                        <h3 className="text-xl font-bold text-[#1c756b] mb-3">Sports Discovery</h3>
+                        <h3 className="text-xl font-bold text-[#83c042] mb-3">Sports Discovery</h3>
                         <p className="text-gray-600">Find nearby grounds, coaches, and mentors with map integration</p>
                     </div>
                     
                     <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#1c756b] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
                             <FaTree className="text-2xl text-white" />
                         </div>
-                        <h3 className="text-xl font-bold text-[#1c756b] mb-3">Tree Tracking</h3>
+                        <h3 className="text-xl font-bold text-[#83c042] mb-3">Tree Tracking</h3>
                         <p className="text-gray-600">Every students tree plantation record is tracked and displayed</p>
                     </div>
                     
                     <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#1c756b] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
                             <FaMedal className="text-2xl text-white" />
                         </div>
-                        <h3 className="text-xl font-bold text-[#1c756b] mb-3">Gamification</h3>
+                        <h3 className="text-xl font-bold text-[#83c042] mb-3">Gamification</h3>
                         <p className="text-gray-600">Earn badges and rewards for tree plantation and sports achievements</p>
                     </div>
                     
                     <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#1c756b] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
                             <FaHandshake className="text-2xl text-white" />
                         </div>
-                        <h3 className="text-xl font-bold text-[#1c756b] mb-3">Community</h3>
+                        <h3 className="text-xl font-bold text-[#83c042] mb-3">Community</h3>
                         <p className="text-gray-600">Connect with like-minded students and environmental enthusiasts</p>
                     </div>
                     
                     <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#1c756b] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
                             <FaMobileAlt className="text-2xl text-white" />
                         </div>
-                        <h3 className="text-xl font-bold text-[#1c756b] mb-3">Mobile Ready</h3>
+                        <h3 className="text-xl font-bold text-[#83c042] mb-3">Mobile Ready</h3>
                         <p className="text-gray-600">Access all features on your mobile device anytime, anywhere</p>
                     </div>
                 </div>
@@ -182,7 +182,7 @@ export default function TopSection(){
         </section>
 
         {/* Impact Section */}
-        <section id="impact" className="py-20 bg-gradient-to-r from-[#1c756b] to-[#2a8b7f] text-white">
+        <section id="impact" className="py-20 bg-gradient-to-r from-[#204b74] to-[#204b74] text-white">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold mb-6">Creating Lasting Impact</h2>
@@ -193,19 +193,19 @@ export default function TopSection(){
                 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
                     <div className="text-center">
-                        <div className="text-4xl font-bold text-yellow-300 mb-2">10K+</div>
+                        <div className="text-4xl font-bold text-[#83c042] mb-2">10K+</div>
                         <div className="text-gray-200">Students Joined</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-4xl font-bold text-yellow-300 mb-2">25K+</div>
+                        <div className="text-4xl font-bold text-[#83c042] mb-2">25K+</div>
                         <div className="text-gray-200">Trees Planted</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-4xl font-bold text-yellow-300 mb-2">50+</div>
+                        <div className="text-4xl font-bold text-[#83c042] mb-2">50+</div>
                         <div className="text-gray-200">Sports</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-4xl font-bold text-yellow-300 mb-2">50+</div>
+                        <div className="text-4xl font-bold text-[#83c042] mb-2">50+</div>
                         <div className="text-gray-200">Cities Covered</div>
                     </div>
                 </div>
@@ -238,7 +238,7 @@ export default function TopSection(){
         <section className="py-20 bg-gray-50">
             <div className="w-full px-6 text-center">
                 <div className="w-full">
-                    <h2 className="text-4xl md:text-5xl font-bold text-[#1c756b] mb-6">
+                    <h2 className="text-4xl md:text-5xl font-bold text-[#83c042] mb-6">
                         Contact Us
                     </h2>
                     <p className="text-xl text-gray-600 mb-8">
@@ -250,36 +250,36 @@ export default function TopSection(){
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 max-w-6xl mx-auto">
                         {/* Email */}
                         <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                            <div className="w-16 h-16 bg-[#1c756b] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
                                 <FaEnvelope className="text-2xl text-white" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">Email Us</h3>
                             <p className="text-gray-600 mb-2">For general inquiries</p>
-                            <a href="mailto:info@studentyug.com" className="text-[#1c756b] font-medium hover:text-[#155e56] transition-colors">
+                            <a href="mailto:info@studentyug.com" className="text-[#83c042] font-medium hover:text-[#155e56] transition-colors">
                                 info@studentyug.com
                             </a>
                         </div>
 
                         {/* Phone */}
                         <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                            <div className="w-16 h-16 bg-[#1c756b] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
                                 <FaPhone className="text-2xl text-white" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">Call Us</h3>
                             <p className="text-gray-600 mb-2">Mon-Fri 9AM-6PM</p>
-                            <a href="tel:+91-9876543210" className="text-[#1c756b] font-medium hover:text-[#155e56] transition-colors">
+                            <a href="tel:+91-9876543210" className="text-[#83c042] font-medium hover:text-[#155e56] transition-colors">
                                 +91 98765 43210
                             </a>
                         </div>
 
                         {/* Address */}
                         <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                            <div className="w-16 h-16 bg-[#1c756b] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
                                 <FaMapMarkerAlt className="text-2xl text-white" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">Visit Us</h3>
                             <p className="text-gray-600 mb-2">Our office location</p>
-                            <p className="text-[#1c756b] font-medium">
+                            <p className="text-[#83c042] font-medium">
                                 123 Education Street,<br />
                                 Green City, Delhi 110001
                             </p>
@@ -293,7 +293,7 @@ export default function TopSection(){
         </section>
 
         {/* Footer */}
-        <footer id="contact" className="bg-[#1c756b] text-white py-12">
+        <footer id="contact" className="bg-[#204b74] text-white py-12">
             <div className="container mx-auto px-6">
                 <div className="grid md:grid-cols-4 gap-8">
                     <div>

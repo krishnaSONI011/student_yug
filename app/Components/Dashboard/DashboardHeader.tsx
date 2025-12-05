@@ -27,15 +27,7 @@ export default function DashboardHeader() {
       <div className="flex items-center justify-between">
 
         {/* Logo and Title */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#1c756b] rounded-full flex items-center justify-center">
-            <FaTree className="text-white text-lg" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-[#1c756b]">StudentYug</h1>
-            <p className="text-xs text-gray-500">Green Community</p>
-          </div>
-        </div>
+       
 
         {/* Search Bar */}
         <div className="flex-1 max-w-md mx-8">

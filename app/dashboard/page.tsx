@@ -124,7 +124,7 @@ export default function Dashboard() {
       <div className="max-w-4xl mx-auto p-6">
 
         {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-[#1c756b] to-[#2a8b7f] rounded-2xl p-6 text-white mb-6">
+        <div className="bg-gradient-to-r from-[#204b73] to-[#204b73] rounded-2xl p-6 text-white mb-6">
           <h2 className="text-2xl font-bold mb-2">Welcome back, {userData?.first_name ?? 'User'}! 🌱</h2>
           <p className="text-green-100">
             Share your tree planting journey and inspire others to go green!
@@ -135,7 +135,7 @@ export default function Dashboard() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center gap-4">
             <Image
-              src="/fina.jpg"
+              src="/logo.png"
               width={48}
               height={48}
               alt="Profile"
@@ -151,7 +151,7 @@ export default function Dashboard() {
 
             <button
               onClick={() => setShowCreatePost(true)}
-              className="bg-[#1c756b] text-white px-6 py-3 rounded-full hover:bg-[#155e56] transition-colors flex items-center gap-2"
+              className="bg-[#204b73] text-white px-6 py-3 rounded-full hover:bg-[#204b73] transition-colors flex items-center gap-2"
             >
               <FaPlus />
               Post
@@ -221,7 +221,7 @@ export default function Dashboard() {
 
                 <button
                   onClick={handleCreatePost}
-                  className="px-6 py-2 bg-[#1c756b] text-white rounded-lg hover:bg-[#155e56]"
+                  className="px-6 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#204b73]"
                 >
                   Share Post
                 </button>

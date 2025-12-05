@@ -1,5 +1,5 @@
 'use client';
-
+import Marquee from "react-fast-marquee";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -32,14 +32,18 @@ export default function Header(){
     return(
         <>
         {/* Top Bar */}
+        <div className="flex  justify-center ">
+            <Marquee autoFill className="bg-[#204b74] font-bold text-white p-2">
+                <p className="text-xl mx-2">One Student.</p>
+                <p className="text-xl mx-2">One Tree.</p>
+                <p className="text-xl mx-2">One Future.</p>
+            </Marquee>
+        </div>
         <div className="header-container flex items-center justify-between shadow px-10 bg-white relative z-50 w-full py-3">
             {/* logo */}
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity duration-300">
-                <Image src={"/fina.jpg"} width={120} height={100} alt="StudentYug Logo" className="rounded-full" />
-                <div>
-                    <h1 className="text-2xl font-bold text-[#1c756b]">StudentYug , Never End</h1>
-                    <p className="text-xs text-gray-600">One Student, One Tree, One Sport</p>
-                </div>
+            <Image src={"/logo.png"} alt="logo" width={120} height={100}/>
+                
             </Link>
 
             <div>
@@ -60,8 +64,8 @@ export default function Header(){
             </div>
 
             <div className="flex gap-5 ">
-                <Link href="/login" className="border-[#1c756b] border-2 px-6 py-2 text-[#1c756b] rounded-full hover:bg-[#1c756b] hover:text-white transition-all duration-300">Login</Link>
-                <Link href="/register" className="bg-primary text-white px-6 py-2 rounded-full hover:bg-[#155e56] transition-all duration-300 shadow-lg">Join Now</Link>
+                <Link href="/login" className="border-[#204b74] border-2 px-6 py-2 text-[#204b74] rounded-full hover:bg-[#204b74] hover:text-white transition-all duration-300">Login</Link>
+                <Link href="/register" className="bg-[#204b74] text-white px-6 py-2 rounded-full hover:bg-[#204b74] transition-all duration-300 shadow-lg">Join Now</Link>
             </div>
 
 

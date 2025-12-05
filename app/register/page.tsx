@@ -147,7 +147,7 @@ export default function RegisterPage() {
   // UI
   // ------------------------
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1c756b] via-[#2a8b7f] to-[#1c756b] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-24">
+    <div className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-24">
       <div className="max-w-md w-full relative z-10">
 
         {/* Header */}
@@ -325,7 +325,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-yellow-400 text-[#1c756b] font-semibold rounded-lg hover:bg-yellow-300 transition"
+              className="w-full py-3 bg-[#81c243] text-white font-semibold rounded-lg  transition"
             >
               {isLoading ? "Creating Account..." : "Create Account"}
             </button>

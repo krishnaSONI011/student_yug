@@ -338,7 +338,7 @@ try {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1c756b] via-[#2a8b7f] to-[#1c756b] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-24">
+    <div className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-24">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-20 w-32 h-32 bg-white rounded-full animate-float"></div>
@@ -361,14 +361,14 @@ try {
                   <div key={step} className="flex items-center">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
                       currentStep >= step 
-                        ? 'bg-yellow-400 text-gray-900' 
+                        ? 'bg-[#81c243] text-gray-900' 
                         : 'bg-white/20 text-white'
                     }`}>
                       {step}
                     </div>
                     {step < 3 && (
                       <div className={`w-8 h-0.5 mx-2 ${
-                        currentStep > step ? 'bg-yellow-400' : 'bg-white/20'
+                        currentStep > step ? 'bg-[#81c243]' : 'bg-white/20'
                       }`}></div>
                     )}
                   </div>
@@ -393,7 +393,7 @@ try {
                 <div 
                   className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
                     loginType === 'aadhaar' 
-                      ? 'border-yellow-400 bg-yellow-400/10' 
+                      ? 'border-yellow-400 bg-[#81c243]/10' 
                       : 'border-white/30 hover:border-white/50'
                   }`}
                   onClick={() => handleLoginTypeSelect('aadhaar')}
@@ -407,7 +407,7 @@ try {
                   </div>
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                     loginType === 'aadhaar' 
-                      ? 'border-yellow-400 bg-yellow-400' 
+                      ? 'border-yellow-400 bg-[#81c243]' 
                       : 'border-white/50'
                   }`}>
                     {loginType === 'aadhaar' && (
@@ -419,7 +419,7 @@ try {
                 <div 
                   className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
                     loginType === 'apaar' 
-                      ? 'border-yellow-400 bg-yellow-400/10' 
+                      ? 'border-yellow-400 bg-[#81c243]/10' 
                       : 'border-white/30 hover:border-white/50'
                   }`}
                   onClick={() => handleLoginTypeSelect('apaar')}
@@ -433,7 +433,7 @@ try {
                   </div>
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                     loginType === 'apaar' 
-                      ? 'border-yellow-400 bg-yellow-400' 
+                      ? 'border-yellow-400 bg-[#81c243]' 
                       : 'border-white/50'
                   }`}>
                     {loginType === 'apaar' && (
@@ -535,7 +535,7 @@ try {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-gray-900 bg-[#81c243]  focus:outline-none focus:ring-2 focus:ring-offset-2  transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="flex items-center">
@@ -562,7 +562,7 @@ try {
                 <div 
                   className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
                     formData.contactMethod === 'mobile' 
-                      ? 'border-yellow-400 bg-yellow-400/10' 
+                      ? 'border-yellow-400 bg-[#81c243]/10' 
                       : 'border-white/30 hover:border-white/50'
                   }`}
                   onClick={() => setFormData(prev => ({ ...prev, contactMethod: 'mobile' }))}
@@ -588,7 +588,7 @@ try {
                 <div 
                   className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
                     formData.contactMethod === 'email' 
-                      ? 'border-yellow-400 bg-yellow-400/10' 
+                      ? 'border-yellow-400 bg-[#81c243]/10' 
                       : 'border-white/30 hover:border-white/50'
                   }`}
                   onClick={() => setFormData(prev => ({ ...prev, contactMethod: 'email' }))}
@@ -630,7 +630,7 @@ try {
               <button
                 type="submit"
                 disabled={isLoading || !formData.contactMethod}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-gray-900 bg-[#81c243] hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="flex items-center">
@@ -654,7 +654,7 @@ try {
                 <h3 className="text-xl font-semibold text-white mb-2">Verify Your {formData.contactMethod === 'mobile' ? 'Mobile' : 'Email'}</h3>
                 <p className="text-gray-200">
                   We&apos;ve sent a 6-digit code to <br />
-                  <span className="font-semibold text-yellow-300">
+                  <span className="font-semibold text-white">
                     {formData.contactMethod === 'mobile' 
                       ? '+91 98xxxxxxxx98' 
                       : 'xxxxxx@gmail.com'
@@ -688,13 +688,13 @@ try {
               <div className="text-center">
                 {otpData.otpTimer > 0 ? (
                   <p className="text-gray-200">
-                    Resend OTP in <span className="text-yellow-300 font-semibold">{otpData.otpTimer}s</span>
+                    Resend OTP in <span className=" font-semibold">{otpData.otpTimer}s</span>
                   </p>
                 ) : (
                   <button
                     type="button"
                     onClick={resendOtp}
-                    className="text-yellow-300 hover:text-yellow-200 transition-colors font-medium"
+                    className="text-white bg-[#81c243] font-medium"
                   >
                     Resend OTP
                   </button>
@@ -715,7 +715,7 @@ try {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-gray-900 bg-[#81c243]  focus:outline-none focus:ring-2 focus:ring-offset-2  transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="flex items-center">

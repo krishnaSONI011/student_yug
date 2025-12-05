@@ -48,37 +48,34 @@ export default function Sidebar() {
     <aside className="w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col h-screen sticky top-0">
       {/* User Profile Section */}
       <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center justify-center gap-3 mb-4">
           <Image
-            src="/fina.jpg"
-            width={48}
+            src="/logo.png"
+            width={120}
             height={48}
             alt="Profile"
             className="rounded-full"
           />
-          <div>
-            <h3 className="font-semibold text-gray-900">{userName}</h3>
-            <p className="text-sm text-gray-500">Student</p>
-          </div>
+          
         </div>
         
         {/* User Stats */}
         <div className="grid grid-cols-3 gap-2">
-          <div className="stat-card p-2 rounded-lg text-white text-center">
+          <div className=" bg-[#204b73] p-2 rounded-lg text-white text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <FaTree className="text-sm" />
               <span className="text-lg font-bold">4</span>
             </div>
             <p className="text-xs opacity-90">Trees Planted</p>
           </div>
-          <div className="stat-card p-3 rounded-lg text-white text-center">
+          <div className="bg-[#204b73] p-3 rounded-lg text-white text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
             <GiPoliceBadge className="text-sm" />
              Sliver
             </div>
             <p className="text-xs opacity-90">Badges</p>
           </div>
-          <div className="stat-card p-3 rounded-lg text-white text-center">
+          <div className="bg-[#204b73] p-3 rounded-lg text-white text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
             <MdSportsBasketball className="text-sm" />
              2
@@ -100,8 +97,8 @@ export default function Sidebar() {
                   onClick={() => setActiveTab(item.id)}
                   className={`sidebar-item w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-all duration-200 ${
                     activeTab === item.id
-                      ? 'bg-[#1c756b] text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-[#1c756b]'
+                      ? 'bg-[#204b73] text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-[#204b73]'
                   }`}
                 >
                   <Icon className="text-lg flex-shrink-0" />
