@@ -32,7 +32,8 @@ interface FormErrors {
 }
 
 export default function RegisterPage() {
-  const router = useRouter()
+  const router = useRouter();
+
   const [formData, setFormData] = useState<RegisterForm>({
     first_name: "",
     last_name: "",
@@ -48,17 +49,23 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // ------------------------
-  // Handle Inputs (TS)
+  // Handle Inputs
   // ------------------------
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
 
     let processedValue = value;
 
-    // Apaar formatting
+    // APAAR ID formatting
     if (name === "apaar_id") {
       const digitsOnly = value.replace(/\D/g, "");
       processedValue = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1 ");
+    }
+
+    // ✅ Mobile - only digits & max 10
+    if (name === "mobile") {
+      const digitsOnly = value.replace(/\D/g, "").slice(0, 10);
+      processedValue = digitsOnly;
     }
 
     setFormData((prev) => ({
@@ -72,7 +79,7 @@ export default function RegisterPage() {
   };
 
   // ------------------------
-  // Validate (TS)
+  // Validation
   // ------------------------
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -84,11 +91,13 @@ export default function RegisterPage() {
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Invalid email";
 
-    // APAAR ID validation
+    // APAAR ID - 12 digits
     if (!/^\d{12}$/.test(formData.apaar_id.replace(/\s/g, "")))
       newErrors.apaar_id = "Enter a valid 12-digit Apaar ID";
 
-    if (!formData.mobile) newErrors.mobile = "Mobile number is required";
+    // ✅ Mobile - Exactly 10 digits
+    if (!/^\d{10}$/.test(formData.mobile))
+      newErrors.mobile = "Enter a valid 10-digit mobile number";
 
     if (!formData.class.trim()) newErrors.class = "Class is required";
     if (!formData.dob) newErrors.dob = "DOB is required";
@@ -97,12 +106,11 @@ export default function RegisterPage() {
       newErrors.agreeToTerms = "You must agree to the terms";
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
   // ------------------------
-  // Submit (TS)
+  // Submit
   // ------------------------
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -110,7 +118,7 @@ export default function RegisterPage() {
     if (!validateForm()) return;
 
     setIsLoading(true);
-         
+
     try {
       const payload = {
         first_name: formData.first_name,
@@ -122,19 +130,18 @@ export default function RegisterPage() {
         dob: formData.dob,
       };
 
-     const response =  await axios.post(
+      const response = await axios.post(
         "https://irisinformatics.net/studentyug/wb/register",
         payload
       );
 
-      if(response.data.status === "1"){
-         router.push("/login")
-         console.log(response.data.message)
-         }
-      else if (response.data.status == "0"){
-        console.log(response.data.message)
+      if (response.data.status === "1") {
+        router.push("/login");
+        console.log(response.data.message);
+      } else if (response.data.status === "0") {
+        console.log(response.data.message);
       }
-     
+
     } catch (error) {
       console.error(error);
       alert("Registration failed. Try again.");
@@ -150,19 +157,16 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-24">
       <div className="max-w-md w-full relative z-10">
 
-        {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-3xl font-bold text-white">Join StudentYug!</h2>
           <p className="text-gray-200">Start your journey today</p>
         </div>
 
-        {/* Form Card */}
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
           <form onSubmit={handleSubmit} className="space-y-6">
 
             {/* First / Last Name */}
             <div className="grid grid-cols-2 gap-4">
-              {/* First Name */}
               <div>
                 <label className="text-white text-sm mb-1 block">First Name</label>
                 <div className="relative">
@@ -175,7 +179,7 @@ export default function RegisterPage() {
                     className={`w-full pl-10 pr-3 py-3 rounded-lg bg-white/90 border ${
                       errors.first_name ? "border-red-500" : "border-white/40"
                     }`}
-                    placeholder="John"
+                    placeholder="Krishna"
                   />
                 </div>
                 {errors.first_name && (
@@ -183,7 +187,6 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              {/* Last Name */}
               <div>
                 <label className="text-white text-sm mb-1 block">Last Name</label>
                 <div className="relative">
@@ -196,7 +199,7 @@ export default function RegisterPage() {
                     className={`w-full pl-10 pr-3 py-3 rounded-lg bg-white/90 border ${
                       errors.last_name ? "border-red-500" : "border-white/40"
                     }`}
-                    placeholder="Doe"
+                    placeholder="Soni"
                   />
                 </div>
                 {errors.last_name && (
@@ -221,12 +224,10 @@ export default function RegisterPage() {
                   placeholder="your@email.com"
                 />
               </div>
-              {errors.email && (
-                <p className="text-red-300 text-sm">{errors.email}</p>
-              )}
+              {errors.email && <p className="text-red-300 text-sm">{errors.email}</p>}
             </div>
 
-            {/* APAAR ID */}
+            {/* APAAR */}
             <div>
               <label className="text-white text-sm mb-1 block">Apaar ID</label>
               <div className="relative">
@@ -243,19 +244,20 @@ export default function RegisterPage() {
                   placeholder="1234 5678 9012"
                 />
               </div>
-              {errors.apaar_id && (
-                <p className="text-red-300 text-sm">{errors.apaar_id}</p>
-              )}
+              {errors.apaar_id && <p className="text-red-300 text-sm">{errors.apaar_id}</p>}
             </div>
 
-            {/* Mobile */}
+            {/* ✅ Mobile */}
             <div>
               <label className="text-white text-sm mb-1 block">Mobile</label>
               <div className="relative">
                 <FaPhone className="absolute left-3 top-3 text-gray-300" />
                 <input
                   name="mobile"
-                  type="text"
+                  type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={10}
                   value={formData.mobile}
                   onChange={handleInputChange}
                   className={`w-full pl-10 pr-3 py-3 rounded-lg bg-white/90 border ${
@@ -264,9 +266,7 @@ export default function RegisterPage() {
                   placeholder="9876543210"
                 />
               </div>
-              {errors.mobile && (
-                <p className="text-red-300 text-sm">{errors.mobile}</p>
-              )}
+              {errors.mobile && <p className="text-red-300 text-sm">{errors.mobile}</p>}
             </div>
 
             {/* Class */}
@@ -282,9 +282,7 @@ export default function RegisterPage() {
                 }`}
                 placeholder="8th"
               />
-              {errors.class && (
-                <p className="text-red-300 text-sm">{errors.class}</p>
-              )}
+              {errors.class && <p className="text-red-300 text-sm">{errors.class}</p>}
             </div>
 
             {/* DOB */}
@@ -299,9 +297,7 @@ export default function RegisterPage() {
                   errors.dob ? "border-red-500" : "border-white/40"
                 }`}
               />
-              {errors.dob && (
-                <p className="text-red-300 text-sm">{errors.dob}</p>
-              )}
+              {errors.dob && <p className="text-red-300 text-sm">{errors.dob}</p>}
             </div>
 
             {/* Terms */}
@@ -313,26 +309,24 @@ export default function RegisterPage() {
                 onChange={handleInputChange}
               />
               <p className="text-white text-sm">
-                I agree to the{" "}
-                <span className="text-yellow-300">Terms & Conditions</span>
+                I agree to the <span className="text-yellow-300">Terms & Conditions</span>
               </p>
             </div>
             {errors.agreeToTerms && (
               <p className="text-red-300 text-sm">{errors.agreeToTerms}</p>
             )}
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-[#81c243] text-white font-semibold rounded-lg  transition"
+              className="w-full py-3 bg-[#81c243] text-white font-semibold rounded-lg"
             >
               {isLoading ? "Creating Account..." : "Create Account"}
             </button>
+
           </form>
         </div>
 
-        {/* Login Link */}
         <p className="text-center text-white mt-4">
           Already have an account?{" "}
           <Link href="/login" className="text-yellow-300">
