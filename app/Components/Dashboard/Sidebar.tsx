@@ -15,9 +15,45 @@ import { GiPoliceBadge } from "react-icons/gi";
 import { MdSportsBasketball } from "react-icons/md";
 import Image from 'next/image';
 import Link from 'next/link';
+import axios from 'axios';
 
 
 export default function Sidebar() {
+  const [treeNumber , setTreeNumber] = useState(0)
+  const [sportsNumber , setSportsNumber] = useState(0)
+  useEffect( ()=>{
+      getNumberOfTree()
+      getNumberOfSports()
+  }, [])
+  async function getNumberOfSports(){
+    const user = localStorage.getItem("user")
+    let userName
+    if(user){
+       userName = JSON.parse(user)
+    }
+   
+    try{
+        const resposne  = await axios.get(`https://irisinformatics.net/studentyug/wb/getSportsParticipation?sports_id=${userName.user_id}`)
+        setSportsNumber(resposne.data.data.length)
+    }catch(e){
+      console.log(e)
+    }
+  }
+  async function getNumberOfTree(){
+    const user = localStorage.getItem("user")
+    let userName
+    if(user){
+       userName = JSON.parse(user)
+
+    }
+   
+    try{
+        const resposne  = await axios.get(`https://irisinformatics.net/studentyug/wb/getPlantedTrees?user_id=${userName.user_id}`)
+        setTreeNumber(resposne.data.data.length)
+    }catch(e){
+      console.log(e)
+    }
+  }
   const [activeTab, setActiveTab] = useState('home');
 
       const [userName, setUserName] = useState<string>(''); // State for user name
@@ -34,7 +70,7 @@ export default function Sidebar() {
   const menuItems = [
     { id: 'home', label: 'Home', Link:"/dashboard", icon: FaHome },
     { id: 'trees', label: 'My Trees', Link:"/dashboard/my-trees", icon: FaTree },
-    { id: 'sport', label: 'My Sport', Link:"#", icon: MdSportsBasketball },
+    { id: 'sport', label: 'My Sport', Link:"/dashboard/my-sports", icon: MdSportsBasketball },
     { id: 'community', label: 'Community', Link:"#", icon: FaUsers },
     { id: 'achievements', label: 'View Certificate', Link:"#", icon: FaTrophy },
   
@@ -64,7 +100,7 @@ export default function Sidebar() {
           <div className=" bg-[#204b73] p-2 rounded-lg text-white text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <FaTree className="text-sm" />
-              <span className="text-lg font-bold">4</span>
+              <span className="text-lg font-bold">{treeNumber}</span>
             </div>
             <p className="text-xs opacity-90">Trees Planted</p>
           </div>
@@ -78,7 +114,7 @@ export default function Sidebar() {
           <div className="bg-[#204b73] p-3 rounded-lg text-white text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
             <MdSportsBasketball className="text-sm" />
-             2
+             {sportsNumber}
             </div>
             <p className="text-xs opacity-90">Sports</p>
           </div>
