@@ -12,7 +12,8 @@ import {
   FaTwitter, 
   FaLinkedin,
   FaEnvelope,
-  FaPhone
+  FaPhone,
+  FaYoutube
 } from 'react-icons/fa';
 
 export default function TopSection(){
@@ -339,12 +340,15 @@ export default function TopSection(){
                             <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
                                 <FaLinkedin className="text-lg" />
                             </a>
+                            <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+                                <FaYoutube className="text-lg" />
+                            </a>
                         </div>
                     </div>
                 </div>
                 
                 <div className="border-t border-white/20 mt-8 pt-8 text-center text-gray-200">
-                    <p>&copy; 2024 StudentYug. All rights reserved. Growing knowledge, growing nature.</p>
+                    <p>&copy; 2025 StudentYug. All rights reserved. Growing knowledge, growing nature.</p>
                 </div>
             </div>
         </footer>

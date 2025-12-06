@@ -90,7 +90,7 @@ export default function Sidebar() {
             width={120}
             height={48}
             alt="Profile"
-            className="rounded-full"
+            className="rounded-full cursor-pointer"
           />
           
         </div>
