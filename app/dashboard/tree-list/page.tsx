@@ -3,13 +3,13 @@
 import axios from 'axios';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { 
-  FaTree, 
-  FaSeedling, 
-  FaSun, 
-  FaTint, 
-  FaLeaf, 
-  FaTimes, 
+import {
+  FaTree,
+  FaSeedling,
+  FaSun,
+  FaTint,
+  FaLeaf,
+  FaTimes,
   FaCheckCircle,
   FaInfoCircle,
   FaCalendarAlt,
@@ -46,24 +46,25 @@ interface Tree {
 }
 
 
-interface tree2{
-  name_en : string ; 
-  name_hi : string ;
-  name_sc : string ;
-  category : string  ; 
-  carbon : string ;
-  oxygen : string ;
-  status : string ;
+interface tree2 {
+  name_en: string;
+  name_hi: string;
+  name_sc: string;
+  category: string;
+  carbon: string;
+  oxygen: string;
+  status: string;
+  description : string ;
+  benefits: string[];
+  img: string;
 
-  img : string ; 
-  
 }
 
 export default function TreeListPage() {
   const [selectedTree, setSelectedTree] = useState<Tree | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [trees, setTrees] = useState<tree2[]>([]);
-const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
 
   // Available trees that students can choose to plant
@@ -373,26 +374,26 @@ const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
-  const fetchTrees = async () => {
-    try {
+    const fetchTrees = async () => {
+      try {
 
-      const response = await axios.get("https://irisinformatics.net/studentyug/wb/get_all_trees");
-      
-      
-      if (response.data.status === "1") {
-        setTrees(response.data.data);   // all trees
-      } else {
-        console.error("Error fetching trees:", response.data.message);
+        const response = await axios.get("https://irisinformatics.net/studentyug/wb/get_all_trees");
+
+
+        if (response.data.status === "1") {
+          setTrees(response.data.data);   // all trees
+        } else {
+          console.error("Error fetching trees:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Network Error:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Network Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchTrees();
-}, []);
+    fetchTrees();
+  }, []);
 
 
   return (
@@ -401,7 +402,7 @@ const [loading, setLoading] = useState(true);
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-[#1c756b] rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-[#204b73] rounded-full flex items-center justify-center">
               <FaTree className="text-2xl text-white" />
             </div>
             <div>
@@ -427,11 +428,11 @@ const [loading, setLoading] = useState(true);
 
         {/* Trees Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {trees.map((tree , index) => (
+          {trees.map((tree, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
-              
+              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300  transform hover:-translate-y-1"
+
             >
               {/* Tree Icon/Image */}
               {/* <div className="h-48 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center relative">
@@ -440,25 +441,36 @@ const [loading, setLoading] = useState(true);
                  
                 </div>
               </div> */}
-              <img src={`https://irisinformatics.net/studentyug/`+ tree.img} alt='' className='w-full'/> 
-
+              <div className="relative w-full h-56 bg-gray-100 overflow-hidden">
+                <Image
+                  src={`https://irisinformatics.net/studentyug/${tree.img}`}
+                  alt={tree.img}
+                  fill
+                  className="object-cover"
+                />
+              </div>
               {/* Tree Info */}
               <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name_en}</h3>
                 <p className="text-sm text-gray-600 italic mb-3">{tree.name_sc}</p>
-                <p className="text-gray-700 text-sm mb-4 line-clamp-2">{"the is the treen"}</p>
+                <p className="text-gray-700 text-sm mb-4 line-clamp-2">{tree.description}</p>
 
                 {/* Key Benefits */}
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">Key Benefits:</h4>
                   <div className="flex flex-wrap gap-2">
-                    
-                      <span
-                        className="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full"
-                      >
-                       {"three is Good"}
-                      </span>
-                   
+                    {
+                      tree.benefits.map((ben, index) => (
+                        <span
+                         key={index}
+                          className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
+                        >
+                          {ben}
+                        </span>
+                      ))
+                    }
+
+
                   </div>
                 </div>
 
@@ -487,9 +499,9 @@ const [loading, setLoading] = useState(true);
                 </div>
 
                 {/* View Details Button */}
-                <button className="w-full py-2 px-4 bg-[#1c756b] text-white rounded-lg hover:bg-[#155e56] transition-colors duration-200 font-medium">
+                {/* <button className="w-full py-2 px-4 bg-[#1c756b] text-white rounded-lg hover:bg-[#155e56] transition-colors duration-200 font-medium">
                   View Details & Planting Guide
-                </button>
+                </button> */}
               </div>
             </div>
           ))}

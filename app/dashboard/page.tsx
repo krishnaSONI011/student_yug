@@ -332,7 +332,7 @@ export default function Dashboard() {
       {/* Floating Button */}
       <button
         onClick={() => setShowCreatePost(true)}
-        className="fixed bottom-6 right-6 bg-[#1c756b] text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center"
+        className="fixed bottom-6 right-6 bg-[#204b73] text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center"
       >
         <FaPlus className="text-xl" />
       </button>

@@ -91,11 +91,11 @@ export default function Sidebar() {
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
-              <Link key={item.id} href={item.Link}>
+              <Link key={item.id} href={item.Link} className=''>
               <li>
                 <button
                   onClick={() => setActiveTab(item.id)}
-                  className={`sidebar-item w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-all duration-200 ${
+                  className={`cursor-pointer sidebar-item w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-all duration-200 ${
                     activeTab === item.id
                       ? 'bg-[#204b73] text-white shadow-md'
                       : 'text-gray-700 hover:bg-gray-100 hover:text-[#204b73]'
@@ -112,7 +112,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Environmental Impact */}
-      <div className="p-4 border-t border-gray-200">
+      {/* <div className="p-4 border-t border-gray-200">
         <div className="bg-green-50 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <FaLeaf className="text-green-600" />
@@ -123,7 +123,7 @@ export default function Sidebar() {
             <p>Oxygen Produced: 180 kg/year</p>
           </div>
         </div>
-      </div>
+      </div> */}
     </aside>
   );
 }

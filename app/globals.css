@@ -39,12 +39,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1c756b;
+  background: #204b73;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #155e56;
+  background: #204b73;
 }
 
 /* Smooth scrolling */
@@ -63,7 +63,7 @@ html {
 /* Header positioning */
 header {
   position: relative;
-  z-index: 1000;
+ 
 }
 
 /* Ensure header is always on top */

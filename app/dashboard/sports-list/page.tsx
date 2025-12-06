@@ -17,6 +17,8 @@ interface tree2{
     name : string ; 
     category : string ;
     img : string ;
+    benefits: string[] ;
+    description : string ;
   
 }
 
@@ -90,7 +92,7 @@ export default function SportsList() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-[#1c756b] rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-[#204b73] rounded-full flex items-center justify-center">
               <MdSportsBasketball className="text-2xl text-white" />
             </div>
             <div>
@@ -119,7 +121,7 @@ export default function SportsList() {
           {trees.map((tree , index) => (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300  transform hover:-translate-y-1"
               
             >
               {/* Tree Icon/Image */}
@@ -143,18 +145,23 @@ export default function SportsList() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name}</h3>
                 <p className="text-sm text-gray-600 italic mb-3">{tree.category}</p>
-                <p className="text-gray-700 text-sm mb-4 line-clamp-2">{"the is the treen"}</p>
+                <p className="text-gray-700 text-sm mb-4 line-clamp-2">{tree.description}</p>
 
                 {/* Key Benefits */}
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">Key Benefits:</h4>
                   <div className="flex flex-wrap gap-2">
-                    
-                      <span
-                        className="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full"
+                    {
+                      tree.benefits.map((ben , index)=>(
+                        <span
+                        key={index}
+                        className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
                       >
-                       {"three is Good"}
+                       {ben}
                       </span>
+                      ))
+                    }
+                     
                    
                   </div>
                 </div>
@@ -166,9 +173,7 @@ export default function SportsList() {
                
 
                 {/* View Details Button */}
-                <button className="w-full py-2 px-4 bg-[#1c756b] text-white rounded-lg hover:bg-[#155e56] transition-colors duration-200 font-medium">
-                  View Details & Planting Guide
-                </button>
+               
               </div>
             </div>
           ))}
