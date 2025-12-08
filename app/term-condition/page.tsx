@@ -4,8 +4,8 @@
 export default function TermsAndService(){
     return(
         <>
-          <div className="flex justify-center items-center h-[40vh] bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] text-white relative overflow-hidden">
-                    <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">Terms of Service</h1>
+          <div className="flex justify-center items-center h-[40vh] bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] text-white ">
+                    <h1 className="text-center text-5xl md:text-7xl font-bold mb-6 leading-tight">Terms of Service</h1>
           </div>
 
 
