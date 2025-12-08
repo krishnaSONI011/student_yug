@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { 
   FaLeaf, 
   FaTrophy, 
@@ -41,9 +42,9 @@ export default function TopSection(){
                         Every step in learning becomes a step for nature.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <button className="bg-[#83c042] text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-yellow-[#83c042] transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                        <Link href={"/register"} className="bg-[#83c042] text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-yellow-[#83c042] transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
                             Join StudentYug
-                        </button>
+                        </Link>
                         
                     </div>
                 </div>
@@ -293,65 +294,7 @@ export default function TopSection(){
             </div>
         </section>
 
-        {/* Footer */}
-        <footer id="contact" className="bg-[#204b74] text-white py-12">
-            <div className="container mx-auto px-6">
-                <div className="grid md:grid-cols-4 gap-8">
-                    <div>
-                        <h3 className="text-2xl font-bold mb-4">StudentYug</h3>
-                        <p className="text-gray-200 mb-4">One Student, One Tree, One Future</p>
-                        <p className="text-sm text-gray-300">
-                            Connecting students with sports guidance while promoting environmental responsibility.
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-                        <ul className="space-y-2 text-gray-200">
-                            <li><a href="#" className="hover:text-yellow-300 transition-colors">About Us</a></li>
-                            <li><a href="#features" className="hover:text-yellow-300 transition-colors">Features</a></li>
-                            <li><a href="#pillars" className="hover:text-yellow-300 transition-colors">Our Pillars</a></li>
-                            <li><a href="#impact" className="hover:text-yellow-300 transition-colors">Impact</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h4 className="text-lg font-semibold mb-4">Support</h4>
-                        <ul className="space-y-2 text-gray-200">
-                            <li><a href="#" className="hover:text-yellow-300 transition-colors">Help Center</a></li>
-                            <li><a href="#" className="hover:text-yellow-300 transition-colors">Contact Us</a></li>
-                            <li><a href="#" className="hover:text-yellow-300 transition-colors">Privacy Policy</a></li>
-                            <li><a href="#" className="hover:text-yellow-300 transition-colors">Terms of Service</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h4 className="text-lg font-semibold mb-4">Connect</h4>
-                        <div className="flex space-x-4">
-                            <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
-                                <FaFacebook className="text-lg" />
-                            </a>
-                            <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
-                                <FaInstagram className="text-lg" />
-                            </a>
-                            <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
-                                <FaTwitter className="text-lg" />
-                            </a>
-                            <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
-                                <FaLinkedin className="text-lg" />
-                            </a>
-                            <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
-                                <FaYoutube className="text-lg" />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div className="border-t border-white/20 mt-8 pt-8 text-center text-gray-200">
-                    <p>&copy; 2025 StudentYug. All rights reserved. Growing knowledge, growing nature.</p>
-                </div>
-            </div>
-        </footer>
+        
         </>
     )
 }

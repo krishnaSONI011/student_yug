@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import {Poppins } from "next/font/google";
 import "./globals.css";
-import Header from "./Components/Header";
+import ConditionalHeader from "./Components/ConditionalHeader";
+import ConditionalFooter from "./Components/ConditionalFooter";
 
 const geistSans = Poppins({
   weight:["400" , "500" , "700"],
@@ -26,9 +27,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.className} antialiased`}
       >
-        <Header />
+        <ConditionalHeader />
         {children}
+        <ConditionalFooter />
       </body>
+      
     </html>
   );
 }

@@ -20,20 +20,20 @@ export default function LoginPage() {
     isOtpSent: false,
     otpTimer: 0
   });
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    
+
     let processedValue = value;
-    
+
     // Format Aadhaar ID with spaces for better readability
     if (name === 'aadhaarId') {
       const digitsOnly = value.replace(/\D/g, '');
       processedValue = digitsOnly.replace(/(\d{4})(?=\d)/g, '$1 ');
     }
-    
+
     if (name === 'otp') {
       setOtpData(prev => ({
         ...prev,
@@ -45,7 +45,7 @@ export default function LoginPage() {
         [name]: type === 'checkbox' ? checked : processedValue
       }));
     }
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
@@ -60,15 +60,15 @@ export default function LoginPage() {
   };
 
   const validateStep1 = () => {
-    const newErrors: {[key: string]: string} = {};
+    const newErrors: { [key: string]: string } = {};
     const idType = loginType === 'aadhaar' ? 'Aadhaar' : 'Apaar';
-    
+
     if (!formData.aadhaarId) {
       newErrors.aadhaarId = `${idType} ID is required`;
     } else if (!/^\d{12}$/.test(formData.aadhaarId.replace(/\s/g, ''))) {
       newErrors.aadhaarId = `Please enter a valid 12-digit ${idType} ID`;
     }
-    
+
     if (!formData.dateOfBirth) {
       newErrors.dateOfBirth = 'Date of birth is required';
     } else {
@@ -79,46 +79,46 @@ export default function LoginPage() {
         newErrors.dateOfBirth = 'Please enter a valid date of birth';
       }
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const validateStep2 = () => {
-    const newErrors: {[key: string]: string} = {};
-    
+    const newErrors: { [key: string]: string } = {};
+
     if (!formData.contactMethod) {
       newErrors.contactMethod = 'Please select a contact method';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const validateOtp = () => {
-    const newErrors: {[key: string]: string} = {};
-    
+    const newErrors: { [key: string]: string } = {};
+
     if (!otpData.otp) {
       newErrors.otp = 'OTP is required';
     } else if (otpData.otp.length !== 6) {
       newErrors.otp = 'OTP must be 6 digits';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleStep1Submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateStep1()) return;
-    
+
     setIsLoading(true);
 
 
 
-  
-    
+
+
     // Simulate API call to verify Aadhaar and DOB
     // setTimeout(() => {
     //   setIsLoading(false);
@@ -126,60 +126,60 @@ export default function LoginPage() {
     // }, 1000);
 
 
-try {
-  console.log(formData)
-  const response = await fetch(
-    "https://irisinformatics.net/studentyug/wb/verify_user",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // JSON payload
-      },
-      body: JSON.stringify({
-        type: loginType, // "aadhaar" or "apaar"
-        apaar_id: formData.aadhaarId.replace(/\s/g, ""), // remove spaces
-        dob: formData.dateOfBirth,
-      }),
+    try {
+      console.log(formData)
+      const response = await fetch(
+        "https://irisinformatics.net/studentyug/wb/verify_user",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // JSON payload
+          },
+          body: JSON.stringify({
+            type: loginType, // "aadhaar" or "apaar"
+            apaar_id: formData.aadhaarId.replace(/\s/g, ""), // remove spaces
+            dob: formData.dateOfBirth,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.status === "1") {
+        setFormData((prev) => ({
+          ...prev,
+          mobile: data.data?.mobile || "",
+          email: data.data?.email || "",
+        }));
+        setCurrentStep(2);
+      } else {
+        alert(data.message || "Verification failed.");
+        setErrors({ general: data.message || "Verification failed." });
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      alert("Network error.");
+      setErrors({ general: "Network error." });
+    } finally {
+      setIsLoading(false);
     }
-  );
-
-  const data = await response.json();
-
-  if (response.ok && data.status === "1") {
-    setFormData((prev) => ({
-      ...prev,
-      mobile: data.data?.mobile || "",
-      email: data.data?.email || "",
-    }));
-    setCurrentStep(2);
-  } else {
-    alert(data.message || "Verification failed.");
-    setErrors({ general: data.message || "Verification failed." });
-  }
-} catch (error) {
-  console.error("API Error:", error);
-  alert("Network error.");
-  setErrors({ general: "Network error." });
-} finally {
-  setIsLoading(false);
-}
 
 
   };
 
   const handleStep2Submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateStep2()) return;
-    
+
     setIsLoading(true);
 
     try {
       const response = await fetch('https://irisinformatics.net/studentyug/wb/send_otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          type: formData.contactMethod, 
+        body: JSON.stringify({
+          type: formData.contactMethod,
           value: formData.contactMethod === "email" ? formData.email : formData.mobile,
           // contactMethod: formData.contactMethod 
         }),
@@ -207,8 +207,8 @@ try {
     } finally {
       setIsLoading(false);
     }
-  
-    
+
+
     // Simulate API call for sending OTP
     // setTimeout(() => {
     //   setOtpData(prev => ({
@@ -218,7 +218,7 @@ try {
     //   }));
     //   setCurrentStep(3);
     //   setIsLoading(false);
-      
+
     //   // Start countdown timer
     //   const timer = setInterval(() => {
     //     setOtpData(prev => {
@@ -234,49 +234,49 @@ try {
 
   const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateOtp()) return;
-    
+
     setIsLoading(true);
 
-try {
-  const response = await fetch('https://irisinformatics.net/studentyug/wb/verify_otp', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-      type: formData.contactMethod, // "email" or "phone"
-      value: formData.contactMethod === "email" ? formData.email : formData.mobile, // actual contact
-      otp: otpData.otp.replace(/\D/g, '') // digits only
-    }),
-  });
+    try {
+      const response = await fetch('https://irisinformatics.net/studentyug/wb/verify_otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: formData.contactMethod, // "email" or "phone"
+          value: formData.contactMethod === "email" ? formData.email : formData.mobile, // actual contact
+          otp: otpData.otp.replace(/\D/g, '') // digits only
+        }),
+      });
 
-  const data = await response.json();
+      const data = await response.json();
 
-  if (response.ok && data.status === "1") {
-    alert('Login successful! Redirecting to dashboard.');
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        user_id:data.data.user_id ,
-        name: data.data.name,
-        email: data.data.email,
-        token : data.data.token
-      })
-    );
-    window.location.href = data.redirectUrl || '/dashboard';
-  } else {
-    setErrors({ otp: data.message || 'Invalid or expired OTP.' });
-    alert(data.message || 'Invalid or expired OTP.');
-  }
-} catch (error) {
-  console.error('OTP Verification Error:', error);
-  setErrors({ general: 'Network error. Could not verify OTP.' });
-  alert('Network error. Could not verify OTP.');
-} finally {
-  setIsLoading(false);
-}
+      if (response.ok && data.status === "1") {
+        alert('Login successful! Redirecting to dashboard.');
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            user_id: data.data.user_id,
+            name: data.data.name,
+            email: data.data.email,
+            token: data.data.token
+          })
+        );
+        window.location.href = data.redirectUrl || '/dashboard';
+      } else {
+        setErrors({ otp: data.message || 'Invalid or expired OTP.' });
+        alert(data.message || 'Invalid or expired OTP.');
+      }
+    } catch (error) {
+      console.error('OTP Verification Error:', error);
+      setErrors({ general: 'Network error. Could not verify OTP.' });
+      alert('Network error. Could not verify OTP.');
+    } finally {
+      setIsLoading(false);
+    }
 
-    
+
     // // Simulate OTP verification
     // setTimeout(() => {
     //   setIsLoading(false);
@@ -287,19 +287,19 @@ try {
 
   const resendOtp = async () => {
     if (otpData.otpTimer > 0) return;
-    
+
     setIsLoading(true);
-    
+
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       const contactInfo = formData.contactMethod === 'mobile' ? '98xxxxxxxx98' : 'xxxxxx@gmail.com';
       console.log('Resending OTP to:', contactInfo);
-      
+
       setOtpData(prev => ({
         ...prev,
         otpTimer: 30
       }));
-      
+
       // Start countdown timer
       const timer = setInterval(() => {
         setOtpData(prev => {
@@ -310,7 +310,7 @@ try {
           return { ...prev, otpTimer: prev.otpTimer - 1 };
         });
       }, 1000);
-      
+
       alert(`OTP resent to ${contactInfo}! (Demo: Use 123456)`);
     } catch (error) {
       console.error('Resend OTP error:', error);
@@ -338,13 +338,13 @@ try {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-24">
+    <div className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-10">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-20 w-32 h-32 bg-white rounded-full animate-float"></div>
-        <div className="absolute top-40 right-32 w-24 h-24 bg-white rounded-full animate-float" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-32 left-1/3 w-20 h-20 bg-white rounded-full animate-float" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-20 right-20 w-28 h-28 bg-white rounded-full animate-float" style={{animationDelay: '3s'}}></div>
+        <div className="absolute top-40 right-32 w-24 h-24 bg-white rounded-full animate-float" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-32 left-1/3 w-20 h-20 bg-white rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-20 right-20 w-28 h-28 bg-white rounded-full animate-float" style={{ animationDelay: '3s' }}></div>
       </div>
 
       <div className="max-w-md w-full space-y-8 relative z-10">
@@ -352,24 +352,22 @@ try {
         <div className="text-center">
           <h2 className="text-3xl font-bold text-white mb-2">Welcome Back!</h2>
           <p className="text-gray-200">Sign in to continue your journey of growth</p>
-          
+
           {/* Progress Steps */}
           {currentStep > 0 && (
             <div className="flex justify-center mt-4 mb-6">
               <div className="flex items-center space-x-2">
                 {[1, 2, 3].map((step) => (
                   <div key={step} className="flex items-center">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                      currentStep >= step 
-                        ? 'bg-[#81c243] text-gray-900' 
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= step
+                        ? 'bg-[#81c243] text-gray-900'
                         : 'bg-white/20 text-white'
-                    }`}>
+                      }`}>
                       {step}
                     </div>
                     {step < 3 && (
-                      <div className={`w-8 h-0.5 mx-2 ${
-                        currentStep > step ? 'bg-[#81c243]' : 'bg-white/20'
-                      }`}></div>
+                      <div className={`w-8 h-0.5 mx-2 ${currentStep > step ? 'bg-[#81c243]' : 'bg-white/20'
+                        }`}></div>
                     )}
                   </div>
                 ))}
@@ -390,12 +388,11 @@ try {
 
               {/* Login Type Options */}
               <div className="space-y-4">
-                <div 
-                  className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
-                    loginType === 'aadhaar' 
-                      ? 'border-yellow-400 bg-[#81c243]/10' 
+                <div
+                  className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${loginType === 'aadhaar'
+                      ? 'border-yellow-400 bg-[#81c243]/10'
                       : 'border-white/30 hover:border-white/50'
-                  }`}
+                    }`}
                   onClick={() => handleLoginTypeSelect('aadhaar')}
                 >
                   <div className="flex items-center space-x-4">
@@ -405,23 +402,21 @@ try {
                       <p className="text-gray-300 text-sm">Use your Aadhaar ID to sign in</p>
                     </div>
                   </div>
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                    loginType === 'aadhaar' 
-                      ? 'border-yellow-400 bg-[#81c243]' 
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${loginType === 'aadhaar'
+                      ? 'border-yellow-400 bg-[#81c243]'
                       : 'border-white/50'
-                  }`}>
+                    }`}>
                     {loginType === 'aadhaar' && (
                       <div className="w-3 h-3 rounded-full bg-gray-900"></div>
                     )}
                   </div>
                 </div>
-                
-                <div 
-                  className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
-                    loginType === 'apaar' 
-                      ? 'border-yellow-400 bg-[#81c243]/10' 
+
+                <div
+                  className={`flex items-center justify-between p-6    rounded-lg border-2 cursor-pointer transition-all duration-300 ${loginType === 'apaar'
+                      ? 'border-yellow-400 bg-[#81c243]/10'
                       : 'border-white/30 hover:border-white/50'
-                  }`}
+                    }`}
                   onClick={() => handleLoginTypeSelect('apaar')}
                 >
                   <div className="flex items-center space-x-4">
@@ -431,11 +426,10 @@ try {
                       <p className="text-gray-300 text-sm">Use your Aapar ID to sign in</p>
                     </div>
                   </div>
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                    loginType === 'apaar' 
-                      ? 'border-yellow-400 bg-[#81c243]' 
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${loginType === 'apaar'
+                      ? 'border-yellow-400 bg-[#81c243]'
                       : 'border-white/50'
-                  }`}>
+                    }`}>
                     {loginType === 'apaar' && (
                       <div className="w-3 h-3 rounded-full bg-gray-900"></div>
                     )}
@@ -467,9 +461,8 @@ try {
                     type="text"
                     value={formData.aadhaarId}
                     onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${
-                      errors.aadhaarId ? 'border-red-500' : 'border-white/30'
-                    }`}
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${errors.aadhaarId ? 'border-red-500' : 'border-white/30'
+                      }`}
                     placeholder="1234 5678 9012"
                     maxLength={14}
                   />
@@ -494,9 +487,8 @@ try {
                     type="date"
                     value={formData.dateOfBirth}
                     onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${
-                      errors.dateOfBirth ? 'border-red-500' : 'border-white/30'
-                    }`}
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${errors.dateOfBirth ? 'border-red-500' : 'border-white/30'
+                      }`}
                   />
                 </div>
                 {errors.dateOfBirth && (
@@ -559,12 +551,11 @@ try {
 
               {/* Contact Method Selection */}
               <div className="space-y-4">
-                <div 
-                  className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
-                    formData.contactMethod === 'mobile' 
-                      ? 'border-yellow-400 bg-[#81c243]/10' 
+                <div
+                  className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${formData.contactMethod === 'mobile'
+                      ? 'border-yellow-400 bg-[#81c243]/10'
                       : 'border-white/30 hover:border-white/50'
-                  }`}
+                    }`}
                   onClick={() => setFormData(prev => ({ ...prev, contactMethod: 'mobile' }))}
                 >
                   <div className="flex items-center space-x-3">
@@ -584,13 +575,12 @@ try {
                     </div>
                   </div>
                 </div>
-                
-                <div 
-                  className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
-                    formData.contactMethod === 'email' 
-                      ? 'border-yellow-400 bg-[#81c243]/10' 
+
+                <div
+                  className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${formData.contactMethod === 'email'
+                      ? 'border-yellow-400 bg-[#81c243]/10'
                       : 'border-white/30 hover:border-white/50'
-                  }`}
+                    }`}
                   onClick={() => setFormData(prev => ({ ...prev, contactMethod: 'email' }))}
                 >
                   <div className="flex items-center space-x-3">
@@ -655,8 +645,8 @@ try {
                 <p className="text-gray-200">
                   We&apos;ve sent a 6-digit code to <br />
                   <span className="font-semibold text-white">
-                    {formData.contactMethod === 'mobile' 
-                      ? '+91 98xxxxxxxx98' 
+                    {formData.contactMethod === 'mobile'
+                      ? '+91 98xxxxxxxx98'
                       : 'xxxxxx@gmail.com'
                     }
                   </span>
@@ -673,9 +663,8 @@ try {
                   type="text"
                   value={otpData.otp}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 text-center text-2xl tracking-widest ${
-                    errors.otp ? 'border-red-500' : 'border-white/30'
-                  }`}
+                  className={`w-full px-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 text-center text-2xl tracking-widest ${errors.otp ? 'border-red-500' : 'border-white/30'
+                    }`}
                   placeholder="000000"
                   maxLength={6}
                 />

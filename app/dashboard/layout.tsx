@@ -1,21 +1,25 @@
+"use client"
 import type { Metadata } from "next";
 
 import "./dashboard.css";
 import DashboardHeader from "../Components/Dashboard/DashboardHeader";
 import Sidebar from "../Components/Dashboard/Sidebar";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-
-
-export const metadata: Metadata = {
-  title: "StudentYug Dashboard - Your Green Journey",
-  description: "Track your tree planting progress and connect with fellow environmental enthusiasts.",
-};
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter()
+  useEffect(()=>{
+    const user = localStorage.getItem("user")
+    if(!user) {
+      router.push("/")
+    }
+  })
   return (
     <div className="min-h-screen flex bg-gray-50">
       {/* Sidebar */}

@@ -7,8 +7,8 @@ import {
   FaUsers, 
   FaTrophy, 
   FaLeaf, 
-  FaChartLine, 
-  
+  FaChartLine,
+  FaUser
 } from 'react-icons/fa';
 import { GiPoliceBadge } from "react-icons/gi";
 
@@ -71,6 +71,7 @@ export default function Sidebar() {
     { id: 'home', label: 'Home', Link:"/dashboard", icon: FaHome },
     { id: 'trees', label: 'My Trees', Link:"/dashboard/my-trees", icon: FaTree },
     { id: 'sport', label: 'My Sport', Link:"/dashboard/my-sports", icon: MdSportsBasketball },
+    
     { id: 'community', label: 'Community', Link:"#", icon: FaUsers },
     { id: 'achievements', label: 'View Certificate', Link:"#", icon: FaTrophy },
   
