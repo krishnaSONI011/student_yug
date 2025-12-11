@@ -1,12 +1,22 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaSchool, FaGraduationCap, FaCalendarAlt, FaEdit } from 'react-icons/fa';
-import { GiPoliceBadge } from 'react-icons/gi';
+import { useState, useEffect } from "react";
+import {
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaSchool,
+  FaGraduationCap,
+  FaCalendarAlt,
+  FaEdit,
+} from "react-icons/fa";
+import { GiPoliceBadge } from "react-icons/gi";
 
 interface UserData {
   user_id: string;
-  name?: string;
+  first_name?: string;
+  last_name?: string;
   email?: string;
   token?: string;
 }
@@ -34,70 +44,127 @@ export default function ProfilePage() {
   const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
+  // -----------------------------------------
+  // LOAD USER FROM LOCAL STORAGE
+  // -----------------------------------------
   useEffect(() => {
-    const loadUserData = () => {
-      try {
-        const user = localStorage.getItem('user');
-        if (user) {
-          const parsedUser = JSON.parse(user);
-          setUserData(parsedUser);
-          
-          // Initialize student profile from localStorage or set defaults
-          const savedProfile = localStorage.getItem('studentProfile');
-          if (savedProfile) {
-            setStudentProfile(JSON.parse(savedProfile));
-          } else {
-            // Set default values based on available data
-            setStudentProfile({
-              name: parsedUser.name || 'Not Set',
-              class: 'Not Set',
-              address: 'Not Set',
-              email: parsedUser.email || 'Not Set',
-              phone: 'Not Set',
-              dateOfBirth: 'Not Set'
-            });
-          }
+    const user = localStorage.getItem("user");
 
-          // Initialize school details from localStorage or set defaults
-          const savedSchool = localStorage.getItem('schoolDetails');
-          if (savedSchool) {
-            setSchoolDetails(JSON.parse(savedSchool));
-          } else {
-            setSchoolDetails({
-              schoolName: 'Not Set',
-              schoolAddress: 'Not Set',
-              schoolClass: 'Not Set',
-              schoolCode: 'Not Set'
-            });
-          }
-        }
-      } catch (error) {
-        console.error('Error loading user data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (user) {
+      const parsed = JSON.parse(user);
+      setUserData(parsed);
 
-    loadUserData();
+      // Student Profile
+      const savedProfile = localStorage.getItem("studentProfile");
+      setStudentProfile(
+        savedProfile
+          ? JSON.parse(savedProfile)
+          : {
+              name: `${parsed.first_name || ""} ${parsed.last_name || ""}`.trim(),
+              class: parsed.class || "Not Set",
+              address: parsed.address || "Not Set",
+              email: parsed.email || "Not Set",
+              phone: parsed.mobile || "Not Set",
+              dateOfBirth: parsed.dob || "Not Set",
+            }
+      );
+
+      // School Details
+      const savedSchool = localStorage.getItem("schoolDetails");
+      setSchoolDetails(
+        savedSchool
+          ? JSON.parse(savedSchool)
+          : {
+              schoolName: parsed.school_name || "Not Set",
+              schoolAddress: parsed.school_address || "Not Set",
+              schoolClass: parsed.class || "Not Set",
+              schoolCode: parsed.school_code || "Not Set",
+            }
+      );
+    }
+
+    setLoading(false);
   }, []);
 
+  // -----------------------------------------
+  // API: UPDATE PROFILE
+  // -----------------------------------------
+  async function updateProfileAPI() {
+    if (!userData || !studentProfile || !schoolDetails) return;
+
+    try {
+      const [fname, lname = ""] = studentProfile.name.split(" ");
+
+      const formData = new FormData();
+
+      formData.append("id", userData.user_id);
+      formData.append("first_name", fname);
+      formData.append("last_name", lname);
+      formData.append("email", studentProfile.email);
+      formData.append("apaar_id", ""); // optional if not used
+      formData.append("mobile", studentProfile.phone);
+      formData.append("class", studentProfile.class);
+      formData.append("dob", studentProfile.dateOfBirth);
+      formData.append("address", studentProfile.address);
+      formData.append("school_name", schoolDetails.schoolName);
+      formData.append("school_address", schoolDetails.schoolAddress);
+      formData.append("school_code", schoolDetails.schoolCode || "");
+
+      const response = await fetch(
+        "https://irisinformatics.net/studentyug/wb/update_profile",
+        { method: "POST", body: formData }
+      );
+
+      const data = await response.json();
+
+      if (data.status === true) {
+        // Update localStorage
+        localStorage.setItem("user", JSON.stringify(data.data));
+
+        setUserData(data.data);
+
+        alert("Profile updated successfully! 🎉");
+      } else {
+        alert("Failed to update profile.");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      alert("Something went wrong!");
+    }
+  }
+
+  // -----------------------------------------
+  // SAVE CHANGES
+  // -----------------------------------------
   const handleSave = () => {
     if (studentProfile && schoolDetails) {
-      localStorage.setItem('studentProfile', JSON.stringify(studentProfile));
-      localStorage.setItem('schoolDetails', JSON.stringify(schoolDetails));
+      localStorage.setItem("studentProfile", JSON.stringify(studentProfile));
+      localStorage.setItem("schoolDetails", JSON.stringify(schoolDetails));
+
+      updateProfileAPI(); // ⭐ Update server also
+
       setIsEditing(false);
-      alert('Profile updated successfully!');
     }
   };
 
-  const handleInputChange = (section: 'student' | 'school', field: string, value: string) => {
-    if (section === 'student' && studentProfile) {
+  // -----------------------------------------
+  // INPUT HANDLER
+  // -----------------------------------------
+  const handleInputChange = (
+    section: "student" | "school",
+    field: string,
+    value: string
+  ) => {
+    if (section === "student" && studentProfile) {
       setStudentProfile({ ...studentProfile, [field]: value });
-    } else if (section === 'school' && schoolDetails) {
+    } else if (section === "school" && schoolDetails) {
       setSchoolDetails({ ...schoolDetails, [field]: value });
     }
   };
 
+  // -----------------------------------------
+  // LOADING SCREEN
+  // -----------------------------------------
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
@@ -109,13 +176,16 @@ export default function ProfilePage() {
     );
   }
 
+  // -----------------------------------------
+  // IF NO USER FOUND
+  // -----------------------------------------
   if (!userData) {
     return (
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600 mb-4">User not found. Please login again.</p>
           <button
-            onClick={() => window.location.href = '/login'}
+            onClick={() => (window.location.href = "/login")}
             className="px-4 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#1a3a5a] transition-colors"
           >
             Go to Login
@@ -125,6 +195,9 @@ export default function ProfilePage() {
     );
   }
 
+  // -----------------------------------------
+  // UI START
+  // -----------------------------------------
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
@@ -140,6 +213,7 @@ export default function ProfilePage() {
                 <p className="text-gray-600">View and manage your profile information</p>
               </div>
             </div>
+
             {!isEditing && (
               <button
                 onClick={() => setIsEditing(true)}
@@ -152,8 +226,9 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {/* Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Student Information Card */}
+          {/* STUDENT INFORMATION */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 bg-[#204b73] rounded-full flex items-center justify-center">
@@ -163,111 +238,68 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={studentProfile?.name || ''}
-                    onChange={(e) => handleInputChange('student', 'name', e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium">{studentProfile?.name || 'Not Set'}</p>
-                )}
-              </div>
+              {/* FULL NAME */}
+              <FormItem
+                label="Full Name"
+                value={studentProfile?.name}
+                editing={isEditing}
+                onChange={(v:any) => handleInputChange("student", "name", v)}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
-                  <GiPoliceBadge className="text-gray-500" />
-                  Class
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={studentProfile?.class || ''}
-                    onChange={(e) => handleInputChange('student', 'class', e.target.value)}
-                    placeholder="e.g., 8th, 9th, 10th"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium">{studentProfile?.class || 'Not Set'}</p>
-                )}
-              </div>
+              {/* CLASS */}
+              <FormItem
+                label="Class"
+                icon={<GiPoliceBadge />}
+                value={studentProfile?.class}
+                editing={isEditing}
+                onChange={(v:any) => handleInputChange("student", "class", v)}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
-                  <FaEnvelope className="text-gray-500" />
-                  Email
-                </label>
-                {isEditing ? (
-                  <input
-                    type="email"
-                    value={studentProfile?.email || ''}
-                    onChange={(e) => handleInputChange('student', 'email', e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium">{studentProfile?.email || 'Not Set'}</p>
-                )}
-              </div>
+              {/* EMAIL */}
+              <FormItem
+                label="Email"
+                icon={<FaEnvelope />}
+                value={studentProfile?.email}
+                editing={isEditing}
+                onChange={(v:any) => handleInputChange("student", "email", v)}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
-                  <FaPhone className="text-gray-500" />
-                  Phone Number
-                </label>
-                {isEditing ? (
-                  <input
-                    type="tel"
-                    value={studentProfile?.phone || ''}
-                    onChange={(e) => handleInputChange('student', 'phone', e.target.value)}
-                    placeholder="e.g., +91 1234567890"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium">{studentProfile?.phone || 'Not Set'}</p>
-                )}
-              </div>
+              {/* PHONE */}
+              <FormItem
+                label="Phone Number"
+                icon={<FaPhone />}
+                value={studentProfile?.phone}
+                editing={isEditing}
+                onChange={(v:any) => handleInputChange("student", "phone", v)}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
-                  <FaMapMarkerAlt className="text-gray-500" />
-                  Address
-                </label>
-                {isEditing ? (
-                  <textarea
-                    value={studentProfile?.address || ''}
-                    onChange={(e) => handleInputChange('student', 'address', e.target.value)}
-                    rows={3}
-                    placeholder="Enter your full address"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium">{studentProfile?.address || 'Not Set'}</p>
-                )}
-              </div>
+              {/* ADDRESS */}
+              <FormItem
+                label="Address"
+                icon={<FaMapMarkerAlt />}
+                textarea
+                value={studentProfile?.address}
+                editing={isEditing}
+                onChange={(v:any) => handleInputChange("student", "address", v)}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
-                  <FaCalendarAlt className="text-gray-500" />
-                  Date of Birth
-                </label>
-                {isEditing ? (
-                  <input
-                    type="date"
-                    value={studentProfile?.dateOfBirth !== 'Not Set' ? studentProfile?.dateOfBirth : ''}
-                    onChange={(e) => handleInputChange('student', 'dateOfBirth', e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium">{studentProfile?.dateOfBirth || 'Not Set'}</p>
-                )}
-              </div>
+              {/* DOB */}
+              <FormItem
+                label="Date of Birth"
+                icon={<FaCalendarAlt />}
+                type="date"
+                value={
+                  studentProfile?.dateOfBirth !== "Not Set"
+                    ? studentProfile?.dateOfBirth
+                    : ""
+                }
+                editing={isEditing}
+                onChange={(v:any) => handleInputChange("student", "dateOfBirth", v)}
+              />
             </div>
           </div>
 
-          {/* School Information Card */}
+          {/* SCHOOL INFORMATION */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 bg-[#204b73] rounded-full flex items-center justify-center">
@@ -277,94 +309,51 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
-                  <FaSchool className="text-gray-500" />
-                  School Name
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={schoolDetails?.schoolName || ''}
-                    onChange={(e) => handleInputChange('school', 'schoolName', e.target.value)}
-                    placeholder="Enter school name"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium">{schoolDetails?.schoolName || 'Not Set'}</p>
-                )}
-              </div>
+              <FormItem
+                label="School Name"
+                icon={<FaSchool />}
+                value={schoolDetails?.schoolName}
+                editing={isEditing}
+                onChange={(v:any) => handleInputChange("school", "schoolName", v)}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
-                  <FaGraduationCap className="text-gray-500" />
-                  Class
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={schoolDetails?.schoolClass || ''}
-                    onChange={(e) => handleInputChange('school', 'schoolClass', e.target.value)}
-                    placeholder="e.g., 8th, 9th, 10th"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium">{schoolDetails?.schoolClass || 'Not Set'}</p>
-                )}
-              </div>
+              <FormItem
+                label="Class"
+                icon={<FaGraduationCap />}
+                value={schoolDetails?.schoolClass}
+                editing={isEditing}
+                onChange={(v:any) => handleInputChange("school", "schoolClass", v)}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
-                  <FaMapMarkerAlt className="text-gray-500" />
-                  School Address
-                </label>
-                {isEditing ? (
-                  <textarea
-                    value={schoolDetails?.schoolAddress || ''}
-                    onChange={(e) => handleInputChange('school', 'schoolAddress', e.target.value)}
-                    rows={3}
-                    placeholder="Enter school address"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium">{schoolDetails?.schoolAddress || 'Not Set'}</p>
-                )}
-              </div>
+              <FormItem
+                label="School Address"
+                icon={<FaMapMarkerAlt />}
+                textarea
+                value={schoolDetails?.schoolAddress}
+                editing={isEditing}
+                onChange={(v:any) => handleInputChange("school", "schoolAddress", v)}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">School Code</label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={schoolDetails?.schoolCode || ''}
-                    onChange={(e) => handleInputChange('school', 'schoolCode', e.target.value)}
-                    placeholder="Enter school code (if available)"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium">{schoolDetails?.schoolCode || 'Not Set'}</p>
-                )}
-              </div>
+              <FormItem
+                label="School Code"
+                value={schoolDetails?.schoolCode}
+                editing={isEditing}
+                onChange={(v:any) => handleInputChange("school", "schoolCode", v)}
+              />
             </div>
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* ACTION BUTTONS */}
         {isEditing && (
           <div className="mt-6 flex gap-3 justify-end">
             <button
-              onClick={() => {
-                setIsEditing(false);
-                // Reload data to reset changes
-                const savedProfile = localStorage.getItem('studentProfile');
-                const savedSchool = localStorage.getItem('schoolDetails');
-                if (savedProfile) setStudentProfile(JSON.parse(savedProfile));
-                if (savedSchool) setSchoolDetails(JSON.parse(savedSchool));
-              }}
+              onClick={() => setIsEditing(false)}
               className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
+
             <button
               onClick={handleSave}
               className="px-6 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#1a3a5a] transition-colors font-medium"
@@ -378,4 +367,44 @@ export default function ProfilePage() {
   );
 }
 
+// -----------------------------------------
+// REUSABLE FORM ITEM COMPONENT
+// -----------------------------------------
+function FormItem({
+  label,
+  icon,
+  value,
+  editing,
+  onChange,
+  textarea,
+  type,
+}: any) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
+        {icon}
+        {label}
+      </label>
 
+      {editing ? (
+        textarea ? (
+          <textarea
+            rows={3}
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
+          />
+        ) : (
+          <input
+            type={type || "text"}
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
+          />
+        )
+      ) : (
+        <p className="text-gray-900 font-medium">{value || "Not Set"}</p>
+      )}
+    </div>
+  );
+}

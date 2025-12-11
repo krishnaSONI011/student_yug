@@ -154,7 +154,7 @@ export default function RegisterPage() {
   // UI
   // ------------------------
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-24">
+    <div className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-15">
       <div className="max-w-md w-full relative z-10">
 
         <div className="text-center mb-6">
@@ -292,6 +292,7 @@ export default function RegisterPage() {
                 name="dob"
                 type="date"
                 value={formData.dob}
+                max="2025-12-31"
                 onChange={handleInputChange}
                 className={`w-full px-4 py-3 rounded-lg bg-white/90 border ${
                   errors.dob ? "border-red-500" : "border-white/40"

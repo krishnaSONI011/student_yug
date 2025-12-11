@@ -485,6 +485,7 @@ export default function LoginPage() {
                     id="dateOfBirth"
                     name="dateOfBirth"
                     type="date"
+                    max="2025-12-31"
                     value={formData.dateOfBirth}
                     onChange={handleInputChange}
                     className={`w-full pl-10 pr-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${errors.dateOfBirth ? 'border-red-500' : 'border-white/30'

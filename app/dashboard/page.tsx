@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { FaPlus, FaImage, FaMapMarkerAlt, FaHeart, FaComment, FaShare } from 'react-icons/fa';
 import Image from 'next/image';
 import axios from 'axios';
+import PostCard from '../Components/Dashboard/PostCard';
 
 interface PostData {
   id: string;
@@ -232,98 +233,8 @@ export default function Dashboard() {
 
         {/* Posts Feed */}
         <div className="space-y-6">
-          {posts.map((post) => (
-            <div
-              key={post.id}
-              className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
-            >
-
-              {/* Header */}
-              <div className="p-6 pb-4">
-                <div className="flex items-center gap-3">
-                  <Image
-                    src="/fina.jpg"
-                    width={48}
-                    height={48}
-                    alt={post.first_name}
-                    className="rounded-full"
-                  />
-
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">{post.first_name}</h4>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <span>2 hours</span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <FaMapMarkerAlt className="text-xs" />
-                        {post.location}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                    tree
-                  </div>
-                </div>
-              </div>
-
-              {/* Description */}
-              <div className="px-6 pb-4">
-                <p className="text-gray-800 leading-relaxed">
-                  {post.description}
-                </p>
-              </div>
-
-              {/* IMAGE WITH SKELETON */}
-              {post.img && (
-                <div className="px-6 pb-4">
-
-                  {/* Skeleton */}
-                  {!loadedImages[post.id] && (
-                    <div className="w-full h-[300px] rounded-lg bg-gray-200 animate-pulse"></div>
-                  )}
-
-                  {/* Actual Image */}
-                  <div>
-                    <Image
-                      src={'https://irisinformatics.net/studentyug/' + post.img}
-                      width={600}
-                      height={400}
-                      alt="Tree planting"
-                      className="w-full h-[500px] rounded-lg object-cover"
-                      onLoadingComplete={() => {
-                        setLoadedImages((prev) => ({ ...prev, [post.id]: true }));
-                      }}
-                    />
-                  </div>
-
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="px-6 py-4 border-t border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-6">
-                    <button className="flex items-center gap-2 text-gray-600 hover:text-red-500">
-                      <FaHeart />
-                      24
-                    </button>
-                    <button className="flex items-center gap-2 text-gray-600 hover:text-blue-500">
-                      <FaComment />
-                      2
-                    </button>
-                    <button className="flex items-center gap-2 text-gray-600 hover:text-green-500">
-                      <FaShare />
-                      3
-                    </button>
-                  </div>
-
-                  <div className="text-sm text-gray-500">
-                    23 people liked this
-                  </div>
-                </div>
-              </div>
-            </div>
+          {posts.map((post, index) => (
+            <PostCard key={index} id={post.id} first_name={post.first_name} description={post.description} img={post.img} location={post.location} />
           ))}
         </div>
 

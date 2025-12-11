@@ -8,18 +8,15 @@ import {
   FaMedal, 
   FaHandshake, 
   FaMobileAlt, 
-  FaFacebook, 
-  FaInstagram, 
-  FaTwitter, 
-  FaLinkedin,
   FaEnvelope,
   FaPhone,
-  FaYoutube
+ 
 } from 'react-icons/fa';
 
 export default function TopSection(){
     return(
         <>  
+        
         {/* Hero Section */}
         <section className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] text-white relative overflow-hidden">
             {/* Background Pattern */}
@@ -50,9 +47,9 @@ export default function TopSection(){
                 </div>
             </div>
         </section>
-
+        
         {/* Pillars Section */}
-        <section id="pillars" className="py-20 bg-gray-50">
+        <section id="pillars" className="py-10 bg-gray-50">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-[#83c042] mb-6">Our Two Pillars</h2>
@@ -120,9 +117,9 @@ export default function TopSection(){
                 </div>
             </div>
         </section>
-
+        
         {/* Features Section */}
-        <section id="features" className="py-20 bg-white">
+        <section id="features" className="py-10 bg-white">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-[#83c042] mb-6">Portal Features</h2>
@@ -182,9 +179,9 @@ export default function TopSection(){
                 </div>
             </div>
         </section>
-
+        
         {/* Impact Section */}
-        <section id="impact" className="py-20 bg-gradient-to-r from-[#204b74] to-[#204b74] text-white">
+        <section id="impact" className="py-10 bg-gradient-to-r from-[#204b74] to-[#204b74] text-white">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold mb-6">Creating Lasting Impact</h2>
@@ -235,9 +232,9 @@ export default function TopSection(){
                 </div>
             </div>
         </section>
-
+        
         {/* Call to Action Section */}
-        <section className="py-20 bg-gray-50">
+        <section className="py-10 bg-gray-50">
             <div className="w-full px-6 text-center">
                 <div className="w-full">
                     <h2 className="text-4xl md:text-5xl font-bold text-[#83c042] mb-6">
@@ -293,7 +290,7 @@ export default function TopSection(){
                 </div>
             </div>
         </section>
-
+        
         
         </>
     )
