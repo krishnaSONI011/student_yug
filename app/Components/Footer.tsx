@@ -4,7 +4,7 @@ import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaYoutube } from "react
 export default function Footer() {
   return (
     <>
-      <div id="contact" className="bg-[#204b74] text-white py-12">
+      <div id="contact" className="bg-[#204b74] border-t border-t-white  text-white py-12">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             {/* Brand */}
@@ -52,11 +52,7 @@ export default function Footer() {
                     Help Center
                   </Link>
                 </li>
-                <li>
-                  <Link href="/contact" className="hover:text-yellow-300 transition-colors">
-                    Contact Us
-                  </Link>
-                </li>
+                
                 <li>
                   <Link href="/privacy-policy" className="hover:text-yellow-300 transition-colors">
                     Privacy Policy

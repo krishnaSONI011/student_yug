@@ -98,19 +98,19 @@ export default function TopSection(){
                         <ul className="space-y-3 text-gray-700">
                             <li className="flex items-start gap-3">
                                 <span className="text-blue-500 mt-1">✓</span>
-                                <span>Find nearby sports grounds and facilities</span>
+                                <span>Improves Physical Fitness</span>
                             </li>
                             <li className="flex items-start gap-3">
                                 <span className="text-blue-500 mt-1">✓</span>
-                                <span>Connect with qualified coaches and mentors</span>
+                                <span>Enhances Mental Well-Being</span>
                             </li>
                             <li className="flex items-start gap-3">
                                 <span className="text-blue-500 mt-1">✓</span>
-                                <span>Location-based guidance and support</span>
+                                <span>Builds Teamwork & Social Skills</span>
                             </li>
                             <li className="flex items-start gap-3">
                                 <span className="text-blue-500 mt-1">✓</span>
-                                <span>Map integration for easy discovery</span>
+                                <span>Teaches Discipline & Goal Setting</span>
                             </li>
                         </ul>
                     </div>

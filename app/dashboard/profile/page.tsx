@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useEffect } from "react";
@@ -56,7 +57,7 @@ export default function ProfilePage() {
       setUserData(parsed);
 
       // Student Profile
-      const savedProfile = localStorage.getItem("studentProfile");
+      const savedProfile = localStorage.getItem("user");
       setStudentProfile(
         savedProfile
           ? JSON.parse(savedProfile)
@@ -92,7 +93,7 @@ export default function ProfilePage() {
   // -----------------------------------------
   async function updateProfileAPI() {
     if (!userData || !studentProfile || !schoolDetails) return;
-
+      console.log(userData.user_id)
     try {
       const [fname, lname = ""] = studentProfile.name.split(" ");
 
@@ -111,21 +112,18 @@ export default function ProfilePage() {
       formData.append("school_address", schoolDetails.schoolAddress);
       formData.append("school_code", schoolDetails.schoolCode || "");
 
-      const response = await fetch(
-        "https://irisinformatics.net/studentyug/wb/update_profile",
-        { method: "POST", body: formData }
-      );
-
-      const data = await response.json();
-
-      if (data.status === true) {
+      
+      const response = await axios.post("https://irisinformatics.net/studentyug/wb/update_profile" , formData)
+     
+      if (response.data.status == "1") {
         // Update localStorage
-        localStorage.setItem("user", JSON.stringify(data.data));
+        localStorage.setItem("user", JSON.stringify(response.data.data));
 
-        setUserData(data.data);
+        setUserData(response.data.data);
 
         alert("Profile updated successfully! 🎉");
       } else {
+        console.log(response.data)
         alert("Failed to update profile.");
       }
     } catch (error) {
