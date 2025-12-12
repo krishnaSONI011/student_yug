@@ -1,10 +1,8 @@
 'use client';
 
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { FaTree, FaCalendarAlt, FaMapMarkerAlt, FaLeaf, FaTrophy, FaPlus } from 'react-icons/fa';
 import { GiPoliceBadge } from 'react-icons/gi';
-import { MdSportsBasketball } from 'react-icons/md';
 
 interface Sport {
   id: number;
@@ -229,33 +227,37 @@ export default function MySportsPage() {
       
       const formData = new FormData();
       formData.append('user_id', userId);
-      formData.append('sports_id', plantFormData.tree_id);
-      formData.append('participation_date', plantFormData.planting_date);
-      formData.append('achievement', plantFormData.height);
-      formData.append('play', plantFormData.health);
-      formData.append('level', plantFormData.class);
+      formData.append('tree_id', plantFormData.tree_id);
+      formData.append('planting_date', plantFormData.planting_date);
+      formData.append('height', plantFormData.height);
+      formData.append('health', plantFormData.health);
+      formData.append('class', plantFormData.class);
       formData.append('location', plantFormData.location);
       
       if (plantFormData.image) {
         formData.append('image', plantFormData.image);
       }
 
-      
-      const response = await axios.post("https://irisinformatics.net/studentyug/wb/addSportsParticipation" , formData)
+      const response = await fetch(
+        'https://irisinformatics.net/studentyug/wb/addPlantedTree',
+        {
+          method: 'POST',
+          body: formData
+        }
+      );
 
-      if (response.data.status == "0") {
-        console.log(response.data)
+      if (!response.ok) {
+        throw new Error('Failed to plant tree');
       }
 
-
-      
+      await response.json();
       
       // Reset form and close modal
       setPlantFormData({
         tree_id: '',
         planting_date: new Date().toISOString().split('T')[0],
         height: '',
-        health: 'Team',
+        health: 'good',
         class: '',
         location: '',
         image: null
@@ -356,7 +358,7 @@ export default function MySportsPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-[#204b73] rounded-full flex items-center justify-center">
-                <MdSportsBasketball className="text-2xl text-white" />
+                <FaTree className="text-2xl text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">My Sports</h1>
@@ -376,8 +378,8 @@ export default function MySportsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                  <MdSportsBasketball className="text-blue-600" />
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <FaTree className="text-green-600" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-900">{sportsData.length}</p>
@@ -411,7 +413,7 @@ export default function MySportsPage() {
         </div>
 
         {/* Filters */}
-        {/* <div className="mb-6">
+        <div className="mb-6">
           <div className="flex flex-wrap gap-2">
             {filters.map((filter) => (
               <button
@@ -427,7 +429,7 @@ export default function MySportsPage() {
               </button>
             ))}
           </div>
-        </div> */}
+        </div>
 
         {/* Sports Grid */}
         {filteredSports.length === 0 ? (
@@ -441,7 +443,7 @@ export default function MySportsPage() {
             {filteredSports.map((sport) => (
               <div key={sport.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
                 <div className="h-48 bg-linear-to-br from-[#204b73] to-[#204b73] flex items-center justify-center">
-                  <MdSportsBasketball className="text-6xl text-white" />
+                  <FaTree className="text-6xl text-white" />
                 </div>
 
                 <div className="p-6">
@@ -467,7 +469,7 @@ export default function MySportsPage() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <GiPoliceBadge className="text-gray-400" />
-                      <span>Level: {sport.level}</span>
+                      <span>Class: {sport.class}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <FaMapMarkerAlt className="text-gray-400" />
@@ -478,7 +480,7 @@ export default function MySportsPage() {
                       <span>Achievement: {sport.achievement}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <MdSportsBasketball className="text-gray-400" />
+                      <FaLeaf className="text-gray-400" />
                       <span>Play: {sport.play}</span>
                     </div>
                   </div>
@@ -564,181 +566,211 @@ export default function MySportsPage() {
         )}
 
         {/* Plant Tree Modal */}
-      
-{showPlantModal && (
-  <div className="fixed inset-0 bg-[#00000091] bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Add New Sport Participation</h2>
-          <button
-            onClick={() => {
-              setShowPlantModal(false);
-              setPlantFormData({
-                tree_id: '',
-                planting_date: new Date().toISOString().split('T')[0],
-                height: '',
-                health: 'Team',
-                class: '',
-                location: '',
-                image: null
-              });
-            }}
-            className="text-gray-400 hover:text-gray-600 text-2xl"
-          >
-            ✕
-          </button>
-        </div>
+        {showPlantModal && (
+          <div className="fixed inset-0 bg-[#00000091] bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">Plant a New Tree</h2>
+                  <button
+                    onClick={() => {
+                      setShowPlantModal(false);
+                      setPlantFormData({
+                        tree_id: '',
+                        planting_date: new Date().toISOString().split('T')[0],
+                        height: '',
+                        health: 'good',
+                        class: '',
+                        location: '',
+                        image: null
+                      });
+                    }}
+                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                  >
+                    ✕
+                  </button>
+                </div>
 
-        <form onSubmit={handlePlantTree} className="space-y-4">
+                <form onSubmit={handlePlantTree} className="space-y-4">
+                  {/* Tree Selection */}
+                  <div>
+                    <label htmlFor="tree_id" className="block text-sm font-medium text-gray-700 mb-2">
+                      Select Tree <span className="text-red-500">*</span>
+                    </label>
+                    {loadingTrees ? (
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-[#1c756b]"></div>
+                        <span>Loading trees...</span>
+                      </div>
+                    ) : (
+                      <select
+                        id="tree_id"
+                        name="tree_id"
+                        value={plantFormData.tree_id}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                      >
+                        <option value="">Select a tree</option>
+                        {availableTrees.map((tree) => (
+                          <option key={tree.id} value={tree.id}>
+                            {tree.name} ({tree.name_hi}) - {tree.category}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
 
-          {/* SELECT SPORT */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Select Sport <span className="text-red-500">*</span>
-            </label>
+                  {/* Planting Date */}
+                  <div>
+                    <label htmlFor="planting_date" className="block text-sm font-medium text-gray-700 mb-2">
+                      Planting Date <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      id="planting_date"
+                      name="planting_date"
+                      value={plantFormData.planting_date}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                    />
+                  </div>
 
-            {loadingTrees ? (
-              <p>Loading sports...</p>
-            ) : (
-              <select
-                name="tree_id"
-                value={plantFormData.tree_id}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-              >
-                <option value="">Select Sport</option>
-                {availableTrees.map((sport) => (
-                  <option key={sport.id} value={sport.id}>
-                    {sport.name} ({sport.category})
-                  </option>
-                ))}
-              </select>
-            )}
+                  {/* Height */}
+                  <div>
+                    <label htmlFor="height" className="block text-sm font-medium text-gray-700 mb-2">
+                      Height (meters) <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      id="height"
+                      name="height"
+                      value={plantFormData.height}
+                      onChange={handleInputChange}
+                      required
+                      min="0"
+                      step="0.1"
+                      placeholder="e.g., 3.0"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                    />
+                  </div>
+
+                  {/* Health */}
+                  <div>
+                    <label htmlFor="health" className="block text-sm font-medium text-gray-700 mb-2">
+                      Health Status <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      id="health"
+                      name="health"
+                      value={plantFormData.health}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                    >
+                      <option value="good">Good</option>
+                      <option value="excellent">Excellent</option>
+                      <option value="fair">Fair</option>
+                      <option value="poor">Poor</option>
+                    </select>
+                  </div>
+
+                  {/* Class */}
+                  <div>
+                    <label htmlFor="class" className="block text-sm font-medium text-gray-700 mb-2">
+                      Class <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="class"
+                      name="class"
+                      value={plantFormData.class}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="e.g., 8th"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                    />
+                  </div>
+
+                  {/* Location */}
+                  <div>
+                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                      Location <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="location"
+                      name="location"
+                      value={plantFormData.location}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="e.g., indore, mp"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                    />
+                  </div>
+
+                  {/* Image Upload */}
+                  <div>
+                    <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
+                      Tree Image
+                    </label>
+                    <input
+                      type="file"
+                      id="image"
+                      name="image"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                    />
+                    {plantFormData.image && (
+                      <p className="mt-2 text-sm text-gray-600">
+                        Selected: {plantFormData.image.name}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowPlantModal(false);
+                        setPlantFormData({
+                          tree_id: '',
+                          planting_date: new Date().toISOString().split('T')[0],
+                          height: '',
+                          health: 'good',
+                          class: '',
+                          location: '',
+                          image: null
+                        });
+                      }}
+                      className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      disabled={planting}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={planting}
+                      className="flex-1 px-4 py-2 bg-[#1c756b] text-white rounded-lg hover:bg-[#155e56] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {planting ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          Planting...
+                        </span>
+                      ) : (
+                        'Plant Tree'
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-
-          {/* PARTICIPATION DATE */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Participation Date <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="date"
-              name="planting_date"
-              value={plantFormData.planting_date}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            />
-          </div>
-
-          {/* ACHIEVEMENT */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Achievement (1st, 2nd, Runner-up etc.)
-            </label>
-            <input
-              type="text"
-              name="height"
-              value={plantFormData.height}
-              onChange={handleInputChange}
-              placeholder="1st / 2nd / Gold / Silver"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            />
-          </div>
-
-          {/* PLAY TYPE */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Play Type <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="health"
-              value={plantFormData.health}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            >
-              <option value="Team">Team</option>
-              <option value="Individual">Individual</option>
-            </select>
-          </div>
-
-          {/* CLASS */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Level <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="class"
-              value={plantFormData.class}
-              onChange={handleInputChange}
-              required
-              placeholder="School level , state level"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            />
-          </div>
-
-          {/* LOCATION */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Location <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="location"
-              value={plantFormData.location}
-              onChange={handleInputChange}
-              required
-              placeholder="Indore, MP"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            />
-          </div>
-
-          {/* CERTIFICATE UPLOAD */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Upload Certificate (optional)
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            />
-            {plantFormData.image && (
-              <p className="text-sm text-gray-600 mt-1">
-                Selected: {plantFormData.image.name}
-              </p>
-            )}
-          </div>
-
-          {/* BUTTONS */}
-          <div className="flex gap-3 pt-4">
-            <button
-              type="button"
-              onClick={() => setShowPlantModal(false)}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              disabled={planting}
-              className="flex-1 px-4 py-2 bg-[#1c756b] text-white rounded-lg hover:bg-[#155e56]"
-            >
-              {planting ? "Saving..." : "Add Sport"}
-            </button>
-          </div>
-
-        </form>
-      </div>
-    </div>
-  </div>
-)}
+        )}
       </div>
     </div>
   );

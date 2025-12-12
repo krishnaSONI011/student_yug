@@ -1,4 +1,6 @@
+"use client"
 import Link from 'next/link';
+import { motion } from "framer-motion";
 import { 
   FaLeaf, 
   FaTrophy, 
@@ -18,7 +20,7 @@ export default function TopSection(){
         <>  
         
         {/* Hero Section */}
-        <section className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] text-white relative overflow-hidden">
+        <section className="min-h-screen bg-linear-to-br from-[#204b74] via-[#204b74] to-[#204b74] text-white relative overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
                 <div className="absolute top-20 left-20 w-32 h-32 bg-white rounded-full"></div>
@@ -129,59 +131,91 @@ export default function TopSection(){
                 </div>
                 
                 <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
+                    
+                    {/* Card 1 */}
+                    <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                        className="group text-center p-6 bg-white rounded-xl shadow-lg transition-colors"
+                    >
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 transition-colors group-hover:bg-[#83c042]">
                             <FaChartBar className="text-2xl text-white" />
                         </div>
                         <h3 className="text-xl font-bold text-[#83c042] mb-3">Student Dashboard</h3>
                         <p className="text-gray-600">Track your profile, progress, and trees planted count in one place</p>
-                    </div>
-                    
-                    <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
+                    </motion.div>
+
+                    {/* Card 2 */}
+                    <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                        className="group text-center p-6 bg-white rounded-xl shadow-lg transition-colors"
+                    >
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 transition-colors group-hover:bg-[#83c042]">
                             <FaMapMarkerAlt className="text-2xl text-white" />
                         </div>
                         <h3 className="text-xl font-bold text-[#83c042] mb-3">Sports Discovery</h3>
                         <p className="text-gray-600">Find nearby grounds, coaches, and mentors with map integration</p>
-                    </div>
-                    
-                    <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
+                    </motion.div>
+
+                    {/* Card 3 */}
+                    <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                        className="group text-center p-6 bg-white rounded-xl shadow-lg transition-colors"
+                    >
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 transition-colors group-hover:bg-[#83c042]">
                             <FaTree className="text-2xl text-white" />
                         </div>
                         <h3 className="text-xl font-bold text-[#83c042] mb-3">Tree Tracking</h3>
-                        <p className="text-gray-600">Every students tree plantation record is tracked and displayed</p>
-                    </div>
-                    
-                    <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <p className="text-gray-600">Every student s tree plantation record is tracked and displayed</p>
+                    </motion.div>
+
+                    {/* Card 4 */}
+                    <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                        className="group text-center p-6 bg-white rounded-xl shadow-lg transition-colors"
+                    >
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 transition-colors group-hover:bg-[#83c042]">
                             <FaMedal className="text-2xl text-white" />
                         </div>
                         <h3 className="text-xl font-bold text-[#83c042] mb-3">Gamification</h3>
                         <p className="text-gray-600">Earn badges and rewards for tree plantation and sports achievements</p>
-                    </div>
-                    
-                    <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
+                    </motion.div>
+
+                    {/* Card 5 */}
+                    <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                        className="group text-center p-6 bg-white rounded-xl shadow-lg transition-colors"
+                    >
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 transition-colors group-hover:bg-[#83c042]">
                             <FaHandshake className="text-2xl text-white" />
                         </div>
                         <h3 className="text-xl font-bold text-[#83c042] mb-3">Community</h3>
                         <p className="text-gray-600">Connect with like-minded students and environmental enthusiasts</p>
-                    </div>
-                    
-                    <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
+                    </motion.div>
+
+                    {/* Card 6 */}
+                    <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                        className="group text-center p-6 bg-white rounded-xl shadow-lg transition-colors"
+                    >
+                        <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 transition-colors group-hover:bg-[#83c042]">
                             <FaMobileAlt className="text-2xl text-white" />
                         </div>
                         <h3 className="text-xl font-bold text-[#83c042] mb-3">Mobile Ready</h3>
                         <p className="text-gray-600">Access all features on your mobile device anytime, anywhere</p>
-                    </div>
+                    </motion.div>
+
                 </div>
             </div>
         </section>
         
         {/* Impact Section */}
-        <section id="impact" className="py-10 bg-gradient-to-r from-[#204b74] to-[#204b74] text-white">
+        <section id="impact" className="py-10 bg-linear-to-r from-[#204b74] to-[#204b74] text-white">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold mb-6">Creating Lasting Impact</h2>
@@ -198,7 +232,7 @@ export default function TopSection(){
                     <div className="text-center">
                         <div className="text-4xl font-bold text-[#83c042] mb-2">25K+</div>
                         <div className="text-gray-200">Trees Planted</div>
-                    </div>
+                    </div> 
                     <div className="text-center">
                         <div className="text-4xl font-bold text-[#83c042] mb-2">50+</div>
                         <div className="text-gray-200">Sports</div>
@@ -248,8 +282,8 @@ export default function TopSection(){
                     {/* Contact Information Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 max-w-6xl mx-auto">
                         {/* Email */}
-                        <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                            <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className=" group bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                            <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#83c042]">
                                 <FaEnvelope className="text-2xl text-white" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">Email Us</h3>
@@ -260,8 +294,8 @@ export default function TopSection(){
                         </div>
 
                         {/* Phone */}
-                        <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                            <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="group bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                            <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#83c042]">
                                 <FaPhone className="text-2xl text-white" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">Call Us</h3>
@@ -270,10 +304,10 @@ export default function TopSection(){
                                 +91 98765 43210
                             </a>
                         </div>
-
+         
                         {/* Address */}
-                        <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                            <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="group bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                            <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#83c042]">
                                 <FaMapMarkerAlt className="text-2xl text-white" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">Visit Us</h3>

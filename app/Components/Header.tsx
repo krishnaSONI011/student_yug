@@ -69,7 +69,7 @@ export default function Header() {
           </Link>
           <Link
             href="/register"
-            className="bg-[#204b74] text-white px-4 lg:px-6 py-2 rounded-full hover:bg-white hover:text-[#204b74] border  border-[#204b74] transition-all duration-300 shadow-lg text-sm lg:text-base"
+            className="bg-[#204b74] text-white px-4 lg:px-6 py-2 rounded-full hover:bg-[#204b74] transition-all duration-300 shadow-lg text-sm lg:text-base"
           >
             Join Now
           </Link>
