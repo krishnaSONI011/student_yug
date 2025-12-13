@@ -244,7 +244,9 @@ export default function TopSection(){
                 </div>
                 
                 <div className="mt-16 grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-                    <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl">
+                    <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}  className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl">
                         <h3 className="text-2xl font-bold mb-4">Government Alignment</h3>
                         <ul className="space-y-3 text-gray-100">
                             <li>• Mission LiFE (Lifestyle for Environment) support</li>
@@ -252,9 +254,11 @@ export default function TopSection(){
                             <li>• One Student One Tree initiatives</li>
                             <li>• CSR partnership opportunities</li>
                         </ul>
-                    </div>
+                    </motion.div>
                     
-                    <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl">
+                    <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }} className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl">
                         <h3 className="text-2xl font-bold mb-4">Social Benefits</h3>
                         <ul className="space-y-3 text-gray-100">
                             <li>• Environmental consciousness in youth</li>
@@ -262,7 +266,7 @@ export default function TopSection(){
                             <li>• Community building and networking</li>
                             <li>• Sustainable development goals</li>
                         </ul>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>
@@ -282,7 +286,9 @@ export default function TopSection(){
                     {/* Contact Information Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 max-w-6xl mx-auto">
                         {/* Email */}
-                        <div className=" group bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                        <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }} className=" group bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
                             <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#83c042]">
                                 <FaEnvelope className="text-2xl text-white" />
                             </div>
@@ -291,10 +297,12 @@ export default function TopSection(){
                             <a href="mailto:info@studentyug.com" className="text-[#83c042] font-medium hover:text-[#155e56] transition-colors">
                                 info@studentyug.com
                             </a>
-                        </div>
+                        </motion.div>
 
                         {/* Phone */}
-                        <div className="group bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                        <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }} className="group bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
                             <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#83c042]">
                                 <FaPhone className="text-2xl text-white" />
                             </div>
@@ -303,10 +311,12 @@ export default function TopSection(){
                             <a href="tel:+91-9876543210" className="text-[#83c042] font-medium hover:text-[#155e56] transition-colors">
                                 +91 98765 43210
                             </a>
-                        </div>
+                        </motion.div>
          
                         {/* Address */}
-                        <div className="group bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                        <motion.div
+                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }} className="group bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
                             <div className="w-16 h-16 bg-[#204b74] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#83c042]">
                                 <FaMapMarkerAlt className="text-2xl text-white" />
                             </div>
@@ -316,7 +326,7 @@ export default function TopSection(){
                                 123 Education Street,<br />
                                 Green City, Delhi 110001
                             </p>
-                        </div>
+                        </motion.div>
                     </div>
 
                     {/* Additional Contact Options */}
