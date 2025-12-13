@@ -28,7 +28,7 @@ export default function Header() {
         <Link
           key={index}
           href={link.link}
-          className="text-gray-700 hover:text-[#1c756b] transition-colors duration-300 font-medium"
+          className="text-gray-700 font-bold hover:text-[#88c143] transition-colors duration-300 text-xl "
           onClick={() => setMobileOpen(false)}
         >
           {link.name}

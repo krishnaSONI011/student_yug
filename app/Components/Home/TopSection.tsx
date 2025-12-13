@@ -41,7 +41,7 @@ export default function TopSection(){
                         Every step in learning becomes a step for nature.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <Link href={"/register"} className="bg-[#83c042] text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-yellow-[#83c042] transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                        <Link href={"/register"} className="bg-[#83c042] hover:bg-white border-2 border-[#83c042] hover:text-[#83c042] text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-yellow-[#83c042] transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 ">
                             Join StudentYug
                         </Link>
                         
