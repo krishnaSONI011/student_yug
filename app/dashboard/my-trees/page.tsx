@@ -887,7 +887,7 @@ export default function MyTreesPage() {
                     <button
                       type="submit"
                       disabled={planting}
-                      className="flex-1 px-4 py-2 bg-[#1c756b] text-white rounded-lg hover:bg-[#155e56] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 px-4 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#204b73] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {planting ? (
                         <span className="flex items-center justify-center gap-2">

@@ -36,7 +36,7 @@ export default function TopSection(){
                         <span className="block text-yellow-[#83c042]">One Tree,</span>
                         <span className="block">One Sports</span>
                     </h1>
-                    <p className="text-xl md:text-2xl mb-8 text-gray-100 leading-relaxed">
+                    <p className="text-lg md:text-xl mb-8 text-gray-100 leading-relaxed">
                         StudentYug connects students with sports guidance while promoting environmental responsibility. 
                         Every step in learning becomes a step for nature.
                     </p>

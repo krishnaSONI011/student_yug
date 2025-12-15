@@ -40,6 +40,8 @@ interface SchoolDetails {
 }
 
 export default function ProfilePage() {
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
@@ -49,6 +51,21 @@ export default function ProfilePage() {
   // -----------------------------------------
   // LOAD USER FROM LOCAL STORAGE
   // -----------------------------------------
+  const savedImage = localStorage.getItem("profileImage");
+if (savedImage) {
+  setProfileImage(savedImage);
+}
+const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    setProfileImage(reader.result as string);
+  };
+  reader.readAsDataURL(file);
+};
+
   useEffect(() => {
     const user = localStorage.getItem("user");
 
@@ -204,9 +221,26 @@ export default function ProfilePage() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-[#204b73] rounded-full flex items-center justify-center">
-                <FaUser className="text-2xl text-white" />
-              </div>
+            <div className="relative">
+  <img
+    src={profileImage || "/avatar.png"}
+    alt="Profile"
+    className="w-12 h-12 rounded-full object-cover border"
+  />
+
+  {isEditing && (
+    <label className="absolute -bottom-1 -right-1 bg-[#204b73] p-1 rounded-full cursor-pointer">
+      <FaEdit className="text-white text-xs" />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageChange}
+        className="hidden"
+      />
+    </label>
+  )}
+</div>
+
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
                 <p className="text-gray-600">View and manage your profile information</p>

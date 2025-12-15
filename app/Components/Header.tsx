@@ -48,10 +48,10 @@ export default function Header() {
         </Marquee>
       </div>
 
-      <div className="header-container flex items-center justify-between shadow px-4 sm:px-6 lg:px-10 bg-white relative z-50 w-full py-3">
+      <div className="header-container flex items-center justify-between shadow px-4 sm:px-6 lg:px-10 bg-white relative z-50 w-full py-1">
         {/* logo */}
-        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity duration-300">
-          <Image src="/logo.png" alt="logo" width={120} height={100} className="w-28 sm:w-32 h-auto" />
+        <Link href="/" className="flex items-center gap-3  duration-300">
+          <Image src="/logo.png" alt="logo" width={120} height={100} className="w-28 sm:w-26 h-auto" />
         </Link>
 
         {/* Desktop Nav */}
@@ -69,7 +69,7 @@ export default function Header() {
           </Link>
           <Link
             href="/register"
-            className="bg-[#204b74] text-white px-4 lg:px-6 py-2 rounded-full hover:bg-[#204b74] transition-all duration-300 shadow-lg text-sm lg:text-base"
+            className="bg-[#204b74] text-white px-4 lg:px-6 py-2 rounded-full hover:bg-white hover:text-[#204b74] border-[#204b74] border-2  transition-all duration-300 shadow-lg text-sm lg:text-base"
           >
             Join Now
           </Link>

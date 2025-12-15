@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { FaTree, FaCalendarAlt, FaMapMarkerAlt, FaLeaf, FaTrophy, FaPlus } from 'react-icons/fa';
 import { GiPoliceBadge } from 'react-icons/gi';
+import { MdSportsBasketball } from 'react-icons/md';
 
 interface Sport {
   id: number;
@@ -227,11 +228,11 @@ export default function MySportsPage() {
       
       const formData = new FormData();
       formData.append('user_id', userId);
-      formData.append('tree_id', plantFormData.tree_id);
-      formData.append('planting_date', plantFormData.planting_date);
-      formData.append('height', plantFormData.height);
-      formData.append('health', plantFormData.health);
-      formData.append('class', plantFormData.class);
+      formData.append('sports_id', plantFormData.tree_id);
+      formData.append('participation_date', plantFormData.planting_date);
+      formData.append('achievement', plantFormData.height);
+      formData.append('play', plantFormData.health);
+      formData.append('level', plantFormData.class);
       formData.append('location', plantFormData.location);
       
       if (plantFormData.image) {
@@ -239,7 +240,7 @@ export default function MySportsPage() {
       }
 
       const response = await fetch(
-        'https://irisinformatics.net/studentyug/wb/addPlantedTree',
+        'https://irisinformatics.net/studentyug/wb/addSportsParticipation',
         {
           method: 'POST',
           body: formData
@@ -358,7 +359,7 @@ export default function MySportsPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-[#204b73] rounded-full flex items-center justify-center">
-                <FaTree className="text-2xl text-white" />
+                <MdSportsBasketball className="text-2xl text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">My Sports</h1>
@@ -413,7 +414,7 @@ export default function MySportsPage() {
         </div>
 
         {/* Filters */}
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <div className="flex flex-wrap gap-2">
             {filters.map((filter) => (
               <button
@@ -429,12 +430,12 @@ export default function MySportsPage() {
               </button>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Sports Grid */}
         {filteredSports.length === 0 ? (
           <div className="text-center py-12">
-            <FaTree className="text-6xl text-gray-300 mx-auto mb-4" />
+            <MdSportsBasketball className="text-6xl text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No sports found</h3>
             <p className="text-gray-600">No sports match your current filter criteria.</p>
           </div>
@@ -443,7 +444,7 @@ export default function MySportsPage() {
             {filteredSports.map((sport) => (
               <div key={sport.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
                 <div className="h-48 bg-linear-to-br from-[#204b73] to-[#204b73] flex items-center justify-center">
-                  <FaTree className="text-6xl text-white" />
+                  <MdSportsBasketball className="text-6xl text-white" />
                 </div>
 
                 <div className="p-6">
@@ -571,7 +572,7 @@ export default function MySportsPage() {
             <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Plant a New Tree</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">Part in a new sports</h2>
                   <button
                     onClick={() => {
                       setShowPlantModal(false);
@@ -595,7 +596,7 @@ export default function MySportsPage() {
                   {/* Tree Selection */}
                   <div>
                     <label htmlFor="tree_id" className="block text-sm font-medium text-gray-700 mb-2">
-                      Select Tree <span className="text-red-500">*</span>
+                      Select Sports <span className="text-red-500">*</span>
                     </label>
                     {loadingTrees ? (
                       <div className="flex items-center gap-2 text-gray-600">
@@ -611,7 +612,7 @@ export default function MySportsPage() {
                         required
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
                       >
-                        <option value="">Select a tree</option>
+                        <option value="">Select a Sports</option>
                         {availableTrees.map((tree) => (
                           <option key={tree.id} value={tree.id}>
                             {tree.name} ({tree.name_hi}) - {tree.category}
@@ -624,7 +625,7 @@ export default function MySportsPage() {
                   {/* Planting Date */}
                   <div>
                     <label htmlFor="planting_date" className="block text-sm font-medium text-gray-700 mb-2">
-                      Planting Date <span className="text-red-500">*</span>
+                    Participation Date <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
@@ -640,7 +641,7 @@ export default function MySportsPage() {
                   {/* Height */}
                   <div>
                     <label htmlFor="height" className="block text-sm font-medium text-gray-700 mb-2">
-                      Height (meters) <span className="text-red-500">*</span>
+                    Achievement <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="number"
@@ -651,7 +652,7 @@ export default function MySportsPage() {
                       required
                       min="0"
                       step="0.1"
-                      placeholder="e.g., 3.0"
+                      placeholder="1st , 2nd"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
                     />
                   </div>
@@ -659,7 +660,7 @@ export default function MySportsPage() {
                   {/* Health */}
                   <div>
                     <label htmlFor="health" className="block text-sm font-medium text-gray-700 mb-2">
-                      Health Status <span className="text-red-500">*</span>
+                    Play <span className="text-red-500">*</span>
                     </label>
                     <select
                       id="health"
@@ -669,17 +670,16 @@ export default function MySportsPage() {
                       required
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
                     >
-                      <option value="good">Good</option>
-                      <option value="excellent">Excellent</option>
-                      <option value="fair">Fair</option>
-                      <option value="poor">Poor</option>
+                      <option value="Team">Team</option>
+                      <option value="Individual">Individual</option>
+                      
                     </select>
                   </div>
 
                   {/* Class */}
                   <div>
                     <label htmlFor="class" className="block text-sm font-medium text-gray-700 mb-2">
-                      Class <span className="text-red-500">*</span>
+                    Level <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -688,7 +688,7 @@ export default function MySportsPage() {
                       value={plantFormData.class}
                       onChange={handleInputChange}
                       required
-                      placeholder="e.g., 8th"
+                      placeholder="School , state , national"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
                     />
                   </div>
@@ -713,7 +713,7 @@ export default function MySportsPage() {
                   {/* Image Upload */}
                   <div>
                     <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
-                      Tree Image
+                      Certificate Image (Optional)
                     </label>
                     <input
                       type="file"
@@ -754,15 +754,15 @@ export default function MySportsPage() {
                     <button
                       type="submit"
                       disabled={planting}
-                      className="flex-1 px-4 py-2 bg-[#1c756b] text-white rounded-lg hover:bg-[#155e56] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 px-4 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#204b73] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {planting ? (
                         <span className="flex items-center justify-center gap-2">
                           <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                          Planting...
+                          Loading...
                         </span>
                       ) : (
-                        'Plant Tree'
+                        'Take Part'
                       )}
                     </button>
                   </div>

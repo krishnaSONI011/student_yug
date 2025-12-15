@@ -9,12 +9,27 @@ export default function LoginPage() {
   const [loginType, setLoginType] = useState<'aadhaar' | 'apaar' | ''>(''); // 'aadhaar' or 'aapar'
   const [formData, setFormData] = useState({
     aadhaarId: '',
-    dateOfBirth: '',
-    contactMethod: '', // 'phone' or 'email'
+    dobDay: '',
+    dobMonth: '',
+    dobYear: '',
+    contactMethod: '',
     mobile: '',
     email: '',
     rememberMe: false
   });
+  const days = Array.from({ length: 31 }, (_, i) => i + 1);
+
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
+  const currentYear = new Date().getFullYear();
+  const years = Array.from(
+    { length: currentYear - 1960 + 1 },
+    (_, i) => currentYear - i
+  );
+    
   const [otpData, setOtpData] = useState({
     otp: '',
     isOtpSent: false,
@@ -69,16 +84,28 @@ export default function LoginPage() {
       newErrors.aadhaarId = `Please enter a valid 12-digit ${idType} ID`;
     }
 
-    if (!formData.dateOfBirth) {
-      newErrors.dateOfBirth = 'Date of birth is required';
+    if (!formData.dobDay || !formData.dobMonth || !formData.dobYear) {
+      newErrors.dateOfBirth = 'Complete date of birth is required';
     } else {
-      const dob = new Date(formData.dateOfBirth);
+      const dob = new Date(
+        Number(formData.dobYear),
+        Number(formData.dobMonth) - 1,
+        Number(formData.dobDay)
+      );
+    
       const today = new Date();
-      const age = today.getFullYear() - dob.getFullYear();
+      let age = today.getFullYear() - dob.getFullYear();
+      const m = today.getMonth() - dob.getMonth();
+    
+      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
+    
       if (age < 13 || age > 100) {
         newErrors.dateOfBirth = 'Please enter a valid date of birth';
       }
     }
+    
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -138,7 +165,8 @@ export default function LoginPage() {
           body: JSON.stringify({
             type: loginType, // "aadhaar" or "apaar"
             apaar_id: formData.aadhaarId.replace(/\s/g, ""), // remove spaces
-            dob: formData.dateOfBirth,
+            dob: `${formData.dobYear}-${String(formData.dobMonth).padStart(2, '0')}-${String(formData.dobDay).padStart(2, '0')}`,
+
           }),
         }
       );
@@ -474,23 +502,60 @@ export default function LoginPage() {
 
               {/* Date of Birth Field */}
               <div>
-                <label htmlFor="dateOfBirth" className="block text-sm font-medium text-white mb-2">
-                  Date of Birth <span className="text-red-300">*</span>
-                </label>
+               
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaCalendarAlt className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="dateOfBirth"
-                    name="dateOfBirth"
-                    type="date"
-                    max="2025-12-31"
-                    value={formData.dateOfBirth}
-                    onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${errors.dateOfBirth ? 'border-red-500' : 'border-white/30'
-                      }`}
-                  />
+                  
+                  <div>
+  <label className="block text-sm font-medium text-white mb-2">
+    Date of Birth <span className="text-red-300">*</span>
+  </label>
+
+  <div className="flex justify-evenly">
+    {/* Day */}
+    <select
+      name="dobDay"
+      value={formData.dobDay}
+      onChange={handleInputChange}
+      className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-22"
+    >
+      <option value="">Day</option>
+      {days.map(day => (
+        <option key={day} value={day}>{day}</option>
+      ))}
+    </select>
+
+    {/* Month */}
+    <select
+      name="dobMonth"
+      value={formData.dobMonth}
+      onChange={handleInputChange}
+      className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-42"
+    >
+      <option value="">Month</option>
+      {months.map((month, index) => (
+        <option key={index} value={index + 1}>{month}</option>
+      ))}
+    </select>
+
+    {/* Year */}
+    <select
+      name="dobYear"
+      value={formData.dobYear}
+      onChange={handleInputChange}
+      className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
+    >
+      <option value="">Year</option>
+      {years.map(year => (
+        <option key={year} value={year}>{year}</option>
+      ))}
+    </select>
+  </div>
+
+  {errors.dateOfBirth && (
+    <p className="mt-2 text-sm text-red-300">{errors.dateOfBirth}</p>
+  )}
+</div>
+
                 </div>
                 {errors.dateOfBirth && (
                   <p className="mt-2 text-sm text-red-300">{errors.dateOfBirth}</p>

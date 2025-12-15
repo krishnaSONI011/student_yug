@@ -272,6 +272,9 @@ export default function RegisterPage() {
             {/* Class */}
             <div>
               <label className="text-white text-sm mb-1 block">Class</label>
+              <select>
+                
+              </select>
               <input
                 name="class"
                 type="text"
