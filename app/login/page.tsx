@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FaArrowLeft, FaCheckCircle, FaIdCard, FaCalendarAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
-
+import {toast} from 'react-toastify'
 export default function LoginPage() {
   const [currentStep, setCurrentStep] = useState(0); // 0: Login Type Selection, 1: Aadhaar/Aapar+DOB, 2: Contact Method, 3: OTP
   const [loginType, setLoginType] = useState<'aadhaar' | 'apaar' | ''>(''); // 'aadhaar' or 'aapar'
@@ -23,13 +23,13 @@ export default function LoginPage() {
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-  
+
   const currentYear = new Date().getFullYear();
   const years = Array.from(
-    { length: currentYear - 1960 + 1 },
+    { length: currentYear - 1980 + 1 },
     (_, i) => currentYear - i
   );
-    
+
   const [otpData, setOtpData] = useState({
     otp: '',
     isOtpSent: false,
@@ -38,37 +38,46 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target;
 
-    let processedValue = value;
+    let processedValue: string | boolean = value;
 
-    // Format Aadhaar ID with spaces for better readability
-    if (name === 'aadhaarId') {
-      const digitsOnly = value.replace(/\D/g, '');
-      processedValue = digitsOnly.replace(/(\d{4})(?=\d)/g, '$1 ');
+    // Aadhaar ID formatting
+    if (name === "aadhaarId") {
+      const digitsOnly = value.replace(/\D/g, "");
+      processedValue = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1 ");
     }
 
-    if (name === 'otp') {
-      setOtpData(prev => ({
+    // OTP handled separately
+    if (name === "otp") {
+      setOtpData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     } else {
-      setFormData(prev => ({
+      // Checkbox safe handling
+      if (type === "checkbox" && e.target instanceof HTMLInputElement) {
+        processedValue = e.target.checked;
+      }
+
+      setFormData((prev) => ({
         ...prev,
-        [name]: type === 'checkbox' ? checked : processedValue
+        [name]: processedValue,
       }));
     }
 
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
+
   const handleLoginTypeSelect = (type: 'aadhaar' | 'apaar') => {
     setLoginType(type);
     setCurrentStep(1);
@@ -92,20 +101,20 @@ export default function LoginPage() {
         Number(formData.dobMonth) - 1,
         Number(formData.dobDay)
       );
-    
+
       const today = new Date();
       let age = today.getFullYear() - dob.getFullYear();
       const m = today.getMonth() - dob.getMonth();
-    
+
       if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
         age--;
       }
-    
+
       if (age < 13 || age > 100) {
         newErrors.dateOfBirth = 'Please enter a valid date of birth';
       }
     }
-    
+
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -281,7 +290,8 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok && data.status === "1") {
-        alert('Login successful! Redirecting to dashboard.');
+        toast.success('Login successful! Redirecting to dashboard.')
+        
         localStorage.setItem(
           "user",
           JSON.stringify({
@@ -291,10 +301,14 @@ export default function LoginPage() {
             token: data.data.token
           })
         );
-        window.location.href = data.redirectUrl || '/dashboard';
+        setTimeout(()=>{
+          window.location.href = data.redirectUrl || '/dashboard';
+        },2000)
+       
       } else {
         setErrors({ otp: data.message || 'Invalid or expired OTP.' });
-        alert(data.message || 'Invalid or expired OTP.');
+        toast.error(data.message || 'Invalid or expired OTP.')
+       
       }
     } catch (error) {
       console.error('OTP Verification Error:', error);
@@ -388,8 +402,8 @@ export default function LoginPage() {
                 {[1, 2, 3].map((step) => (
                   <div key={step} className="flex items-center">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= step
-                        ? 'bg-[#81c243] text-gray-900'
-                        : 'bg-white/20 text-white'
+                      ? 'bg-[#81c243] text-gray-900'
+                      : 'bg-white/20 text-white'
                       }`}>
                       {step}
                     </div>
@@ -418,8 +432,8 @@ export default function LoginPage() {
               <div className="space-y-4">
                 <div
                   className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${loginType === 'aadhaar'
-                      ? 'border-yellow-400 bg-[#81c243]/10'
-                      : 'border-white/30 hover:border-white/50'
+                    ? 'border-yellow-400 bg-[#81c243]/10'
+                    : 'border-white/30 hover:border-white/50'
                     }`}
                   onClick={() => handleLoginTypeSelect('aadhaar')}
                 >
@@ -431,8 +445,8 @@ export default function LoginPage() {
                     </div>
                   </div>
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${loginType === 'aadhaar'
-                      ? 'border-yellow-400 bg-[#81c243]'
-                      : 'border-white/50'
+                    ? 'border-yellow-400 bg-[#81c243]'
+                    : 'border-white/50'
                     }`}>
                     {loginType === 'aadhaar' && (
                       <div className="w-3 h-3 rounded-full bg-gray-900"></div>
@@ -442,8 +456,8 @@ export default function LoginPage() {
 
                 <div
                   className={`flex items-center justify-between p-6    rounded-lg border-2 cursor-pointer transition-all duration-300 ${loginType === 'apaar'
-                      ? 'border-yellow-400 bg-[#81c243]/10'
-                      : 'border-white/30 hover:border-white/50'
+                    ? 'border-yellow-400 bg-[#81c243]/10'
+                    : 'border-white/30 hover:border-white/50'
                     }`}
                   onClick={() => handleLoginTypeSelect('apaar')}
                 >
@@ -455,8 +469,8 @@ export default function LoginPage() {
                     </div>
                   </div>
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${loginType === 'apaar'
-                      ? 'border-yellow-400 bg-[#81c243]'
-                      : 'border-white/50'
+                    ? 'border-yellow-400 bg-[#81c243]'
+                    : 'border-white/50'
                     }`}>
                     {loginType === 'apaar' && (
                       <div className="w-3 h-3 rounded-full bg-gray-900"></div>
@@ -502,59 +516,59 @@ export default function LoginPage() {
 
               {/* Date of Birth Field */}
               <div>
-               
+
                 <div className="relative">
-                  
+
                   <div>
-  <label className="block text-sm font-medium text-white mb-2">
-    Date of Birth <span className="text-red-300">*</span>
-  </label>
+                    <label className="block text-sm font-medium text-white mb-2">
+                      Date of Birth <span className="text-red-300">*</span>
+                    </label>
 
-  <div className="flex justify-evenly">
-    {/* Day */}
-    <select
-      name="dobDay"
-      value={formData.dobDay}
-      onChange={handleInputChange}
-      className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-22"
-    >
-      <option value="">Day</option>
-      {days.map(day => (
-        <option key={day} value={day}>{day}</option>
-      ))}
-    </select>
+                    <div className="flex justify-evenly">
+                      {/* Day */}
+                      <select
+                        name="dobDay"
+                        value={formData.dobDay}
+                        onChange={handleInputChange}
+                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-22"
+                      >
+                        <option value="">Day</option>
+                        {days.map(day => (
+                          <option key={day} value={day}>{day}</option>
+                        ))}
+                      </select>
 
-    {/* Month */}
-    <select
-      name="dobMonth"
-      value={formData.dobMonth}
-      onChange={handleInputChange}
-      className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-42"
-    >
-      <option value="">Month</option>
-      {months.map((month, index) => (
-        <option key={index} value={index + 1}>{month}</option>
-      ))}
-    </select>
+                      {/* Month */}
+                      <select
+                        name="dobMonth"
+                        value={formData.dobMonth}
+                        onChange={handleInputChange}
+                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-42"
+                      >
+                        <option value="">Month</option>
+                        {months.map((month, index) => (
+                          <option key={index} value={index + 1}>{month}</option>
+                        ))}
+                      </select>
 
-    {/* Year */}
-    <select
-      name="dobYear"
-      value={formData.dobYear}
-      onChange={handleInputChange}
-      className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
-    >
-      <option value="">Year</option>
-      {years.map(year => (
-        <option key={year} value={year}>{year}</option>
-      ))}
-    </select>
-  </div>
+                      {/* Year */}
+                      <select
+                        name="dobYear"
+                        value={formData.dobYear}
+                        onChange={handleInputChange}
+                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
+                      >
+                        <option value="">Year</option>
+                        {years.map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                    </div>
 
-  {errors.dateOfBirth && (
-    <p className="mt-2 text-sm text-red-300">{errors.dateOfBirth}</p>
-  )}
-</div>
+                    {errors.dateOfBirth && (
+                      <p className="mt-2 text-sm text-red-300">{errors.dateOfBirth}</p>
+                    )}
+                  </div>
 
                 </div>
                 {errors.dateOfBirth && (
@@ -619,8 +633,8 @@ export default function LoginPage() {
               <div className="space-y-4">
                 <div
                   className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${formData.contactMethod === 'mobile'
-                      ? 'border-yellow-400 bg-[#81c243]/10'
-                      : 'border-white/30 hover:border-white/50'
+                    ? 'border-yellow-400 bg-[#81c243]/10'
+                    : 'border-white/30 hover:border-white/50'
                     }`}
                   onClick={() => setFormData(prev => ({ ...prev, contactMethod: 'mobile' }))}
                 >
@@ -644,8 +658,8 @@ export default function LoginPage() {
 
                 <div
                   className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${formData.contactMethod === 'email'
-                      ? 'border-yellow-400 bg-[#81c243]/10'
-                      : 'border-white/30 hover:border-white/50'
+                    ? 'border-yellow-400 bg-[#81c243]/10'
+                    : 'border-white/30 hover:border-white/50'
                     }`}
                   onClick={() => setFormData(prev => ({ ...prev, contactMethod: 'email' }))}
                 >

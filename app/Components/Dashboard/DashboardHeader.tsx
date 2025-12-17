@@ -83,7 +83,7 @@ export default function DashboardHeader() {
           </button>
 
           {/* Profile Menu */}
-          <div ref={menuRef} className="relative">
+          <div ref={menuRef} id="profile" className="relative">
 
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}

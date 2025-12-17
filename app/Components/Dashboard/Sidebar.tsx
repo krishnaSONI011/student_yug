@@ -68,16 +68,16 @@ export default function Sidebar() {
   }, []);
 
   const menuItems = [
-    { id: 'home', label: 'Home', Link:"/dashboard", icon: FaHome },
-    { id: 'trees', label: 'My Trees', Link:"/dashboard/my-trees", icon: FaTree },
-    { id: 'sport', label: 'My Sport', Link:"/dashboard/my-sports", icon: MdSportsBasketball },
+    { id: 'home',classId:"", label: 'Home', Link:"/dashboard", icon: FaHome },
+    { id: 'trees',classId:"my-tree", label: 'My Trees', Link:"/dashboard/my-trees", icon: FaTree },
+    { id: 'sport',classId:"my-sports", label: 'My Sport', Link:"/dashboard/my-sports", icon: MdSportsBasketball },
     
-    { id: 'community', label: 'Community', Link:"#", icon: FaUsers },
+    { id: 'community',classId:"", label: 'Community', Link:"#", icon: FaUsers },
     { id: 'achievements', label: 'View Certificate', Link:"#", icon: FaTrophy },
   
     { id: 'analytics', label: 'Environmental Analysis', Link:"#", icon: FaChartLine },
-    { id: 'tree list', label: 'Tree List', Link:"/dashboard/tree-list", icon: FaTree },
-    { id: 'sport list', label: 'Sport List', Link:"/dashboard/sports-list", icon: MdSportsBasketball},
+    { id: 'tree list',classId:"all-tree", label: 'Tree List', Link:"/dashboard/tree-list", icon: FaTree },
+    { id: 'sport list',classId:"all-sports", label: 'Sport List', Link:"/dashboard/sports-list", icon: MdSportsBasketball},
     
   ];
 
@@ -85,7 +85,7 @@ export default function Sidebar() {
     <aside className="w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col h-screen sticky top-0">
       {/* User Profile Section */}
       <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center justify-center gap-3 mb-4">
+        <div id="logo" className="flex items-center justify-center gap-3 mb-4">
           <Image
             src="/logo.png"
             width={120}
@@ -98,21 +98,21 @@ export default function Sidebar() {
         
         {/* User Stats */}
         <div className="grid grid-cols-3 gap-2">
-          <div className=" bg-[#204b73] p-2 rounded-lg text-white text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
+          <div id='plant-tree' className=" bg-[#204b73] p-2 rounded-lg text-white text-center">
+            <div  className="flex items-center justify-center gap-1 mb-1">
               <FaTree className="text-sm" />
               <span className="text-lg font-bold">{treeNumber}</span>
             </div>
             <p className="text-xs opacity-90">Trees Planted</p>
           </div>
-          <div className="bg-[#204b73] p-3 rounded-lg text-white text-center">
+          <div id="badge-earn" className="bg-[#204b73] p-3 rounded-lg text-white text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
             <GiPoliceBadge className="text-sm" />
              Sliver
             </div>
             <p className="text-xs opacity-90">Badges</p>
           </div>
-          <div className="bg-[#204b73] p-3 rounded-lg text-white text-center">
+          <div id="sports-part" className="bg-[#204b73] p-3 rounded-lg text-white text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
             <MdSportsBasketball className="text-sm" />
              {sportsNumber}
@@ -128,7 +128,7 @@ export default function Sidebar() {
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
-              <Link key={item.id} href={item.Link} className=''>
+              <Link id={item.classId} key={item.id} href={item.Link} className=''>
               <li>
                 <button
                   onClick={() => setActiveTab(item.id)}

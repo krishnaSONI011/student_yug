@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { FaUser, FaEnvelope, FaIdCard, FaPhone } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-
+import {toast} from 'react-toastify'
 // -----------------------------
 // Types
 // -----------------------------
@@ -16,7 +16,9 @@ interface RegisterForm {
   apaar_id: string;
   mobile: string;
   class: string;
-  dob: string;
+  dobDay: string,
+  dobMonth: string,
+  dobYear: string,
   agreeToTerms: boolean;
 }
 
@@ -41,42 +43,72 @@ export default function RegisterPage() {
     apaar_id: "",
     mobile: "",
     class: "",
-    dob: "",
+    dobDay: '',
+    dobMonth: '',
+    dobYear: '',
     agreeToTerms: false,
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const [showWarning , setShowWarning] = useState<boolean> (false)
   // ------------------------
   // Handle Inputs
   // ------------------------
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
 
-    let processedValue = value;
+  const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
+  const currentYear = new Date().getFullYear();
+  const years = Array.from(
+    { length: currentYear - 1980 + 1 },
+    (_, i) => currentYear - i
+  );
+    
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target;
+  
+    let processedValue: string | boolean = value;
+  
+    // Checkbox handling (only inputs have checked)
+    if (type === "checkbox" && e.target instanceof HTMLInputElement) {
+      processedValue = e.target.checked;
+    }
+  
     // APAAR ID formatting
     if (name === "apaar_id") {
       const digitsOnly = value.replace(/\D/g, "");
       processedValue = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1 ");
     }
-
-    // ✅ Mobile - only digits & max 10
+  
+    // Mobile number – only digits, max 10
     if (name === "mobile") {
-      const digitsOnly = value.replace(/\D/g, "").slice(0, 10);
-      processedValue = digitsOnly;
+      processedValue = value.replace(/\D/g, "").slice(0, 10);
     }
-
+  
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : processedValue,
+      [name]: processedValue,
     }));
-
+  
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
+  useEffect(()=>{
+    if(formData.first_name === ""){
+      setShowWarning(false)
+    }
+    else{
+      setShowWarning(true)
+    }
+  } , [formData.first_name])
 
   // ------------------------
   // Validation
@@ -100,8 +132,7 @@ export default function RegisterPage() {
       newErrors.mobile = "Enter a valid 10-digit mobile number";
 
     if (!formData.class.trim()) newErrors.class = "Class is required";
-    if (!formData.dob) newErrors.dob = "DOB is required";
-
+    
     if (!formData.agreeToTerms)
       newErrors.agreeToTerms = "You must agree to the terms";
 
@@ -127,7 +158,7 @@ export default function RegisterPage() {
         apaar_id: formData.apaar_id.replace(/\s/g, ""),
         mobile: formData.mobile,
         class: formData.class,
-        dob: formData.dob,
+        dob: `${formData.dobYear}-${String(formData.dobMonth).padStart(2, '0')}-${String(formData.dobDay).padStart(2, '0')}`,
       };
 
       const response = await axios.post(
@@ -136,6 +167,7 @@ export default function RegisterPage() {
       );
 
       if (response.data.status === "1") {
+        toast.success(response.data.message)
         router.push("/login");
         console.log(response.data.message);
       } else if (response.data.status === "0") {
@@ -164,7 +196,12 @@ export default function RegisterPage() {
 
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
           <form onSubmit={handleSubmit} className="space-y-6">
-
+            {
+              showWarning ? <p className="bg-[#ffe69c] border-2 border-amber-400 rounded  p-2 text-yellow-600 font-bold "><span>Warning !</span><br/>
+              <span className="font-light text-justify">You Are Not Able To Change Your Name Again And Please Enter The Name According To The Apaar / Aadhar Id . </span>
+              </p> : <span></span>
+            }
+            
             {/* First / Last Name */}
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -272,26 +309,31 @@ export default function RegisterPage() {
             {/* Class */}
             <div>
               <label className="text-white text-sm mb-1 block">Class</label>
-              <select>
-                
+              <select className="bg-white text-black w-full p-3 rounded "
+              name="class"
+              onChange={handleInputChange}
+              >
+                <option>Select Class</option>
+                <option value="I Class">I Class</option>
+                <option value="II Class">II Class</option>
+                <option value={"III Class"}>III Class</option>
+                <option value={"IV Class"}>IV Class</option>
+                <option value={"V Class"}>V Class</option>
+                <option value={"VI Class"}>VI Class</option>
+                <option value={"VII Class"}>VII Class</option>
+                <option value={"VIII Class"}>VIII Class</option>
+                <option value={"IX Class"}>IX Class</option>
+                <option value={"X Class"}>X Class</option>
               </select>
-              <input
-                name="class"
-                type="text"
-                value={formData.class}
-                onChange={handleInputChange}
-                className={`w-full px-4 py-3 rounded-lg bg-white/90 border ${
-                  errors.class ? "border-red-500" : "border-white/40"
-                }`}
-                placeholder="8th"
-              />
+
+              
               {errors.class && <p className="text-red-300 text-sm">{errors.class}</p>}
             </div>
 
             {/* DOB */}
             <div>
               <label className="text-white text-sm mb-1 block">Date of Birth</label>
-              <input
+              {/* <input
                 name="dob"
                 type="date"
                 value={formData.dob}
@@ -300,7 +342,48 @@ export default function RegisterPage() {
                 className={`w-full px-4 py-3 rounded-lg bg-white/90 border ${
                   errors.dob ? "border-red-500" : "border-white/40"
                 }`}
-              />
+              /> */}
+              <div className="flex justify-evenly">
+                      {/* Day */}
+                      <select
+                        name="dobDay"
+                        value={formData.dobDay}
+                        onChange={handleInputChange}
+                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-22"
+                      >
+                        <option value="">Day</option>
+                        {days.map(day => (
+                          <option key={day} value={day}>{day}</option>
+                        ))}
+                      </select>
+
+                      {/* Month */}
+                      <select
+                        name="dobMonth"
+                        value={formData.dobMonth}
+                        onChange={handleInputChange}
+                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-42"
+                      >
+                        <option value="">Month</option>
+                        {months.map((month, index) => (
+                          <option key={index} value={index + 1}>{month}</option>
+                        ))}
+                      </select>
+
+                      {/* Year */}
+                      <select
+                        name="dobYear"
+                        value={formData.dobYear}
+                        onChange={handleInputChange}
+                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
+                      >
+                        <option value="">Year</option>
+                        {years.map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                    </div>
+
               {errors.dob && <p className="text-red-300 text-sm">{errors.dob}</p>}
             </div>
 

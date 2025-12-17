@@ -3,6 +3,7 @@ import {Poppins } from "next/font/google";
 import "./globals.css";
 import ConditionalHeader from "./Components/ConditionalHeader";
 import ConditionalFooter from "./Components/ConditionalFooter";
+import ToastProvider from "./Provider/ToastProvider";
 
 const geistSans = Poppins({
   weight:["400" , "500" , "700"],
@@ -29,6 +30,7 @@ export default function RootLayout({
       >
         <ConditionalHeader />
         {children}
+        <ToastProvider />
         <ConditionalFooter />
       </body>
       

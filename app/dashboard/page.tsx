@@ -133,7 +133,7 @@ export default function Dashboard() {
         </div>
 
         {/* Create Post Section */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div id='post-create' className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center gap-4">
             <Image
               src="/logo.png"

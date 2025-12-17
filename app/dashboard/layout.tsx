@@ -6,6 +6,7 @@ import DashboardHeader from "../Components/Dashboard/DashboardHeader";
 import Sidebar from "../Components/Dashboard/Sidebar";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useDriverTour } from "../hook/useDriverTour";
 
 
 export default function DashboardLayout({
@@ -20,6 +21,7 @@ export default function DashboardLayout({
       router.push("/")
     }
   })
+  useDriverTour()
   return (
     <div className="min-h-screen flex bg-gray-50">
       {/* Sidebar */}
