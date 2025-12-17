@@ -51,20 +51,58 @@ export default function ProfilePage() {
   // -----------------------------------------
   // LOAD USER FROM LOCAL STORAGE
   // -----------------------------------------
-  const savedImage = localStorage.getItem("profileImage");
-if (savedImage) {
-  setProfileImage(savedImage);
-}
-const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    setProfileImage(reader.result as string);
+  useEffect(() => {
+    // ---- PROFILE IMAGE ----
+    const savedImage = localStorage.getItem("profileImage");
+    if (savedImage) {
+      setProfileImage(savedImage);
+    }
+  
+    // ---- USER DATA ----
+    const user = localStorage.getItem("user");
+  
+    if (user) {
+      const parsed = JSON.parse(user);
+      setUserData(parsed);
+  
+      setStudentProfile({
+        name: `${parsed.first_name || ""} ${parsed.last_name || ""}`.trim(),
+        class: parsed.class || "Not Set",
+        address: parsed.address || "Not Set",
+        email: parsed.email || "Not Set",
+        phone: parsed.mobile || "Not Set",
+        dateOfBirth: parsed.dob || "Not Set",
+      });
+  
+      const savedSchool = localStorage.getItem("schoolDetails");
+      setSchoolDetails(
+        savedSchool
+          ? JSON.parse(savedSchool)
+          : {
+              schoolName: parsed.school_name || "Not Set",
+              schoolAddress: parsed.school_address || "Not Set",
+              schoolClass: parsed.class || "Not Set",
+              schoolCode: parsed.school_code || "Not Set",
+            }
+      );
+    }
+  
+    setLoading(false);
+  }, []);
+  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const img = reader.result as string;
+      setProfileImage(img);
+      localStorage.setItem("profileImage", img); // ✅ persist
+    };
+    reader.readAsDataURL(file);
   };
-  reader.readAsDataURL(file);
-};
+  
 
   useEffect(() => {
     const user = localStorage.getItem("user");
