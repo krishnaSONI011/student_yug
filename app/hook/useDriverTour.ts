@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 
 export const useDriverTour = () => {
-  useEffect(() => {
+  return () => {
     const driverObj = driver({
       showProgress: true,
       animate: true,
@@ -20,7 +19,8 @@ export const useDriverTour = () => {
           element: "#logo",
           popover: {
             title: "Welcome 👋",
-            description: "This is Student Yug Where We Encourage Student For Planting Tree And Play Sports",
+            description:
+              "This is Student Yug where we encourage students to plant trees and play sports",
             side: "bottom",
             align: "center",
           },
@@ -29,7 +29,8 @@ export const useDriverTour = () => {
           element: "#plant-tree",
           popover: {
             title: "Plant Tree Counter",
-            description: "This is Where You know about the count of the tree you have planted across your journey",
+            description:
+              "See how many trees you have planted during your journey",
             side: "right",
             align: "center",
           },
@@ -37,82 +38,86 @@ export const useDriverTour = () => {
         {
           element: "#badge-earn",
           popover: {
-            title: "Badges Earn",
-            description: "This is Your Badges here You can see you status of the rank through out the journey",
+            title: "Badges Earned",
+            description:
+              "Check your rank and achievements throughout the journey",
             side: "left",
             align: "center",
           },
         },
         {
-            element: "#sports-part",
-            popover: {
-              title: "Sports Partisipation",
-              description: "This is where you see the how many sports you are intrusted in  through out the journey",
-              side: "left",
-              align: "center",
-            },
+          element: "#sports-part",
+          popover: {
+            title: "Sports Participation",
+            description:
+              "Track the sports you are interested in",
+            side: "left",
+            align: "center",
           },
-          {
-            element: "#my-tree",
-            popover: {
-              title: "Your Planted Tree Details",
-              description: "In this tab you will see the details of your Planted trees",
-              side: "left",
-              align: "center",
-            },
+        },
+        {
+          element: "#my-tree",
+          popover: {
+            title: "Your Trees",
+            description:
+              "View details of the trees you have planted",
+            side: "left",
+            align: "center",
           },
-          {
-            element: "#my-sports",
-            popover: {
-              title: "You Sports",
-              description: "This is where you will know your partisition sports",
-              side: "left",
-              align: "center",
-            },
+        },
+        {
+          element: "#my-sports",
+          popover: {
+            title: "Your Sports",
+            description:
+              "See your sports participation history",
+            side: "left",
+            align: "center",
           },
-          {
-            element: "#all-tree",
-            popover: {
-              title: "Know About the Tree",
-              description: "This is where you will know about the tree and how you will plant a tree and taking care of the tree",
-              side: "left",
-              align: "center",
-            },
+        },
+        {
+          element: "#all-tree",
+          popover: {
+            title: "Learn About Trees",
+            description:
+              "Discover how to plant and take care of trees",
+            side: "left",
+            align: "center",
           },
-          {
-            element: "#all-sports",
-            popover: {
-              title: "Know About the Sports",
-              description: "This is where you will know about the sports and how you can play a sports",
-              side: "left",
-              align: "center",
-            },
+        },
+        {
+          element: "#all-sports",
+          popover: {
+            title: "Learn About Sports",
+            description:
+              "Explore different sports and how to play them",
+            side: "left",
+            align: "center",
           },
-          {
-            element: "#post-create",
-            popover: {
-              title: "You can Post",
-              description: "This is where you can post a post to the community where other student can know about your doing",
-              side: "bottom",
-              align: "center",
-            },
+        },
+        {
+          element: "#post-create",
+          popover: {
+            title: "Create a Post",
+            description:
+              "Share your activities with the Student Yug community",
+            side: "bottom",
+            align: "center",
           },
-          {
-            element: "#profile",
-            popover: {
-              title: "Your Profile",
-              description: "This is you profile in which you know you profile",
-              side: "bottom",
-              align: "center",
-            },
+        },
+        {
+          element: "#profile",
+          popover: {
+            title: "Your Profile",
+            description:
+              "View and manage your profile details",
+            side: "bottom",
+            align: "center",
           },
+        },
       ],
     });
 
     driverObj.drive();
-
-    return () => {
-      driverObj.destroy();
-    };
-  }, []);
+  };
 };

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaTree, FaCalendarAlt, FaMapMarkerAlt, FaLeaf, FaSeedling, FaTrophy, FaHeart, FaEye, FaPlus } from 'react-icons/fa';
+import { FaTree, FaCalendarAlt, FaMapMarkerAlt, FaLeaf, FaSeedling, FaTrophy, FaHeart, FaEye, FaPlus, FaTumblr } from 'react-icons/fa';
 import { GiPoliceBadge } from 'react-icons/gi';
+import { LuTestTube } from 'react-icons/lu';
 
 interface Tree {
   id: number;
@@ -514,7 +515,7 @@ export default function MyTreesPage() {
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">{tree.name}</h3>
-                    <p className="text-sm text-gray-600 italic">{tree.scientificName}</p>
+                    {/* <p className="text-sm text-gray-600 italic">{tree.scientificName}</p> */}
                   </div>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     tree.status.toLowerCase() === 'mature' 
@@ -529,6 +530,10 @@ export default function MyTreesPage() {
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <FaCalendarAlt className="text-gray-400" />
                     <span>Planted: {new Date(tree.plantedDate).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <LuTestTube className="text-gray-400" />
+                    <span className='font-bold'>Scientific Name: <span className='font-normal'> {tree.scientificName}</span></span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <GiPoliceBadge className="text-gray-400" />

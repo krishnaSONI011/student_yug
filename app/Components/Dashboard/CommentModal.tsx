@@ -12,12 +12,19 @@ interface CommentModalProps {
   onCommentAdded: () => void;
 }
 
-export default function CommentModal({ postId, isOpen, onClose ,onCommentAdded }: CommentModalProps) {
+const QUICK_COMMENTS = ["Good", "Great", "Nice", "Good Tree"];
+
+export default function CommentModal({
+  postId,
+  isOpen,
+  onClose,
+  onCommentAdded,
+}: CommentModalProps) {
   const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState("");
   const [currentUser, setCurrentUser] = useState<string | null>(null);
 
-  const commentsRef = useRef<HTMLDivElement | null>(null); // ⭐ TOP SCROLL TARGET
+  const commentsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -29,7 +36,7 @@ export default function CommentModal({ postId, isOpen, onClose ,onCommentAdded }
     if (isOpen) loadComments();
   }, [isOpen]);
 
-  // ⭐ Scroll to TOP
+  /* ---------------- SCROLL TO TOP ---------------- */
   function scrollToTop() {
     setTimeout(() => {
       if (commentsRef.current) {
@@ -38,6 +45,7 @@ export default function CommentModal({ postId, isOpen, onClose ,onCommentAdded }
     }, 10);
   }
 
+  /* ---------------- LOAD COMMENTS ---------------- */
   async function loadComments() {
     try {
       const res = await axios.get(
@@ -45,28 +53,24 @@ export default function CommentModal({ postId, isOpen, onClose ,onCommentAdded }
       );
 
       setComments(res.data.data || []);
-
-      // ⭐ Scroll to TOP on load
       scrollToTop();
     } catch (e) {
       console.log(e);
     }
   }
 
+  /* ---------------- ADD COMMENT ---------------- */
   async function addComment() {
-    if (!newComment.trim()) return;
+    if (!newComment) return;
 
     const user = localStorage.getItem("user");
-    let userID;
+    if (!user) return;
 
-    if (user) {
-      const userData = JSON.parse(user);
-      userID = userData.user_id;
-    }
+    const userData = JSON.parse(user);
 
     try {
       const formData = new FormData();
-      formData.append("user_id", userID);
+      formData.append("user_id", userData.user_id);
       formData.append("post_id", postId);
       formData.append("comments", newComment);
 
@@ -76,10 +80,7 @@ export default function CommentModal({ postId, isOpen, onClose ,onCommentAdded }
       );
 
       setNewComment("");
-
       loadComments();
-
-      // ⭐ Always scroll to TOP after adding
       scrollToTop();
       onCommentAdded();
     } catch (e) {
@@ -90,7 +91,7 @@ export default function CommentModal({ postId, isOpen, onClose ,onCommentAdded }
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 transition">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-5 relative animate-fadeIn">
 
         {/* CLOSE BUTTON */}
@@ -111,7 +112,9 @@ export default function CommentModal({ postId, isOpen, onClose ,onCommentAdded }
           className="max-h-72 overflow-y-auto space-y-3 mb-4 p-2 scrollbar-thin"
         >
           {comments.length === 0 ? (
-            <p className="text-gray-500 text-sm text-center">No comments yet.</p>
+            <p className="text-gray-500 text-sm text-center">
+              No comments yet.
+            </p>
           ) : (
             comments.map((c, i) => {
               const isUser = String(c.user_id) === String(currentUser);
@@ -143,26 +146,35 @@ export default function CommentModal({ postId, isOpen, onClose ,onCommentAdded }
           )}
         </div>
 
-        {/* ADD COMMENT */}
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="Write a comment..."
-            className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-
-          <button
-            onClick={addComment}
-            className="bg-[#204b73] hover:bg-[#204b73] text-white px-4 py-2 rounded-full transition font-medium"
-          >
-            Send
-          </button>
+        {/* QUICK COMMENTS */}
+        <div className="flex flex-wrap gap-2 mb-4 justify-center">
+          {QUICK_COMMENTS.map((comment) => (
+            <button
+              key={comment}
+              onClick={() => setNewComment(comment)}
+              className={`px-4 py-2 rounded-full border text-sm font-medium transition
+                ${
+                  newComment === comment
+                    ? "bg-[#204b73] text-white border-[#204b73]"
+                    : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200"
+                }`}
+            >
+              {comment}
+            </button>
+          ))}
         </div>
+
+        {/* SEND BUTTON */}
+        <button
+          onClick={addComment}
+          disabled={!newComment}
+          className="w-full bg-[#204b73] disabled:opacity-50 hover:bg-[#183a5b] text-white px-4 py-2 rounded-full transition font-medium"
+        >
+          Send
+        </button>
       </div>
 
-      {/* ANIMATIONS */}
+      {/* STYLES */}
       <style jsx>{`
         .animate-fadeIn {
           animation: fadeIn 0.25s ease-out;

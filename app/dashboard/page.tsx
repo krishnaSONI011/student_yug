@@ -125,7 +125,7 @@ export default function Dashboard() {
       <div className="max-w-4xl mx-auto p-6">
 
         {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-[#204b73] to-[#204b73] rounded-2xl p-6 text-white mb-6">
+        <div className="bg-gradient-to-r cursor-default from-[#204b73] to-[#204b73] rounded-2xl p-6 text-white mb-6">
           <h2 className="text-2xl font-bold mb-2">Welcome back, {userData?.first_name ?? 'User'}! 🌱</h2>
           <p className="text-green-100">
             Share your tree planting journey and inspire others to go green!
@@ -152,7 +152,7 @@ export default function Dashboard() {
 
             <button
               onClick={() => setShowCreatePost(true)}
-              className="bg-[#204b73] text-white px-6 py-3 rounded-full hover:bg-[#204b73] transition-colors flex items-center gap-2"
+              className="bg-[#204b73] text-white px-6 py-3 rounded-full hover:bg-white hover:text-[#204b73] transition-colors flex items-center gap-2 border border-[#204b73] cursor-pointer"
             >
               <FaPlus />
               Post
@@ -215,14 +215,14 @@ export default function Dashboard() {
               <div className="flex justify-end gap-3 mt-6">
                 <button
                   onClick={() => setShowCreatePost(false)}
-                  className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-[#204b73] hover:text-white"
                 >
                   Cancel
                 </button>
 
                 <button
                   onClick={handleCreatePost}
-                  className="px-6 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#204b73]"
+                  className="px-6 py-2 bg-[#204b73] text-white rounded-lg hover:bg-white hover:text-[#204b73] border border-[#204b73]"
                 >
                   Share Post
                 </button>

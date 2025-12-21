@@ -1,10 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { FaMapMarkerAlt, FaHeart, FaComment, FaShare } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaHeart,
+  FaComment,
+  FaShare,
+} from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import confetti from "canvas-confetti"; // 🎉 Confetti Library
+import confetti from "canvas-confetti";
+import { toPng } from "html-to-image";
+
 import CommentModal from "./CommentModal";
 
 interface PostData {
@@ -22,82 +29,66 @@ export default function PostCard({
   description,
   img,
 }: PostData) {
-  const [loadedImages, setLoadedImages] = useState<{ [key: string]: boolean }>({});
+  const [loadedImages, setLoadedImages] = useState<{ [key: string]: boolean }>(
+    {}
+  );
   const [like, setLike] = useState<number>(0);
   const [comment, setCommnet] = useState<number>(0);
-  const [isLiked, setisLike] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const [openCommentModal, setOpenCommentModal] = useState(false);
 
-  // ❤️ Heart Button Reference (for confetti origin)
   const heartRef = useRef<HTMLButtonElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    getLikeAndCommnet();
+    getLikeAndComment();
   }, []);
 
-  async function getLikeAndCommnet() {
+  async function getLikeAndComment() {
     const user = localStorage.getItem("user");
-    let userID;
-    if (user) {
-      const userData = JSON.parse(user);
-      userID = userData.user_id;
-    }
+    const userID = user ? JSON.parse(user).user_id : "";
 
     try {
-      const response = await axios.get(
+      const res = await axios.get(
         `https://irisinformatics.net/studentyug/wb/count_liked_posts?post_id=${id}&user_id=${userID}`
       );
 
-      setCommnet(response.data.data.total_comments);
-      setLike(response.data.data.total_likes);
-      setisLike(response.data.data.is_liked);
+      setCommnet(res.data.data.total_comments);
+      setLike(res.data.data.total_likes);
+      setIsLiked(res.data.data.is_liked);
     } catch (e) {
       console.log(e);
     }
   }
 
-  // 🎉 Confetti Burst from EXACT Heart Position
   function runConfettiFromHeart() {
     if (!heartRef.current) return;
 
     const rect = heartRef.current.getBoundingClientRect();
 
-    const origin = {
-      x: (rect.left + rect.width / 2) / window.innerWidth,
-      y: (rect.top + rect.height / 2) / window.innerHeight,
-    };
-
     confetti({
       particleCount: 50,
       spread: 30,
       startVelocity: 10,
-      origin,
+      origin: {
+        x: (rect.left + rect.width / 2) / window.innerWidth,
+        y: (rect.top + rect.height / 2) / window.innerHeight,
+      },
     });
   }
 
-  // ❤️ LIKE POST
   async function likeMyPost() {
     const user = localStorage.getItem("user");
-    let userID;
-    if (user) {
-      const userData = JSON.parse(user);
-      userID = userData.user_id;
-    }
+    const userID = user ? JSON.parse(user).user_id : "";
 
-    // Optimistic UI
     const oldLike = like;
-    const oldIsLiked = isLiked;
+    const oldLiked = isLiked;
 
-    if (!isLiked) {
-      setLike(like + 1);
-      runConfettiFromHeart(); // 🎉 Confetti here
-    } else {
-      setLike(like - 1);
-    }
+    setIsLiked(!isLiked);
+    setLike(isLiked ? like - 1 : like + 1);
 
-    setisLike(!isLiked);
+    if (!isLiked) runConfettiFromHeart();
 
-    // API Request
     try {
       const formData = new FormData();
       formData.append("user_id", userID);
@@ -107,28 +98,58 @@ export default function PostCard({
         "https://irisinformatics.net/studentyug/wb/posts_liked",
         formData
       );
-
-      getLikeAndCommnet();
     } catch (e) {
-      console.log(e);
       setLike(oldLike);
-      setisLike(oldIsLiked);
+      setIsLiked(oldLiked);
     }
   }
+
   function updateCommentCount() {
-    setCommnet(prev => prev + 1);
+    setCommnet((prev) => prev + 1);
+  }
+
+  // ✅ SHARE TO WHATSAPP WITH SCREENSHOT
+  async function sharePostToWhatsApp() {
+    if (!cardRef.current) return;
+  
+    try {
+      const dataUrl = await toPng(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: "#ffffff",
+      });
+  
+      // Convert to blob
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+  
+      const url = URL.createObjectURL(blob);
+  
+      // Download image
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "studentyug-post.png";
+      a.click();
+  
+      // Open WhatsApp
+      const text = encodeURIComponent(
+        "🌱 Check out this post on Student Yug!"
+      );
+      window.open(`https://wa.me/?text=${text}`, "_blank");
+    } catch (err) {
+      console.error("Screenshot failed:", err);
+    }
   }
   
 
   return (
     <>
-    <div
-      key={id}
-      className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
-    >
-      {/* Header */}
-      <div className="p-6 pb-4">
-        <div className="flex items-center gap-3">
+      <div
+        ref={cardRef}
+        className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+      >
+        {/* Header */}
+        <div className="p-6 pb-4 flex items-center gap-3">
           <Image
             src="/logo.png"
             width={48}
@@ -137,88 +158,84 @@ export default function PostCard({
             className="rounded-full"
           />
 
-          <div className="flex-1">
+          <div>
             <h4 className="font-semibold text-gray-900">{first_name}</h4>
             <div className="flex items-center gap-2 text-sm text-gray-500">
-              <span>2 hours</span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <FaMapMarkerAlt className="text-xs" />
-                {location}
-              </span>
+              <FaMapMarkerAlt />
+              {location}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Description */}
-      <div className="px-6 pb-4">
-        <p className="text-gray-800 leading-relaxed">{description}</p>
-      </div>
-
-      {/* Image + Skeleton */}
-      {img && (
+        {/* Description */}
         <div className="px-6 pb-4">
-          {!loadedImages[id] && (
-            <div className="w-full h-[300px] rounded-lg bg-gray-200 animate-pulse"></div>
-          )}
-
-          <Image
-            src={`https://irisinformatics.net/studentyug/${img}`}
-            width={600}
-            height={400}
-            alt="Post image"
-            className={`w-full h-[500px] rounded-lg object-cover transition-opacity duration-500 ${
-              loadedImages[id] ? "opacity-100" : "opacity-0"
-            }`}
-            onLoadingComplete={() =>
-              setLoadedImages((prev) => ({ ...prev, [id]: true }))
-            }
-          />
+          <p className="text-gray-800">{description}</p>
         </div>
-      )}
 
-      {/* Actions */}
-      <div className="px-6 py-4 border-t border-gray-100">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
+        {/* Image */}
+        {img && (
+          <div className="px-6 pb-4">
+            {!loadedImages[id] && (
+              <div className="h-[300px] bg-gray-200 animate-pulse rounded-lg" />
+            )}
+            <Image
+              src={`https://irisinformatics.net/studentyug/${img}`}
+              width={600}
+              height={400}
+              alt="Post"
+              className={`w-full h-[450px] rounded-lg object-cover transition-opacity ${
+                loadedImages[id] ? "opacity-100" : "opacity-0"
+              }`}
+              onLoadingComplete={() =>
+                setLoadedImages((p) => ({ ...p, [id]: true }))
+              }
+            />
+          </div>
+        )}
 
-            {/* ❤️ LIKE BUTTON */}
+        {/* Actions */}
+        <div className="px-6 py-4 border-t flex justify-between">
+          <div className="flex gap-6">
             <button
               ref={heartRef}
               onClick={likeMyPost}
-              className={`flex items-center gap-2 relative transition-all ${
+              className={`flex gap-2 items-center ${
                 isLiked ? "text-red-500" : "text-gray-600"
               }`}
             >
-              <FaHeart className={`${isLiked ? "scale-125" : ""} transition-all`} />
+              <FaHeart />
               {like}
             </button>
 
-            {/* 💬 COMMENT BUTTON */}
-            <button className="flex items-center gap-2 text-gray-600 hover:text-blue-500" onClick={() => setOpenCommentModal(true)}>
+            <button
+              onClick={() => setOpenCommentModal(true)}
+              className="flex gap-2 items-center text-gray-600"
+            >
               <FaComment />
               {comment}
             </button>
 
-            {/* 🔄 SHARE BUTTON */}
-            <button className="flex items-center gap-2 text-gray-600 hover:text-green-500">
+            <button
+              onClick={sharePostToWhatsApp}
+              className="flex gap-2 items-center text-gray-600 hover:text-green-600"
+            >
               <FaShare />
-              3
+              Share
             </button>
           </div>
 
-          <div className="text-sm text-gray-500">{like} people liked this</div>
+          <div className="text-sm text-gray-500">
+            {like} people liked this
+          </div>
         </div>
       </div>
-    </div>
-    <CommentModal 
-  postId={id} 
-  isOpen={openCommentModal} 
-  onClose={() => setOpenCommentModal(false)} 
-  onCommentAdded={updateCommentCount}
-/>
 
+      <CommentModal
+        postId={id}
+        isOpen={openCommentModal}
+        onClose={() => setOpenCommentModal(false)}
+        onCommentAdded={updateCommentCount}
+      />
     </>
   );
 }

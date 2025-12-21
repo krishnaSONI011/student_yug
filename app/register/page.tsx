@@ -65,7 +65,7 @@ export default function RegisterPage() {
   
   const currentYear = new Date().getFullYear();
   const years = Array.from(
-    { length: currentYear - 1980 + 1 },
+    { length: currentYear - 2001 + 1 },
     (_, i) => currentYear - i
   );
     
@@ -324,6 +324,8 @@ export default function RegisterPage() {
                 <option value={"VIII Class"}>VIII Class</option>
                 <option value={"IX Class"}>IX Class</option>
                 <option value={"X Class"}>X Class</option>
+                <option value={"XI Class"}>XI Class</option>
+                <option value={"XII Class"}>XII Class</option>
               </select>
 
               

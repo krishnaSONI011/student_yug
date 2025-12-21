@@ -1,12 +1,13 @@
 'use client';
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import Link from 'next/link';
-import { FaArrowLeft, FaCheckCircle, FaIdCard, FaCalendarAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { FaArrowLeft, FaCheckCircle, FaIdCard,  FaPhone, FaEnvelope } from 'react-icons/fa';
 import {toast} from 'react-toastify'
 export default function LoginPage() {
   const [currentStep, setCurrentStep] = useState(0); // 0: Login Type Selection, 1: Aadhaar/Aapar+DOB, 2: Contact Method, 3: OTP
-  const [loginType, setLoginType] = useState<'aadhaar' | 'apaar' | ''>(''); // 'aadhaar' or 'aapar'
+  const [loginType, setLoginType] = useState<'email' | 'apaar' | ''>('');
+ // 'aadhaar' or 'aapar'
   const [formData, setFormData] = useState({
     aadhaarId: '',
     dobDay: '',
@@ -26,7 +27,7 @@ export default function LoginPage() {
 
   const currentYear = new Date().getFullYear();
   const years = Array.from(
-    { length: currentYear - 1980 + 1 },
+    { length: currentYear - 2001 + 1 },
     (_, i) => currentYear - i
   );
 
@@ -47,9 +48,16 @@ export default function LoginPage() {
 
     // Aadhaar ID formatting
     if (name === "aadhaarId") {
-      const digitsOnly = value.replace(/\D/g, "");
-      processedValue = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1 ");
+      if (loginType === "apaar") {
+        // Aadhaar: numbers only with spacing
+        const digitsOnly = value.replace(/\D/g, "");
+        processedValue = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1 ");
+      } else {
+        // Email: allow full text
+        processedValue = value;
+      }
     }
+    
 
     // OTP handled separately
     if (name === "otp") {
@@ -78,20 +86,33 @@ export default function LoginPage() {
     }
   };
 
-  const handleLoginTypeSelect = (type: 'aadhaar' | 'apaar') => {
+  const handleLoginTypeSelect = (type: 'email' | 'apaar') => {
+
     setLoginType(type);
     setCurrentStep(1);
   };
 
   const validateStep1 = () => {
     const newErrors: { [key: string]: string } = {};
-    const idType = loginType === 'aadhaar' ? 'Aadhaar' : 'Apaar';
+    const idType = loginType === 'email' ? 'Email' : 'Aadhaar';
+
 
     if (!formData.aadhaarId) {
       newErrors.aadhaarId = `${idType} ID is required`;
-    } else if (!/^\d{12}$/.test(formData.aadhaarId.replace(/\s/g, ''))) {
-      newErrors.aadhaarId = `Please enter a valid 12-digit ${idType} ID`;
+    } else {
+      if (loginType === 'email') {
+        if (!/^\S+@\S+\.\S+$/.test(formData.aadhaarId)) {
+          newErrors.aadhaarId = 'Please enter a valid email address';
+        }
+      }
+    
+      if (loginType === 'apaar') {
+        if (!/^\d{12}$/.test(formData.aadhaarId.replace(/\s/g, ''))) {
+          newErrors.aadhaarId = 'Please enter a valid 12-digit Aadhaar ID';
+        }
+      }
     }
+    
 
     if (!formData.dobDay || !formData.dobMonth || !formData.dobYear) {
       newErrors.dateOfBirth = 'Complete date of birth is required';
@@ -163,6 +184,19 @@ export default function LoginPage() {
 
 
     try {
+      const payload: any = {
+        type: loginType,
+        dob: `${formData.dobYear}-${String(formData.dobMonth).padStart(2, '0')}-${String(formData.dobDay).padStart(2, '0')}`,
+      };
+      
+      if (loginType === 'email') {
+        payload.email = formData.aadhaarId.trim();
+      }
+      
+      if (loginType === 'apaar') {
+        payload.apaar_id = formData.aadhaarId.replace(/\s/g, '');
+      }
+      
       console.log(formData)
       const response = await fetch(
         "https://irisinformatics.net/studentyug/wb/verify_user",
@@ -171,12 +205,7 @@ export default function LoginPage() {
           headers: {
             "Content-Type": "application/json", // JSON payload
           },
-          body: JSON.stringify({
-            type: loginType, // "aadhaar" or "apaar"
-            apaar_id: formData.aadhaarId.replace(/\s/g, ""), // remove spaces
-            dob: `${formData.dobYear}-${String(formData.dobMonth).padStart(2, '0')}-${String(formData.dobDay).padStart(2, '0')}`,
-
-          }),
+          body: JSON.stringify(payload),
         }
       );
 
@@ -431,11 +460,36 @@ export default function LoginPage() {
               {/* Login Type Options */}
               <div className="space-y-4">
                 <div
-                  className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${loginType === 'aadhaar'
-                    ? 'border-yellow-400 bg-[#81c243]/10'
+                  className={`flex items-center justify-between p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${loginType === 'email'
+                    ? 'border-green-400 bg-[#81c243]/10'
                     : 'border-white/30 hover:border-white/50'
                     }`}
-                  onClick={() => handleLoginTypeSelect('aadhaar')}
+                    onClick={() => handleLoginTypeSelect('email')}
+
+                >
+                  <div className="flex items-center space-x-4">
+                    <FaIdCard className="text-white text-2xl" />
+                    <div>
+                      <p className="text-white font-medium text-lg">Login with Email/Number</p>
+                      <p className="text-gray-300 text-sm">Use your Email or Number  to sign in</p>
+                    </div>
+                  </div>
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${loginType === 'email'
+                    ? 'border-green-400 bg-[#81c243]'
+                    : 'border-white/50'
+                    }`}>
+                    {loginType === 'email' && (
+                      <div className="w-3 h-3 rounded-full bg-gray-900"></div>
+                    )}
+                  </div>
+                </div>
+
+                <div
+                  className={`flex items-center justify-between p-6    rounded-lg border-2 cursor-pointer transition-all duration-300 ${loginType === 'apaar'
+                    ? 'border-green-400 bg-[#81c243]/10'
+                    : 'border-white/30 hover:border-white/50'
+                    }`}
+                  onClick={() => handleLoginTypeSelect('apaar')}
                 >
                   <div className="flex items-center space-x-4">
                     <FaIdCard className="text-white text-2xl" />
@@ -444,32 +498,8 @@ export default function LoginPage() {
                       <p className="text-gray-300 text-sm">Use your Aadhaar ID to sign in</p>
                     </div>
                   </div>
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${loginType === 'aadhaar'
-                    ? 'border-yellow-400 bg-[#81c243]'
-                    : 'border-white/50'
-                    }`}>
-                    {loginType === 'aadhaar' && (
-                      <div className="w-3 h-3 rounded-full bg-gray-900"></div>
-                    )}
-                  </div>
-                </div>
-
-                <div
-                  className={`flex items-center justify-between p-6    rounded-lg border-2 cursor-pointer transition-all duration-300 ${loginType === 'apaar'
-                    ? 'border-yellow-400 bg-[#81c243]/10'
-                    : 'border-white/30 hover:border-white/50'
-                    }`}
-                  onClick={() => handleLoginTypeSelect('apaar')}
-                >
-                  <div className="flex items-center space-x-4">
-                    <FaIdCard className="text-white text-2xl" />
-                    <div>
-                      <p className="text-white font-medium text-lg">Login with Aapar</p>
-                      <p className="text-gray-300 text-sm">Use your Aapar ID to sign in</p>
-                    </div>
-                  </div>
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${loginType === 'apaar'
-                    ? 'border-yellow-400 bg-[#81c243]'
+                    ? 'border-green-400 bg-[#81c243]'
                     : 'border-white/50'
                     }`}>
                     {loginType === 'apaar' && (
@@ -487,11 +517,12 @@ export default function LoginPage() {
               {/* Aadhaar/Aapar ID Field */}
               <div>
                 <label htmlFor="aadhaarId" className="block text-sm font-medium text-white mb-2">
-                  {loginType === 'aadhaar' ? (
-                    <>Aadhaar ID <span className="text-red-300">*</span></>
-                  ) : (
-                    <>Aapar ID <span className="text-red-300">*</span></>
-                  )}
+                {loginType === 'email' ? (
+  <>Email ID / Mobile Number <span className="text-red-300">*</span></>
+) : (
+  <>Aadhaar ID <span className="text-red-300">*</span></>
+)}
+
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -505,7 +536,8 @@ export default function LoginPage() {
                     onChange={handleInputChange}
                     className={`w-full pl-10 pr-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${errors.aadhaarId ? 'border-red-500' : 'border-white/30'
                       }`}
-                    placeholder="1234 5678 9012"
+                      placeholder={loginType === 'email' ? 'Enter your email or number' : '1234 5678 9012'}
+
                     maxLength={14}
                   />
                 </div>
@@ -633,7 +665,7 @@ export default function LoginPage() {
               <div className="space-y-4">
                 <div
                   className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${formData.contactMethod === 'mobile'
-                    ? 'border-yellow-400 bg-[#81c243]/10'
+                    ? 'border-green-400 bg-[#81c243]/10'
                     : 'border-white/30 hover:border-white/50'
                     }`}
                   onClick={() => setFormData(prev => ({ ...prev, contactMethod: 'mobile' }))}
@@ -646,7 +678,7 @@ export default function LoginPage() {
                       value="mobile"
                       checked={formData.contactMethod === 'mobile'}
                       onChange={handleInputChange}
-                      className="h-4 w-4 text-yellow-400 focus:ring-yellow-400 border-gray-300"
+                      className="h-4 w-4 text-green-400 focus:ring-green-400 border-gray-300"
                     />
                     <FaPhone className="text-white" />
                     <div>
@@ -658,7 +690,7 @@ export default function LoginPage() {
 
                 <div
                   className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${formData.contactMethod === 'email'
-                    ? 'border-yellow-400 bg-[#81c243]/10'
+                    ? 'border-green-400 bg-[#81c243]/10'
                     : 'border-white/30 hover:border-white/50'
                     }`}
                   onClick={() => setFormData(prev => ({ ...prev, contactMethod: 'email' }))}
@@ -671,7 +703,7 @@ export default function LoginPage() {
                       value="email"
                       checked={formData.contactMethod === 'email'}
                       onChange={handleInputChange}
-                      className="h-4 w-4 text-yellow-400 focus:ring-yellow-400 border-gray-300"
+                      className="h-4 w-4 text-green-400 focus:ring-green-400 border-gray-300"
                     />
                     <FaEnvelope className="text-white" />
                     <div>
@@ -700,7 +732,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading || !formData.contactMethod}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-gray-900 bg-[#81c243] hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-gray-900 bg-[#81c243] hover:border-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="flex items-center">

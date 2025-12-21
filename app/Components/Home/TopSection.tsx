@@ -14,8 +14,31 @@ import {
   FaPhone,
  
 } from 'react-icons/fa';
+import { FaBaseball } from 'react-icons/fa6';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
+
+interface TotalStates  {
+    total_student:string ;
+    total_trees : string ;
+    total_sports : string ;
+    planted_tree : string ;
+    sports_participation : string ;
+}
 export default function TopSection(){
+    const [stats , setStats ] = useState<TotalStates>()
+    useEffect(()=>{
+        getStats()
+    },[])
+    const getStats = async  ()=>{
+        try{
+            const response = await axios.get("https://irisinformatics.net/studentyug/wb/stats_counts")
+            setStats(response.data.data)
+        }catch(err){
+            console.log(err)
+        }
+    }
     return(
         <>  
         
@@ -65,7 +88,7 @@ export default function TopSection(){
                     <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                         <div className="text-center mb-6">
                             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <FaLeaf className="text-4xl text-green-600" />
+                                <FaTree className="text-4xl text-green-600" />
                             </div>
                             <h3 className="text-2xl font-bold text-[#83c042] mb-4">Environment & Tree Plantation</h3>
                         </div>
@@ -84,7 +107,7 @@ export default function TopSection(){
                             </li>
                             <li className="flex items-start gap-3">
                                 <span className="text-green-500 mt-1">✓</span>
-                                <span>Support Mission LiFE and Green India</span>
+                                <span>Support Mission Green India And Healthy India</span>
                             </li>
                         </ul>
                     </div>
@@ -93,7 +116,7 @@ export default function TopSection(){
                     <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                         <div className="text-center mb-6">
                             <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <FaTrophy className="text-4xl text-blue-600" />
+                                <FaBaseball className="text-4xl text-blue-600" />
                             </div>
                             <h3 className="text-2xl font-bold text-[#83c042] mb-4">Student Sports Information</h3>
                         </div>
@@ -168,7 +191,7 @@ export default function TopSection(){
                             <FaTree className="text-2xl text-white" />
                         </div>
                         <h3 className="text-xl font-bold text-[#83c042] mb-3">Tree Tracking</h3>
-                        <p className="text-gray-600">Every student s tree plantation record is tracked and displayed</p>
+                        <p className="text-gray-600">Every students tree plantation record is tracked and displayed as Co2 and O2 </p>
                     </motion.div>
 
                     {/* Card 4 */}
@@ -223,38 +246,47 @@ export default function TopSection(){
                         StudentYug aligns with national initiatives and creates positive change
                     </p>
                 </div>
-                
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-[#83c042] mb-2">10K+</div>
-                        <div className="text-gray-200">Students Joined</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-[#83c042] mb-2">25K+</div>
-                        <div className="text-gray-200">Trees Planted</div>
-                    </div> 
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-[#83c042] mb-2">50+</div>
-                        <div className="text-gray-200">Sports</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-[#83c042] mb-2">50+</div>
-                        <div className="text-gray-200">Cities Covered</div>
-                    </div>
-                </div>
+                {
+                     <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
+                     <div className="text-center">
+                         <div className="text-4xl font-bold text-[#83c042] mb-2">{stats?.total_student}</div>
+                         <div className="text-gray-200">Total Students</div>
+                     </div>
+                     <div className="text-center">
+                         <div className="text-4xl font-bold text-[#83c042] mb-2">{stats?.total_trees}</div>
+                         <div className="text-gray-200">Total Trees Planted</div>
+                     </div> 
+                     <div className="text-center">
+                         <div className="text-4xl font-bold text-[#83c042] mb-2">{stats?.sports_participation}</div>
+                         <div className="text-gray-200">Total Sports Participated</div>
+                     </div>
+                     <div className="text-center">
+                         <div className="text-4xl font-bold text-[#83c042] mb-2">{stats?.total_trees}</div>
+                         <div className="text-gray-200">Total Tree List</div>
+                     </div>
+                     <div className="text-center">
+                         <div className="text-4xl font-bold text-[#83c042] mb-2">{stats?.total_sports}</div>
+                         <div className="text-gray-200">Total Sport List</div>
+                     </div>
+                 </div>
+                }
+               
                 
                 <div className="mt-16 grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-                    <motion.div
-                        whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
-                        transition={{ type: "spring", stiffness: 200, damping: 15 }}  className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl">
-                        <h3 className="text-2xl font-bold mb-4">Government Alignment</h3>
-                        <ul className="space-y-3 text-gray-100">
-                            <li>• Mission LiFE (Lifestyle for Environment) support</li>
-                            <li>• National Green Mission participation</li>
-                            <li>• One Student One Tree initiatives</li>
-                            <li>• CSR partnership opportunities</li>
-                        </ul>
-                    </motion.div>
+                <motion.div
+  whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
+  transition={{ type: "spring", stiffness: 200, damping: 15 }}
+  className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl"
+>
+  <h3 className="text-2xl font-bold mb-4">Policy & Compliance Support</h3>
+  <ul className="space-y-3 text-gray-100">
+    <li>• Alignment with National Education Policy (NEP 2020)</li>
+    <li>• Environmental compliance awareness programs</li>
+    <li>• Support for Swachh Bharat & sustainability goals</li>
+    <li>• Documentation support for government reporting</li>
+  </ul>
+</motion.div>
+
                     
                     <motion.div
                         whileHover={{ rotateX: 8, rotateY: -8, scale: 1.04 }}
