@@ -451,8 +451,8 @@ export default function TreeListPage() {
               </div>
               {/* Tree Info */}
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name_en}</h3>
-                <p className="text-sm text-gray-600 italic mb-3">{tree.name_sc}</p>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name_en}({tree.name_hi})</h3>
+                <p className="text-sm text-gray-600 italic mb-3"><span className='font-bold'>Scientific Name :</span> {tree.name_sc} </p>
                 <p className="text-gray-700 text-sm mb-4 line-clamp-2">{tree.description}</p>
 
                 {/* Key Benefits */}
@@ -524,7 +524,7 @@ export default function TreeListPage() {
                   <span className="text-5xl">{selectedTree.icon}</span>
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">{selectedTree.name}</h2>
-                    <p className="text-gray-600 italic">{selectedTree.scientificName}</p>
+                    <p className="text-gray-600 font-bold italic">scientific name:{selectedTree.scientificName}</p>
                   </div>
                 </div>
                 <button

@@ -35,6 +35,7 @@ interface ApiTreeData {
   tree_id: string;
   tree_name_en: string;
   tree_name_sc: string;
+  name_hi: string;
   tree_category: string;
   tree_carbon_reduced_per_year: string;
   tree_oxygen_produced_per_year: string;
@@ -514,7 +515,7 @@ export default function MyTreesPage() {
               <div className="p-6">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{tree.name}</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">{tree.name}({tree.name_hi})</h3>
                     {/* <p className="text-sm text-gray-600 italic">{tree.scientificName}</p> */}
                   </div>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${

@@ -52,11 +52,22 @@ export default function LoginPage() {
         // Aadhaar: numbers only with spacing
         const digitsOnly = value.replace(/\D/g, "");
         processedValue = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1 ");
-      } else {
-        // Email: allow full text
-        processedValue = value;
+      } 
+      else if (loginType === "email") {
+        const firstChar = value.charAt(0);
+    
+        // If starts with number → mobile number mode
+        if (/^\d$/.test(firstChar)) {
+          const digitsOnly = value.replace(/\D/g, "");
+          processedValue = digitsOnly.slice(0, 10); // limit to 10 digits
+        }
+        // If starts with letter → email mode
+        else {
+          processedValue = value; // unlimited email typing
+        }
       }
     }
+    
     
 
     // OTP handled separately
@@ -538,7 +549,12 @@ export default function LoginPage() {
                       }`}
                       placeholder={loginType === 'email' ? 'Enter your email or number' : '1234 5678 9012'}
 
-                    maxLength={14}
+                      maxLength={
+                        loginType === "apaar"
+                          ? 14            // Aadhaar: 12 digits + spaces
+                          : undefined     // Email & Mobile: no limit
+                      }
+                      
                   />
                 </div>
                 {errors.aadhaarId && (

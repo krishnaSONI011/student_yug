@@ -68,6 +68,9 @@ export default function Profile2(){
                 <label>School Address</label>
                 <textarea  className=" border bg-white p-2" value={"NH-11 , near alok toll , Bharatpur"}  />
             </div>
+            <div className="my-10 text-center">
+                <button className="px-6 py-2 bg-[#204b73] text-white rounded-lg hover:bg-white hover:text-[#204b73] border border-[#204b73]">Submit</button>
+            </div>
             {/* <div className="flex flex-col">
                 <label></label>
                 <input type="text" className=" border bg-gray-100 p-2" value={"SB0001"} />
