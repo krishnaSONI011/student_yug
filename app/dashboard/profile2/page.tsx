@@ -8,7 +8,7 @@ export default function Profile2(){
             <Image src={"/logo.png"} alt="profile" width={100} height={100}  />
         </div>
         <div className="p-2">
-            <h1 className="text-xl font-bold">Basic Information</h1>
+            <h1 className="text-xl font-bold">Fixed  Information</h1>
         <p className="my-5 bg-yellow-200 p-2 text-amber-500 text-center border border-amber-500 rounded">You do not Change some Basic Information</p>
         </div>
         <div className="grid grid-cols-2 gap-2 p-2">
@@ -31,6 +31,7 @@ export default function Profile2(){
                 <input type="text" className="cursor-no-drop border bg-gray-100 p-2" value={"03-12-2001"} />
             </div>
         </div>
+        <h1 className="text-xl mt-5 px-5 font-bold">Basic Information</h1>
         <div className="grid grid-cols-2 gap-2 p-2">
         <div className="flex flex-col">
                 <label>Email</label>
