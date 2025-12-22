@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FaTree, FaCalendarAlt, FaMapMarkerAlt, FaLeaf, FaTrophy, FaPlus } from 'react-icons/fa';
+import { FaBaseball } from 'react-icons/fa6';
 import { GiPoliceBadge } from 'react-icons/gi';
 import { MdSportsBasketball } from 'react-icons/md';
 
@@ -361,7 +362,7 @@ export default function MySportsPage() {
               <div className="w-12 h-12 bg-[#204b73] rounded-full flex items-center justify-center">
                 <MdSportsBasketball className="text-2xl text-white" />
               </div>
-              <div>
+              <div className='cursor-default'>
                 <h1 className="text-3xl font-bold text-gray-900">My Sports</h1>
                 <p className="text-gray-600">Track your Fitness By Playing Sports</p>
               </div>
@@ -379,12 +380,12 @@ export default function MySportsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <FaTree className="text-green-600" />
+                <div className="cursor-default w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <FaBaseball className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{sportsData.length}</p>
-                  <p className="text-sm text-gray-600">Total Sports</p>
+                  <p className="cursor-default text-2xl font-bold text-gray-900">{sportsData.length}</p>
+                  <p className="text-sm text-gray-600 cursor-default">Total Sports</p>
                 </div>
               </div>
             </div>
@@ -394,8 +395,8 @@ export default function MySportsPage() {
                   <FaCalendarAlt className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{sportsData.filter(s => s.play.toLowerCase() === 'team').length}</p>
-                  <p className="text-sm text-gray-600">Team Sports</p>
+                  <p className="cursor-default text-2xl font-bold text-gray-900">{sportsData.filter(s => s.play.toLowerCase() === 'team').length}</p>
+                  <p className="cursor-default text-sm text-gray-600">Team Sports</p>
                 </div>
               </div>
             </div>
@@ -405,8 +406,8 @@ export default function MySportsPage() {
                   <FaTrophy className="text-yellow-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{sportsData.filter(s => s.achievement.toLowerCase() !== 'n/a').length}</p>
-                  <p className="text-sm text-gray-600">Achievements</p>
+                  <p className="cursor-default text-2xl font-bold text-gray-900">{sportsData.filter(s => s.achievement.toLowerCase() !== 'n/a').length}</p>
+                  <p className="text-sm text-gray-600 cursor-default">Achievements</p>
                 </div>
               </div>
             </div>
@@ -434,13 +435,13 @@ export default function MySportsPage() {
 
         {/* Sports Grid */}
         {filteredSports.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center cursor-default py-12">
             <MdSportsBasketball className="text-6xl text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No sports found</h3>
             <p className="text-gray-600">No sports match your current filter criteria.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid cursor-default  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSports.map((sport) => (
               <div key={sport.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
                 <div className="h-48 bg-linear-to-br from-[#204b73] to-[#204b73] flex items-center justify-center">

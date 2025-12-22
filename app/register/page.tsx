@@ -266,7 +266,7 @@ export default function RegisterPage() {
 
             {/* APAAR */}
             <div>
-              <label className="text-white text-sm mb-1 block">Apaar ID</label>
+              <label className="text-white text-sm mb-1 block">Aadhaar ID</label>
               <div className="relative">
                 <FaIdCard className="absolute left-3 top-3 text-gray-300" />
                 <input

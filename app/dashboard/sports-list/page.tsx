@@ -95,7 +95,7 @@ export default function SportsList() {
             <div className="w-12 h-12 bg-[#204b73] rounded-full flex items-center justify-center">
               <MdSportsBasketball className="text-2xl text-white" />
             </div>
-            <div>
+            <div className='cursor-default'>
               <h1 className="text-3xl font-bold text-gray-900">Sports List</h1>
               <p className="text-gray-600">Choose a sport</p>
             </div>
@@ -121,7 +121,7 @@ export default function SportsList() {
           {trees.map((tree , index) => (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300  transform hover:-translate-y-1"
+              className="bg-white cursor-default rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300  transform hover:-translate-y-1"
               
             >
               {/* Tree Icon/Image */}

@@ -9,6 +9,7 @@ interface Tree {
   id: number;
   name: string;
   scientificName: string;
+  tree_name_hi: string;
   plantedDate: string;
   class: string;
   subject: string;
@@ -35,7 +36,7 @@ interface ApiTreeData {
   tree_id: string;
   tree_name_en: string;
   tree_name_sc: string;
-  name_hi: string;
+  tree_name_hi: string;
   tree_category: string;
   tree_carbon_reduced_per_year: string;
   tree_oxygen_produced_per_year: string;
@@ -103,6 +104,7 @@ const transformApiDataToTree = (apiData: ApiTreeData): Tree => {
     name: apiData.tree_name_en || 'Unknown Tree',
     scientificName: apiData.tree_name_sc || 'Unknown',
     plantedDate: apiData.planting_date || '',
+    tree_name_hi: apiData.tree_name_hi || '',
     class: apiData.class || 'N/A',
     subject: apiData.tree_category || 'General',
     location: apiData.location || 'Unknown Location',
@@ -410,7 +412,7 @@ export default function MyTreesPage() {
               <div className="w-12 h-12 bg-[#204b73] rounded-full flex items-center justify-center">
                 <FaTree className="text-2xl text-white" />
               </div>
-              <div>
+              <div className='cursor-default'>
                 <h1 className="text-3xl font-bold text-gray-900">My Trees</h1>
                 <p className="text-gray-600">Track your environmental impact through tree plantation</p>
               </div>
@@ -515,7 +517,7 @@ export default function MyTreesPage() {
               <div className="p-6">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{tree.name}({tree.name_hi})</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">{tree.name}({tree.tree_name_hi})</h3>
                     {/* <p className="text-sm text-gray-600 italic">{tree.scientificName}</p> */}
                   </div>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${

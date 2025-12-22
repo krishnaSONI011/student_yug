@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import Link from 'next/link';
-import { FaArrowLeft, FaCheckCircle, FaIdCard,  FaPhone, FaEnvelope } from 'react-icons/fa';
-import {toast} from 'react-toastify'
+import { FaArrowLeft, FaCheckCircle, FaIdCard, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { toast } from 'react-toastify'
 export default function LoginPage() {
   const [currentStep, setCurrentStep] = useState(0); // 0: Login Type Selection, 1: Aadhaar/Aapar+DOB, 2: Contact Method, 3: OTP
   const [loginType, setLoginType] = useState<'email' | 'apaar' | ''>('');
- // 'aadhaar' or 'aapar'
+  // 'aadhaar' or 'aapar'
   const [formData, setFormData] = useState({
     aadhaarId: '',
     dobDay: '',
@@ -52,10 +52,10 @@ export default function LoginPage() {
         // Aadhaar: numbers only with spacing
         const digitsOnly = value.replace(/\D/g, "");
         processedValue = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1 ");
-      } 
+      }
       else if (loginType === "email") {
         const firstChar = value.charAt(0);
-    
+
         // If starts with number → mobile number mode
         if (/^\d$/.test(firstChar)) {
           const digitsOnly = value.replace(/\D/g, "");
@@ -67,8 +67,8 @@ export default function LoginPage() {
         }
       }
     }
-    
-    
+
+
 
     // OTP handled separately
     if (name === "otp") {
@@ -116,14 +116,14 @@ export default function LoginPage() {
           newErrors.aadhaarId = 'Please enter a valid email address';
         }
       }
-    
+
       if (loginType === 'apaar') {
         if (!/^\d{12}$/.test(formData.aadhaarId.replace(/\s/g, ''))) {
           newErrors.aadhaarId = 'Please enter a valid 12-digit Aadhaar ID';
         }
       }
     }
-    
+
 
     if (!formData.dobDay || !formData.dobMonth || !formData.dobYear) {
       newErrors.dateOfBirth = 'Complete date of birth is required';
@@ -199,15 +199,15 @@ export default function LoginPage() {
         type: loginType,
         dob: `${formData.dobYear}-${String(formData.dobMonth).padStart(2, '0')}-${String(formData.dobDay).padStart(2, '0')}`,
       };
-      
+
       if (loginType === 'email') {
         payload.email = formData.aadhaarId.trim();
       }
-      
+
       if (loginType === 'apaar') {
         payload.apaar_id = formData.aadhaarId.replace(/\s/g, '');
       }
-      
+
       console.log(formData)
       const response = await fetch(
         "https://irisinformatics.net/studentyug/wb/verify_user",
@@ -331,7 +331,7 @@ export default function LoginPage() {
 
       if (response.ok && data.status === "1") {
         toast.success('Login successful! Redirecting to dashboard.')
-        
+
         localStorage.setItem(
           "user",
           JSON.stringify({
@@ -341,14 +341,14 @@ export default function LoginPage() {
             token: data.data.token
           })
         );
-        setTimeout(()=>{
+        setTimeout(() => {
           window.location.href = data.redirectUrl || '/dashboard';
-        },2000)
-       
+        }, 2000)
+
       } else {
         setErrors({ otp: data.message || 'Invalid or expired OTP.' });
         toast.error(data.message || 'Invalid or expired OTP.')
-       
+
       }
     } catch (error) {
       console.error('OTP Verification Error:', error);
@@ -418,7 +418,24 @@ export default function LoginPage() {
     }));
     setErrors({});
   };
-
+  const getLoginLabel = () => {
+    const value = formData.aadhaarId.trim();
+  
+    if (!value) return "Email ID / Mobile Number";
+  
+    const firstChar = value.charAt(0);
+  
+    if (/^\d$/.test(firstChar)) {
+      return "Mobile Number";
+    }
+  
+    if (/^[a-zA-Z]$/.test(firstChar)) {
+      return "Email Address";
+    }
+  
+    return "Email ID / Mobile Number";
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-10">
       {/* Background Pattern */}
@@ -475,7 +492,7 @@ export default function LoginPage() {
                     ? 'border-green-400 bg-[#81c243]/10'
                     : 'border-white/30 hover:border-white/50'
                     }`}
-                    onClick={() => handleLoginTypeSelect('email')}
+                  onClick={() => handleLoginTypeSelect('email')}
 
                 >
                   <div className="flex items-center space-x-4">
@@ -527,14 +544,18 @@ export default function LoginPage() {
             <form className="space-y-6" onSubmit={handleStep1Submit}>
               {/* Aadhaar/Aapar ID Field */}
               <div>
-                <label htmlFor="aadhaarId" className="block text-sm font-medium text-white mb-2">
-                {loginType === 'email' ? (
-  <>Email ID / Mobile Number <span className="text-red-300">*</span></>
-) : (
-  <>Aadhaar ID <span className="text-red-300">*</span></>
-)}
+              <label htmlFor="aadhaarId" className="block text-sm font-medium text-white mb-2">
+  {loginType === "email" ? (
+    <>
+      {getLoginLabel()} <span className="text-red-300">*</span>
+    </>
+  ) : (
+    <>
+      Aadhaar ID <span className="text-red-300">*</span>
+    </>
+  )}
+</label>
 
-                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <FaIdCard className="h-5 w-5 text-gray-400" />
@@ -547,14 +568,14 @@ export default function LoginPage() {
                     onChange={handleInputChange}
                     className={`w-full pl-10 pr-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${errors.aadhaarId ? 'border-red-500' : 'border-white/30'
                       }`}
-                      placeholder={loginType === 'email' ? 'Enter your email or number' : '1234 5678 9012'}
+                    placeholder={loginType === 'email' ? 'Enter your email or number' : '1234 5678 9012'}
 
-                      maxLength={
-                        loginType === "apaar"
-                          ? 14            // Aadhaar: 12 digits + spaces
-                          : undefined     // Email & Mobile: no limit
-                      }
-                      
+                    maxLength={
+                      loginType === "apaar"
+                        ? 14            // Aadhaar: 12 digits + spaces
+                        : undefined     // Email & Mobile: no limit
+                    }
+
                   />
                 </div>
                 {errors.aadhaarId && (
