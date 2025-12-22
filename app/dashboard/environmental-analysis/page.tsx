@@ -6,7 +6,7 @@ export default function EA(){
         <>
         <div>
             <div className="bg-white mx-10 my-5 p-5  ">
-             <h1 className="text-2xl font-bold">Enviromental Analysis</h1>
+             <h1 className="text-2xl font-bold cursor-default">Enviromental Analysis</h1>
             <SimpleLineChart />
             </div>
           
