@@ -10,6 +10,7 @@ interface Sport {
   id: number;
   sports_name: string;
   category: string;
+  sports_name_hi : string
   level: string;
   achievement: string;
   participation_date: string;
@@ -28,6 +29,7 @@ interface ApiSportsData {
   id?: string;
   user_id?: string;
   sports_id?: string;
+  sports_name_hi ?: string;
   sports_name?: string;
   category?: string;
   level?: string;
@@ -47,7 +49,7 @@ interface ApiResponse {
 interface AvailableTree {
   id: string;
   name: string;
-  name_hi: string;
+  sports_name_hi: string;
   name_sc: string;
   category: string;
   carbon: string;
@@ -81,6 +83,7 @@ const transformApiDataToSport = (apiData: ApiSportsData): Sport => ({
   id: parseInt(apiData.id || apiData.sports_id || '0') || 0,
   sports_name: apiData.sports_name || 'Unknown Sport',
   category: apiData.category || 'General',
+  sports_name_hi:apiData.sports_name_hi || '',
   level: apiData.level || 'N/A',
   achievement: apiData.achievement || 'N/A',
   participation_date: apiData.participation_date || '',
@@ -451,7 +454,7 @@ export default function MySportsPage() {
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{sport.sports_name}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">{sport.sports_name}({sport.sports_name_hi})</h3>
                       <p className="text-sm text-gray-600">{sport.category}</p>
                       <p className="text-xs text-gray-500">Level: {sport.level}</p>
                     </div>
@@ -616,7 +619,7 @@ export default function MySportsPage() {
                         <option value="">Select a Sports</option>
                         {availableTrees.map((tree) => (
                           <option key={tree.id} value={tree.id}>
-                            {tree.name} ({tree.name_hi}) - {tree.category}
+                            {tree.name} ({tree.sports_name_hi}) - {tree.category}
                           </option>
                         ))}
                       </select>

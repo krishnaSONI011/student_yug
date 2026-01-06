@@ -33,7 +33,7 @@ export default function Sidebar() {
     }
    
     try{
-        const resposne  = await axios.get(`https://irisinformatics.net/studentyug/wb/getSportsParticipation?sports_id=${userName.user_id}`)
+        const resposne  = await axios.get(`https://irisinformatics.net/studentyug/wb/getSportsParticipation?user_id=${userName.user_id}`)
         setSportsNumber(resposne.data.data.length)
     }catch(e){
       console.log(e)
@@ -86,6 +86,7 @@ export default function Sidebar() {
       {/* User Profile Section */}
       <div className="p-6 border-b border-gray-200">
         <div id="logo" className="flex items-center justify-center gap-3 mb-4">
+          <Link href={"/dashboard"}>
           <Image
             src="/logo.png"
             width={120}
@@ -93,6 +94,7 @@ export default function Sidebar() {
             alt="Profile"
             className="rounded-full cursor-pointer"
           />
+          </Link>
           
         </div>
         

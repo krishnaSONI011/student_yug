@@ -16,6 +16,7 @@ import { MdSportsBasketball } from 'react-icons/md';
 interface tree2{
     name : string ; 
     category : string ;
+    name_hi:string ;
     img : string ;
     benefits: string[] ;
     description : string ;
@@ -143,7 +144,7 @@ export default function SportsList() {
 
               {/* Tree Info */}
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name}</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name}({tree.name_hi})</h3>
                 <p className="text-sm text-gray-600 italic mb-3">{tree.category}</p>
                 <p className="text-gray-700 text-sm mb-4 line-clamp-2">{tree.description}</p>
 

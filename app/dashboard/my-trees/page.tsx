@@ -516,11 +516,11 @@ export default function MyTreesPage() {
               {/* Tree Info */}
               <div className="p-6">
                 <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{tree.name}({tree.tree_name_hi})</h3>
+                  <div className='cursor-default'>
+                    <h3 className="cursor-default text-lg font-semibold text-gray-900">{tree.name}({tree.tree_name_hi})</h3>
                     {/* <p className="text-sm text-gray-600 italic">{tree.scientificName}</p> */}
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  <span className={`px-2 py-1 rounded-full cursor-default text-xs font-medium ${
                     tree.status.toLowerCase() === 'mature' 
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-blue-100 text-blue-800'
@@ -530,23 +530,23 @@ export default function MyTreesPage() {
                 </div>
 
                 <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
                     <FaCalendarAlt className="text-gray-400" />
                     <span>Planted: {new Date(tree.plantedDate).toLocaleDateString()}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
                     <LuTestTube className="text-gray-400" />
                     <span className='font-bold'>Scientific Name: <span className='font-normal'> {tree.scientificName}</span></span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
                     <GiPoliceBadge className="text-gray-400" />
                     <span>Class: {tree.class}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
                     <FaMapMarkerAlt className="text-gray-400" />
                     <span>{tree.location}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
                     <FaTree className="text-gray-400" />
                     <span>Height: {tree.height}</span>
                   </div>
@@ -554,8 +554,8 @@ export default function MyTreesPage() {
 
                 {/* Health Status */}
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm text-gray-600">Health Status:</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  <span className="text-sm text-gray-600 cursor-default">Health Status:</span>
+                  <span className={`cursor-default px-2 py-1 rounded-full text-xs font-medium ${
                     tree.health.toLowerCase() === 'excellent' || tree.health.toLowerCase() === 'good'
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-yellow-100 text-yellow-800'
@@ -566,15 +566,15 @@ export default function MyTreesPage() {
 
                 {/* Impact Stats */}
                 <div className="grid grid-cols-3 gap-2 mb-4">
-                  <div className="text-center p-2 bg-gray-50 rounded">
+                  <div className="cursor-default text-center p-2 bg-gray-50 rounded">
                     <p className="text-xs text-gray-600">CO₂</p>
                     <p className="text-sm font-semibold text-gray-900">{tree.impact.co2Reduced}kg</p>
                   </div>
-                  <div className="text-center p-2 bg-gray-50 rounded">
+                  <div className="cursor-default text-center p-2 bg-gray-50 rounded">
                     <p className="text-xs text-gray-600">O₂</p>
                     <p className="text-sm font-semibold text-gray-900">{tree.impact.oxygenProduced}kg</p>
                   </div>
-                  <div className="text-center p-2 bg-gray-50 rounded">
+                  <div className="cursor-default text-center p-2 bg-gray-50 rounded">
                     <p className="text-xs text-gray-600">Carbon</p>
                     <p className="text-sm font-semibold text-gray-900">{tree.impact.carbonStored}kg</p>
                   </div>

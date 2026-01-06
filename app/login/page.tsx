@@ -496,7 +496,7 @@ export default function LoginPage() {
 
                 >
                   <div className="flex items-center space-x-4">
-                    <FaIdCard className="text-white text-2xl" />
+                    <FaIdCard className="text-blue-300 text-2xl" />
                     <div>
                       <p className="text-white font-medium text-lg">Login with Email/Number</p>
                       <p className="text-gray-300 text-sm">Use your Email or Number  to sign in</p>

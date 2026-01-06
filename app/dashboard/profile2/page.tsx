@@ -17,7 +17,7 @@ interface studentApi {
   school_name: string;
   school_address: string;
   school_code: string;
-  profile_image?: string;
+  img?: string;
 }
 
 export default function Profile2() {
@@ -40,12 +40,10 @@ export default function Profile2() {
       const response = await axios.get(
         `https://irisinformatics.net/studentyug/wb/getStudent?user_id=${userData.user_id}`
       );
-
-      if (response.data.status === "1") {
-        setProfileData(response.data.data[0]);
-      } else {
-        toast.error(response.data.message);
-      }
+       console.log(response)
+     
+        setProfileData(response.data.data);
+      
     } catch (e) {
       console.log(e);
     }
@@ -103,7 +101,7 @@ export default function Profile2() {
       formData.append("school_name", profileData.school_name);
       formData.append("school_address", profileData.school_address);
       formData.append("school_code", profileData.school_code);
-
+      formData.append("img", profileData.img || "");
       if (profileImage) {
         formData.append("profile_image", profileImage);
       }
@@ -130,7 +128,7 @@ export default function Profile2() {
   if (!profileData) {
     return <p className="text-center mt-10">Loading profile...</p>;
   }
-
+console.log(profileData)
     return(
         <>
        
@@ -140,8 +138,8 @@ export default function Profile2() {
           src={
             previewImage
               ? previewImage
-              : profileData.profile_image
-              ? profileData.profile_image
+              : profileData?.img
+              ? profileData?.img
               : "/logo.png"
           }
           alt="profile"
@@ -149,6 +147,11 @@ export default function Profile2() {
           height={120}
           className="rounded-full border object-cover"
         />
+        {/* <img
+  src={`https://irisinformatics.net/studentyug/upload/students/logo.webp`}
+  alt="profile"
+  className="w-[120px] h-[120px] rounded-full border object-cover"
+/> */}
 
         <label className="cursor-pointer text-sm text-blue-600">
           Change Profile Photo
