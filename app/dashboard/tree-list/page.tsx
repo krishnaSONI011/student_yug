@@ -453,7 +453,7 @@ export default function TreeListPage() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name_en}({tree.name_hi})</h3>
                 <p className="text-sm text-gray-600 italic mb-3"><span className='font-bold'>Scientific Name :</span> {tree.name_sc} </p>
-                <p className="text-gray-700 text-sm mb-4 line-clamp-2">{tree.description}</p>
+                <p className="text-gray-700 text-sm mb-4 text-justify">{tree.description}</p>
 
                 {/* Key Benefits */}
                 <div className="mb-4">
@@ -476,20 +476,14 @@ export default function TreeListPage() {
 
                 {/* Quick Info */}
                 <div className="space-y-2 text-sm text-gray-600 mb-4">
-                  <div className="flex items-center gap-2">
-                    <FaCalendarAlt className="text-gray-400" />
-                    <span>hh</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <FaSun className="text-gray-400" />
-                    <span>jj</span>
-                  </div>
+                 
+                  
                 </div>
 
                 {/* Environmental Impact Preview */}
                 <div className="grid grid-cols-2 gap-2 mb-4 p-3 bg-gray-50 rounded">
                   <div className="text-center">
-                    <p className="text-xs text-gray-600">CO₂ Absorbed</p>
+                    <p className="text-xs text-gray-600">CO₂ Reduced</p>
                     <p className="text-sm font-semibold text-gray-900">{tree.carbon}</p>
                   </div>
                   <div className="text-center">

@@ -10,7 +10,7 @@ interface Sport {
   id: number;
   sports_name: string;
   category: string;
-  sports_name_hi : string
+  sports_name_hi: string
   level: string;
   achievement: string;
   participation_date: string;
@@ -29,7 +29,7 @@ interface ApiSportsData {
   id?: string;
   user_id?: string;
   sports_id?: string;
-  sports_name_hi ?: string;
+  sports_name_hi?: string;
   sports_name?: string;
   category?: string;
   level?: string;
@@ -49,7 +49,7 @@ interface ApiResponse {
 interface AvailableTree {
   id: string;
   name: string;
-  sports_name_hi: string;
+  name_hi: string;
   name_sc: string;
   category: string;
   carbon: string;
@@ -83,7 +83,7 @@ const transformApiDataToSport = (apiData: ApiSportsData): Sport => ({
   id: parseInt(apiData.id || apiData.sports_id || '0') || 0,
   sports_name: apiData.sports_name || 'Unknown Sport',
   category: apiData.category || 'General',
-  sports_name_hi:apiData.sports_name_hi || '',
+  sports_name_hi: apiData.sports_name_hi || '',
   level: apiData.level || 'N/A',
   achievement: apiData.achievement || 'N/A',
   participation_date: apiData.participation_date || '',
@@ -101,7 +101,7 @@ const transformApiDataToSport = (apiData: ApiSportsData): Sport => ({
 // Get user_id from localStorage
 const getUserIdFromStorage = (): string | null => {
   if (typeof window === 'undefined') return null;
-  
+
   try {
     const userData = localStorage.getItem('user');
     if (userData) {
@@ -141,14 +141,14 @@ export default function MySportsPage() {
       try {
         setLoading(true);
         setError(null);
-        
+
         const userId = getUserIdFromStorage();
         if (!userId) {
           setError('User not found. Please login again.');
           setLoading(false);
           return;
         }
-        
+
         const response = await fetch(
           `https://irisinformatics.net/studentyug/wb/getSportsParticipation?user_id=${userId}`
         );
@@ -158,7 +158,7 @@ export default function MySportsPage() {
         }
 
         const result: ApiResponse = await response.json();
-        
+
         if (result.data && Array.isArray(result.data)) {
           const transformedSports = result.data.map(transformApiDataToSport);
           setSportsData(transformedSports);
@@ -192,9 +192,10 @@ export default function MySportsPage() {
           }
 
           const result: AvailableTreesResponse = await response.json();
-          
+
           if (result.data && Array.isArray(result.data)) {
             setAvailableTrees(result.data);
+            console.log(result.data)
           } else {
             setAvailableTrees([]);
           }
@@ -213,23 +214,23 @@ export default function MySportsPage() {
   // Handle plant tree form submission
   const handlePlantTree = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!plantFormData.tree_id || !plantFormData.planting_date || !plantFormData.height || 
-        !plantFormData.health || !plantFormData.class || !plantFormData.location) {
+
+    if (!plantFormData.tree_id || !plantFormData.planting_date || !plantFormData.height ||
+      !plantFormData.health || !plantFormData.class || !plantFormData.location) {
       alert('Please fill in all required fields');
       return;
     }
 
     try {
       setPlanting(true);
-      
+
       const userId = getUserIdFromStorage();
       if (!userId) {
         alert('User not found. Please login again.');
         setPlanting(false);
         return;
       }
-      
+
       const formData = new FormData();
       formData.append('user_id', userId);
       formData.append('sports_id', plantFormData.tree_id);
@@ -238,7 +239,7 @@ export default function MySportsPage() {
       formData.append('play', plantFormData.health);
       formData.append('level', plantFormData.class);
       formData.append('location', plantFormData.location);
-      
+
       if (plantFormData.image) {
         formData.append('image', plantFormData.image);
       }
@@ -256,7 +257,7 @@ export default function MySportsPage() {
       }
 
       await response.json();
-      
+
       // Reset form and close modal
       setPlantFormData({
         tree_id: '',
@@ -268,7 +269,7 @@ export default function MySportsPage() {
         image: null
       });
       setShowPlantModal(false);
-      
+
       // Refresh the sports list
       const refreshUserId = getUserIdFromStorage();
       if (refreshUserId) {
@@ -283,7 +284,7 @@ export default function MySportsPage() {
           }
         }
       }
-      
+
       alert('Sport added successfully!');
     } catch (err) {
       console.error('Error planting tree:', err);
@@ -318,13 +319,13 @@ export default function MySportsPage() {
     { id: 'individual', label: 'Individual', count: sportsData.filter(s => s.play.toLowerCase() === 'individual').length },
   ];
 
-  const filteredSports = selectedFilter === 'all' 
-    ? sportsData 
+  const filteredSports = selectedFilter === 'all'
+    ? sportsData
     : sportsData.filter(sport => {
-        if (selectedFilter === 'team') return sport.play.toLowerCase() === 'team';
-        if (selectedFilter === 'individual') return sport.play.toLowerCase() === 'individual';
-        return true;
-      });
+      if (selectedFilter === 'team') return sport.play.toLowerCase() === 'team';
+      if (selectedFilter === 'individual') return sport.play.toLowerCase() === 'individual';
+      return true;
+    });
 
   if (loading) {
     return (
@@ -372,7 +373,7 @@ export default function MySportsPage() {
             </div>
             <button
               onClick={() => setShowPlantModal(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-[#204b73] text-white rounded-lg hover:bg-[#204b73] transition-colors duration-200 font-medium shadow-sm"
+              className="flex items-center gap-2 px-6 py-3 bg-[#204b73] text-white cursor-pointer border border-[#204b73] rounded-lg hover:bg-white hover:text-[#204b73] transition-colors duration-200 font-medium shadow-sm"
             >
               <FaPlus className="text-sm" />
               Sports
@@ -410,7 +411,7 @@ export default function MySportsPage() {
                 </div>
                 <div>
                   <p className="cursor-default text-2xl font-bold text-gray-900">{sportsData.filter(s => s.achievement.toLowerCase() !== 'n/a').length}</p>
-                  <p className="text-sm text-gray-600 cursor-default">Achievements</p>
+                  <p className="text-sm text-gray-600 cursor-default">Level</p>
                 </div>
               </div>
             </div>
@@ -458,11 +459,10 @@ export default function MySportsPage() {
                       <p className="text-sm text-gray-600">{sport.category}</p>
                       <p className="text-xs text-gray-500">Level: {sport.level}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      sport.status.toLowerCase() === 'active' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-blue-100 text-blue-800'
-                    }`}>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${sport.status.toLowerCase() === 'active'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-blue-100 text-blue-800'
+                      }`}>
                       {sport.status}
                     </span>
                   </div>
@@ -590,7 +590,7 @@ export default function MySportsPage() {
                         image: null
                       });
                     }}
-                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                    className="text-gray-400 hover:text-gray-600 text-2xl bg-red-500 p-2 rounded-full px-4 text-white"
                   >
                     ✕
                   </button>
@@ -619,7 +619,7 @@ export default function MySportsPage() {
                         <option value="">Select a Sports</option>
                         {availableTrees.map((tree) => (
                           <option key={tree.id} value={tree.id}>
-                            {tree.name} ({tree.sports_name_hi}) - {tree.category}
+                            {tree.name} ({tree.name_hi}) - {tree.category}
                           </option>
                         ))}
                       </select>
@@ -629,23 +629,28 @@ export default function MySportsPage() {
                   {/* Planting Date */}
                   <div>
                     <label htmlFor="planting_date" className="block text-sm font-medium text-gray-700 mb-2">
-                    Participation Date <span className="text-red-500">*</span>
+                      Participation Date <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
                       id="planting_date"
                       name="planting_date"
-                      value={plantFormData.planting_date}
+                      value={plantFormData.planting_date || ""}
                       onChange={handleInputChange}
+                      onClick={(e) => e.currentTarget.showPicker?.()}
+                      onKeyDown={(e) => e.preventDefault()}
+                      onPaste={(e) => e.preventDefault()}
+                      inputMode="none"
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
                     />
+
                   </div>
 
                   {/* Height */}
                   <div>
                     <label htmlFor="height" className="block text-sm font-medium text-gray-700 mb-2">
-                    Achievement <span className="text-red-500">*</span>
+                      Achievement <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="number"
@@ -664,7 +669,7 @@ export default function MySportsPage() {
                   {/* Health */}
                   <div>
                     <label htmlFor="health" className="block text-sm font-medium text-gray-700 mb-2">
-                    Play <span className="text-red-500">*</span>
+                      Play <span className="text-red-500">*</span>
                     </label>
                     <select
                       id="health"
@@ -676,25 +681,37 @@ export default function MySportsPage() {
                     >
                       <option value="Team">Team</option>
                       <option value="Individual">Individual</option>
-                      
+
                     </select>
                   </div>
 
                   {/* Class */}
                   <div>
-                    <label htmlFor="class" className="block text-sm font-medium text-gray-700 mb-2">
-                    Level <span className="text-red-500">*</span>
+                    <label
+                      htmlFor="class"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      Level <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
+
+                    <select
                       id="class"
                       name="class"
                       value={plantFormData.class}
                       onChange={handleInputChange}
                       required
-                      placeholder="School , state , national"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
-                    />
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                    >
+                      <option value="" disabled>
+                        Select level
+                      </option>
+                      <option value="school">School</option>
+                      <option value="district">District</option>
+                      <option value="state">State</option>
+                      <option value="national">National</option>
+                      <option value="international">International</option>
+                    </select>
+
                   </div>
 
                   {/* Location */}
@@ -750,7 +767,7 @@ export default function MySportsPage() {
                           image: null
                         });
                       }}
-                      className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg  hover:bg-[#204b73] cursor-pointer hover:text-white transition-colors"
                       disabled={planting}
                     >
                       Cancel
@@ -758,7 +775,7 @@ export default function MySportsPage() {
                     <button
                       type="submit"
                       disabled={planting}
-                      className="flex-1 px-4 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#204b73] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 px-4 py-2 bg-[#204b73] text-white rounded-lg border hover:text-[#204b73] border-[#204b73] hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {planting ? (
                         <span className="flex items-center justify-center gap-2">

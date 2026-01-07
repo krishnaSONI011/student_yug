@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { FaTree, FaCalendarAlt, FaMapMarkerAlt, FaLeaf, FaSeedling, FaTrophy, FaHeart, FaEye, FaPlus, FaTumblr } from 'react-icons/fa';
 import { GiPoliceBadge } from 'react-icons/gi';
@@ -10,6 +11,7 @@ interface Tree {
   name: string;
   scientificName: string;
   tree_name_hi: string;
+  tree_img : string ;
   plantedDate: string;
   class: string;
   subject: string;
@@ -38,6 +40,7 @@ interface ApiTreeData {
   tree_name_sc: string;
   tree_name_hi: string;
   tree_category: string;
+  tree_img : string ;
   tree_carbon_reduced_per_year: string;
   tree_oxygen_produced_per_year: string;
   student_id: string;
@@ -62,6 +65,7 @@ interface AvailableTree {
   name_en: string;
   name_hi: string;
   name_sc: string;
+  tree_img : string ;
   category: string;
   carbon: string;
   oxygen: string;
@@ -91,7 +95,7 @@ interface PlantTreeFormData {
 
 // Helper function to extract numeric value from string like "0.00 kg" or "0 kg"
 const extractNumericValue = (value: string): number => {
-  
+
   if (!value) return 0;
   const match = value.match(/[\d.]+/);
   return match ? parseFloat(match[0]) : 0;
@@ -105,6 +109,7 @@ const transformApiDataToTree = (apiData: ApiTreeData): Tree => {
     scientificName: apiData.tree_name_sc || 'Unknown',
     plantedDate: apiData.planting_date || '',
     tree_name_hi: apiData.tree_name_hi || '',
+    tree_img: apiData.tree_img || '',
     class: apiData.class || 'N/A',
     subject: apiData.tree_category || 'General',
     location: apiData.location || 'Unknown Location',
@@ -112,7 +117,7 @@ const transformApiDataToTree = (apiData: ApiTreeData): Tree => {
     status: apiData.stage || 'Unknown',
     height: apiData.height || 'N/A',
     health: apiData.health || 'Unknown',
-    image: '', // Not available in API response
+    image: apiData.tree_img || '', // Not available in API response
     description: `${apiData.tree_name_en} (${apiData.tree_name_sc}) planted on ${apiData.planting_date}. ${apiData.tree_category} category.`,
     impact: {
       co2Reduced: extractNumericValue(apiData.co2_reduced),
@@ -130,7 +135,7 @@ const transformApiDataToTree = (apiData: ApiTreeData): Tree => {
 // Get user_id from localStorage
 const getUserIdFromStorage = (): string | null => {
   if (typeof window === 'undefined') return null;
-  
+
   try {
     const userData = localStorage.getItem('user');
     if (userData) {
@@ -170,14 +175,14 @@ export default function MyTreesPage() {
       try {
         setLoading(true);
         setError(null);
-        
+
         const userId = getUserIdFromStorage();
         if (!userId) {
           setError('User not found. Please login again.');
           setLoading(false);
           return;
         }
-        
+
         const response = await fetch(
           `https://irisinformatics.net/studentyug/wb/getPlantedTrees?user_id=${userId}`
         );
@@ -187,7 +192,7 @@ export default function MyTreesPage() {
         }
 
         const result: ApiResponse = await response.json();
-        
+
         if (result.data && Array.isArray(result.data)) {
           const transformedTrees = result.data.map(transformApiDataToTree);
           setTreesData(transformedTrees);
@@ -221,7 +226,7 @@ export default function MyTreesPage() {
           }
 
           const result: AvailableTreesResponse = await response.json();
-          
+
           if (result.data && Array.isArray(result.data)) {
             setAvailableTrees(result.data);
           } else {
@@ -242,23 +247,23 @@ export default function MyTreesPage() {
   // Handle plant tree form submission
   const handlePlantTree = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!plantFormData.tree_id || !plantFormData.planting_date || !plantFormData.height || 
-        !plantFormData.health || !plantFormData.class || !plantFormData.location) {
+
+    if (!plantFormData.tree_id || !plantFormData.planting_date || !plantFormData.height ||
+      !plantFormData.health || !plantFormData.class || !plantFormData.location) {
       alert('Please fill in all required fields');
       return;
     }
 
     try {
       setPlanting(true);
-      
+
       const userId = getUserIdFromStorage();
       if (!userId) {
         alert('User not found. Please login again.');
         setPlanting(false);
         return;
       }
-      
+
       const formData = new FormData();
       formData.append('user_id', userId);
       formData.append('tree_id', plantFormData.tree_id);
@@ -267,7 +272,7 @@ export default function MyTreesPage() {
       formData.append('health', plantFormData.health);
       formData.append('class', plantFormData.class);
       formData.append('location', plantFormData.location);
-      
+
       if (plantFormData.image) {
         formData.append('image', plantFormData.image);
       }
@@ -285,7 +290,7 @@ export default function MyTreesPage() {
       }
 
       await response.json();
-      
+
       // Reset form and close modal
       setPlantFormData({
         tree_id: '',
@@ -297,7 +302,7 @@ export default function MyTreesPage() {
         image: null
       });
       setShowPlantModal(false);
-      
+
       // Refresh the trees list
       const refreshUserId = getUserIdFromStorage();
       if (refreshUserId) {
@@ -312,7 +317,7 @@ export default function MyTreesPage() {
           }
         }
       }
-      
+
       alert('Tree planted successfully!');
     } catch (err) {
       console.error('Error planting tree:', err);
@@ -348,14 +353,14 @@ export default function MyTreesPage() {
     { id: 'excellent', label: 'Excellent Health', count: treesData.filter(tree => tree.health.toLowerCase() === 'excellent' || tree.health.toLowerCase() === 'good').length }
   ];
 
-  const filteredTrees = selectedFilter === 'all' 
-    ? treesData 
+  const filteredTrees = selectedFilter === 'all'
+    ? treesData
     : treesData.filter(tree => {
-        if (selectedFilter === 'growing') return tree.status.toLowerCase() === 'growing';
-        if (selectedFilter === 'mature') return tree.status.toLowerCase() === 'mature';
-        if (selectedFilter === 'excellent') return tree.health.toLowerCase() === 'excellent' || tree.health.toLowerCase() === 'good';
-        return true;
-      });
+      if (selectedFilter === 'growing') return tree.status.toLowerCase() === 'growing';
+      if (selectedFilter === 'mature') return tree.status.toLowerCase() === 'mature';
+      if (selectedFilter === 'excellent') return tree.health.toLowerCase() === 'excellent' || tree.health.toLowerCase() === 'good';
+      return true;
+    });
 
   const totalImpact = treesData.reduce((acc, tree) => ({
     co2Reduced: acc.co2Reduced + tree.impact.co2Reduced,
@@ -366,11 +371,11 @@ export default function MyTreesPage() {
   // Calculate average years from trees
   const averageYears = treesData.length > 0
     ? Math.round(treesData.reduce((sum, tree) => {
-        const plantedDate = new Date(tree.plantedDate);
-        const now = new Date();
-        const years = (now.getTime() - plantedDate.getTime()) / (1000 * 60 * 60 * 24 * 365);
-        return sum + (isNaN(years) ? 0 : years);
-      }, 0) / treesData.length)
+      const plantedDate = new Date(tree.plantedDate);
+      const now = new Date();
+      const years = (now.getTime() - plantedDate.getTime()) / (1000 * 60 * 60 * 24 * 365);
+      return sum + (isNaN(years) ? 0 : years);
+    }, 0) / treesData.length)
     : 0;
 
   if (loading) {
@@ -401,7 +406,7 @@ export default function MyTreesPage() {
       </div>
     );
   }
-
+console.log(filteredTrees)
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -419,7 +424,7 @@ export default function MyTreesPage() {
             </div>
             <button
               onClick={() => setShowPlantModal(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-[#204b73] text-white rounded-lg hover:bg-[#204b73] transition-colors duration-200 font-medium shadow-sm"
+              className="flex items-center gap-2 px-6 py-3 bg-[#204b73] text-white cursor-pointer border border-[#204b73] rounded-lg hover:bg-white hover:text-[#204b73] transition-colors duration-200 font-medium shadow-sm"
             >
               <FaPlus className="text-sm" />
               Plant Tree
@@ -427,7 +432,7 @@ export default function MyTreesPage() {
           </div>
 
           {/* Stats Cards */}
-          <div className="cursor-default grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="cursor-default grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
@@ -464,7 +469,7 @@ export default function MyTreesPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            {/* <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
                   <FaTrophy className="text-yellow-600" />
@@ -474,7 +479,7 @@ export default function MyTreesPage() {
                   <p className="text-sm text-gray-600">Avg Years</p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -506,82 +511,81 @@ export default function MyTreesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTrees.map((tree) => (
-            <div key={tree.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
-              {/* Tree Image */}
-              <div className="h-48 bg-gradient-to-br from-[#204b73] to-[#204b73] flex items-center justify-center">
-                <FaTree className="text-6xl text-white" />
-              </div>
+            {filteredTrees.map((tree , index) => (
+              <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                {/* Tree Image */}
+                <div className="h-48 bg-gradient-to-br ">
+                  {/* <FaTree className="text-6xl text-white" /> */}
+                  <img src={`https://irisinformatics.net/`+tree.image} alt={"image"}  width={100} height={100}/>
+                </div>
 
-              {/* Tree Info */}
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-3">
-                  <div className='cursor-default'>
-                    <h3 className="cursor-default text-lg font-semibold text-gray-900">{tree.name}({tree.tree_name_hi})</h3>
-                    {/* <p className="text-sm text-gray-600 italic">{tree.scientificName}</p> */}
-                  </div>
-                  <span className={`px-2 py-1 rounded-full cursor-default text-xs font-medium ${
-                    tree.status.toLowerCase() === 'mature' 
-                      ? 'bg-green-100 text-green-800' 
+                {/* Tree Info */}
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className='cursor-default'>
+                      <h3 className="cursor-default text-lg font-semibold text-gray-900">{tree.name}({tree.tree_name_hi})</h3>
+                      {/* <p className="text-sm text-gray-600 italic">{tree.scientificName}</p> */}
+                    </div>
+                    <span className={`px-2 py-1 rounded-full cursor-default text-xs font-medium ${tree.status.toLowerCase() === 'mature'
+                      ? 'bg-green-100 text-green-800'
                       : 'bg-blue-100 text-blue-800'
-                  }`}>
-                    {tree.status}
-                  </span>
-                </div>
+                      }`}>
+                      {tree.status}
+                    </span>
+                  </div>
 
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
-                    <FaCalendarAlt className="text-gray-400" />
-                    <span>Planted: {new Date(tree.plantedDate).toLocaleDateString()}</span>
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
+                      <FaCalendarAlt className="text-gray-400" />
+                      <span>Planted: {new Date(tree.plantedDate).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
+                      <LuTestTube className="text-gray-400" />
+                      <span className='font-bold'>Scientific Name: <span className='font-normal'> {tree.scientificName}</span></span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
+                      <GiPoliceBadge className="text-gray-400" />
+                      <span>Class: {tree.class}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
+                      <FaMapMarkerAlt className="text-gray-400" />
+                      <span>{tree.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
+                      <FaTree className="text-gray-400" />
+                      <span>Height: {tree.height}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
-                    <LuTestTube className="text-gray-400" />
-                    <span className='font-bold'>Scientific Name: <span className='font-normal'> {tree.scientificName}</span></span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
-                    <GiPoliceBadge className="text-gray-400" />
-                    <span>Class: {tree.class}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
-                    <FaMapMarkerAlt className="text-gray-400" />
-                    <span>{tree.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
-                    <FaTree className="text-gray-400" />
-                    <span>Height: {tree.height}</span>
-                  </div>
-                </div>
 
-                {/* Health Status */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm text-gray-600 cursor-default">Health Status:</span>
-                  <span className={`cursor-default px-2 py-1 rounded-full text-xs font-medium ${
-                    tree.health.toLowerCase() === 'excellent' || tree.health.toLowerCase() === 'good'
-                      ? 'bg-green-100 text-green-800' 
+                  {/* Health Status */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm text-gray-600 cursor-default">Health Status:</span>
+                    <span className={`cursor-default px-2 py-1 rounded-full text-xs font-medium ${tree.health.toLowerCase() === 'excellent' || tree.health.toLowerCase() === 'good'
+                      ? 'bg-green-100 text-green-800'
                       : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {tree.health}
-                  </span>
-                </div>
+                      }`}>
+                      {tree.health}
+                    </span>
+                  </div>
 
-                {/* Impact Stats */}
-                <div className="grid grid-cols-3 gap-2 mb-4">
-                  <div className="cursor-default text-center p-2 bg-gray-50 rounded">
-                    <p className="text-xs text-gray-600">CO₂</p>
-                    <p className="text-sm font-semibold text-gray-900">{tree.impact.co2Reduced}kg</p>
+                  {/* Impact Stats */}
+                  <div className="grid grid-cols-3 gap-2 mb-4">
+                    <div className="cursor-default text-center p-2 bg-gray-50 rounded">
+                      <p className="text-xs text-gray-600">CO₂</p>
+                      <p className="text-sm font-semibold text-gray-900">{tree.impact.co2Reduced}kg</p>
+                    </div>
+                    <div className="cursor-default text-center p-2 bg-gray-50 rounded">
+                      <p className="text-xs text-gray-600">O₂</p>
+                      <p className="text-sm font-semibold text-gray-900">{tree.impact.oxygenProduced}kg</p>
+                    </div>
+                    <div className="cursor-default text-center p-2 bg-gray-50 rounded">
+                      <p className="text-xs text-gray-600">Carbon</p>
+                      <p className="text-sm font-semibold text-gray-900">{tree.impact.carbonStored}kg</p>
+                    </div>
                   </div>
-                  <div className="cursor-default text-center p-2 bg-gray-50 rounded">
-                    <p className="text-xs text-gray-600">O₂</p>
-                    <p className="text-sm font-semibold text-gray-900">{tree.impact.oxygenProduced}kg</p>
-                  </div>
-                  <div className="cursor-default text-center p-2 bg-gray-50 rounded">
-                    <p className="text-xs text-gray-600">Carbon</p>
-                    <p className="text-sm font-semibold text-gray-900">{tree.impact.carbonStored}kg</p>
-                  </div>
-                </div>
 
-                {/* Actions */}
-                {/* <div className="flex gap-2">
+                  {/* Actions */}
+                  {/* <div className="flex gap-2">
                   <button
                     onClick={() => setSelectedTree(tree)}
                     className="flex-1 flex items-center justify-center gap-2 py-2 px-3 bg-[#1c756b] text-white rounded-lg hover:bg-[#155e56] transition-colors duration-200 text-sm font-medium"
@@ -593,9 +597,9 @@ export default function MyTreesPage() {
                     <FaHeart className="text-sm" />
                   </button>
                 </div> */}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
           </div>
         )}
 
@@ -726,7 +730,7 @@ export default function MyTreesPage() {
                         image: null
                       });
                     }}
-                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                    className="text-gray-400 hover:text-gray-600 text-2xl bg-red-500 p-2 rounded-full px-4 text-white"
                   >
                     ✕
                   </button>
@@ -769,13 +773,17 @@ export default function MyTreesPage() {
                     </label>
                     <input
                       type="date"
-                      id="planting_date"
                       name="planting_date"
-                      value={plantFormData.planting_date}
+                      value={plantFormData.planting_date || ""}
                       onChange={handleInputChange}
+                      // onClick={(e) => e.currentTarget.showPicker?.()}
+                      disabled
+                      // onKeyDown={(e) => e.preventDefault()}   // ⛔ blocks typing
+                      max="2026-12-31"
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                      className="w-full cursor-not-allowed px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b]"
                     />
+
                   </div>
 
                   {/* Height */}
@@ -822,16 +830,32 @@ export default function MyTreesPage() {
                     <label htmlFor="class" className="block text-sm font-medium text-gray-700 mb-2">
                       Class <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
+                    <select
                       id="class"
                       name="class"
-                      value={plantFormData.class}
+                      value={plantFormData.class || ""}
                       onChange={handleInputChange}
                       required
-                      placeholder="e.g., 8th"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
-                    />
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent bg-white"
+                    >
+                      <option value="" disabled>
+                        Select Class
+                      </option>
+
+                      <option value="I">Class I</option>
+                      <option value="II">Class II</option>
+                      <option value="III">Class III</option>
+                      <option value="IV">Class IV</option>
+                      <option value="V">Class V</option>
+                      <option value="VI">Class VI</option>
+                      <option value="VII">Class VII</option>
+                      <option value="VIII">Class VIII</option>
+                      <option value="IX">Class IX</option>
+                      <option value="X">Class X</option>
+                      <option value="XI">Class XI</option>
+                      <option value="XII">Class XII</option>
+                    </select>
+
                   </div>
 
                   {/* Location */}
@@ -887,7 +911,7 @@ export default function MyTreesPage() {
                           image: null
                         });
                       }}
-                      className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg  hover:bg-[#204b73] cursor-pointer hover:text-white transition-colors"
                       disabled={planting}
                     >
                       Cancel
@@ -895,7 +919,7 @@ export default function MyTreesPage() {
                     <button
                       type="submit"
                       disabled={planting}
-                      className="flex-1 px-4 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#204b73] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 px-4 py-2 bg-[#204b73] text-white rounded-lg border hover:text-[#204b73] border-[#204b73] hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {planting ? (
                         <span className="flex items-center justify-center gap-2">

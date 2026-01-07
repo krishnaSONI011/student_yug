@@ -338,6 +338,7 @@ export default function LoginPage() {
             user_id: data.data.user_id,
             name: data.data.name,
             email: data.data.email,
+            img: data.data.img,
             token: data.data.token
           })
         );
@@ -568,7 +569,7 @@ export default function LoginPage() {
                     onChange={handleInputChange}
                     className={`w-full pl-10 pr-4 py-3 rounded-lg border-2 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 ${errors.aadhaarId ? 'border-red-500' : 'border-white/30'
                       }`}
-                    placeholder={loginType === 'email' ? 'Enter your email or number' : '1234 5678 9012'}
+                    placeholder={loginType === 'email' ? 'Enter your Email or Number' : '1234 5678 9012'}
 
                     maxLength={
                       loginType === "apaar"
@@ -640,9 +641,9 @@ export default function LoginPage() {
                   </div>
 
                 </div>
-                {errors.dateOfBirth && (
+                {/* {errors.dateOfBirth && (
                   <p className="mt-2 text-sm text-red-300">{errors.dateOfBirth}</p>
-                )}
+                )} */}
               </div>
 
               {/* Remember Me */}

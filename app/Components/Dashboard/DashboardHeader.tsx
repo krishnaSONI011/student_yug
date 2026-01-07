@@ -10,7 +10,8 @@ import { useRouter } from 'next/navigation';
 interface UserData {
   name: string;
   email?: string;
-  image?: string;
+  img?: string;
+
 }
 
 export default function DashboardHeader() {
@@ -20,13 +21,26 @@ export default function DashboardHeader() {
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // ✅ Get user from localStorage safely
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setUserData(JSON.parse(user));
-    }
+    const loadUser = () => {
+      const user = localStorage.getItem("user");
+      if (user) {
+        setUserData(JSON.parse(user));
+      }
+    };
+  
+    loadUser(); // initial load
+  
+    window.addEventListener("userUpdated", loadUser);
+    window.addEventListener("storage", loadUser); // cross-tab
+  
+    return () => {
+      window.removeEventListener("userUpdated", loadUser);
+      window.removeEventListener("storage", loadUser);
+    };
   }, []);
+  
+  
 
   // ✅ Close dropdown on outside click
   useEffect(() => {
@@ -75,12 +89,12 @@ export default function DashboardHeader() {
         <div className="flex items-center gap-4">
 
           {/* Notifications */}
-          <button className="relative p-2 text-gray-600 hover:text-[#204b73] transition-colors">
+          {/* <button className="relative p-2 text-gray-600 hover:text-[#204b73] transition-colors">
             <FaBell className="text-xl" />
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
               3
             </span>
-          </button>
+          </button> */}
 
           {/* Profile Menu */}
           <div ref={menuRef} id="profile" className="relative">
@@ -89,13 +103,16 @@ export default function DashboardHeader() {
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
-              <Image
-                src={userData?.image || "/fina.jpg"}
-                width={32}
-                height={32}
-                alt="Profile"
-                className="rounded-full object-cover"
-              />
+             <div className="relative w-[50px] h-[50px] rounded-full overflow-hidden">
+  <Image
+    src={userData?.img || "/fina.jpg"}
+    alt="Profile"
+    fill
+    sizes="50px"
+    className="object-cover"
+  />
+</div>
+
 
               <span className="text-sm font-medium text-gray-700">
                 {userData?.name || "Guest"}

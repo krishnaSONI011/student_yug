@@ -102,10 +102,11 @@ export default function Profile2() {
       formData.append("school_address", profileData.school_address);
       formData.append("school_code", profileData.school_code);
       formData.append("img", profileData.img || "");
+      console.log("sdfsdfa"+profileData.img)
       if (profileImage) {
-        formData.append("profile_image", profileImage);
+        formData.append("img", profileImage);
       }
-
+      console.log(formData)
       const response = await axios.post(
         "https://irisinformatics.net/studentyug/wb/update_profile",
         formData
@@ -113,9 +114,22 @@ export default function Profile2() {
 
       if (response.data.status === "1") {
         toast.success(response.data.message);
+        const updatedImg =
+        response.data?.data?.img || response.data?.img;
+
+      if (updatedImg) {
+        const updatedUser = {
+          ...userData,
+          img: updatedImg,
+        };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event("userUpdated"));
+      }
+
         setPreviewImage(null);
         setProfileImage(null);
         getProfileData();
+        
       } else {
         toast.error(response.data.message);
       }
@@ -134,19 +148,23 @@ console.log(profileData)
        
        {/* ================= PROFILE IMAGE ================= */}
       <div className="flex flex-col items-center mt-5 gap-3">
-        <Image
-          src={
-            previewImage
-              ? previewImage
-              : profileData?.img
-              ? profileData?.img
-              : "/logo.png"
-          }
-          alt="profile"
-          width={120}
-          height={120}
-          className="rounded-full border object-cover"
-        />
+      <div className="relative w-[120px] h-[120px] rounded-full overflow-hidden border">
+  <Image
+    src={
+      previewImage
+        ? previewImage
+        : profileData?.img
+        ? profileData.img
+        : "/logo.png"
+    }
+    alt="profile"
+    fill
+    sizes="120px"
+    className="object-cover"
+  />
+</div>
+
+
         {/* <img
   src={`https://irisinformatics.net/studentyug/upload/students/logo.webp`}
   alt="profile"
@@ -190,17 +208,17 @@ console.log(profileData)
         <h1 className="text-xl mt-5 px-5 font-bold">Basic Information</h1>
         <div className="grid grid-cols-2 gap-2 p-2">
         <div className="flex flex-col">
-                <label>Email</label>
+                <label>Email<span className="text-red-500">*</span></label>
                 <input type="email" className=" border bg-white p-2" value={profileData?.email} name="email"  onChange={handleChange} />
             </div>
             <div className="flex flex-col">
-                <label>Phone</label>
-                <input type="text" className=" border bg-white p-2" value={profileData?.mobile} name="mobile"  onChange={handleChange}/>
+                <label>Phone<span className="text-red-500">*</span></label>
+                <input  type="number" className=" border bg-white p-2" value={profileData?.mobile} name="mobile"  onChange={handleChange}/>
             </div>
         </div>
        <div className="grid grid-cols-1 gap-2 p-2">
        <div className="flex flex-col">
-                <label>Address</label>
+                <label>Address<span className="text-red-500">*</span></label>
                 <textarea  className=" border bg-white p-2" value={profileData?.address}  name="address"  onChange={handleChange}/>
             </div>
        </div>
@@ -211,17 +229,17 @@ console.log(profileData)
         </div>
         <div className="grid grid-cols-2 gap-2 p-2">
         <div className="flex flex-col">
-                <label>School Name</label>
+                <label>School Name <span className="text-red-500">*</span></label>
                 <input type="text" className=" border bg-white p-2" value={profileData?.school_name}  name="school_name"  onChange={handleChange}/>
             </div>
             <div className="flex flex-col">
-                <label>School Code</label>
+                <label>School Code<span className="text-red-500">*</span></label>
                 <input type="text" className=" border bg-white p-2"  value={profileData?.school_code} name="school_code"  onChange={handleChange}/>
             </div>
         </div>
         <div className="grid grid-cols-1 gap-2 p-2">
         <div className="flex flex-col">
-                <label>School Address</label>
+                <label>School Address<span className="text-red-500">*</span></label>
                 <textarea  className=" border bg-white p-2" value={profileData?.school_address}  name="school_address"  onChange={handleChange}/>
             </div>
             <div className="my-10 text-center">
