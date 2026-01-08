@@ -339,6 +339,7 @@ export default function LoginPage() {
             name: data.data.name,
             email: data.data.email,
             img: data.data.img,
+            current_class:data.data.current_class,
             token: data.data.token
           })
         );

@@ -1,481 +1,306 @@
-"use client";
+'use client'
+
 import axios from "axios";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-import { useState, useEffect } from "react";
-import {
-  FaUser,
-  FaEnvelope,
-  FaPhone,
-  FaMapMarkerAlt,
-  FaSchool,
-  FaGraduationCap,
-  FaCalendarAlt,
-  FaEdit,
-} from "react-icons/fa";
-import { GiPoliceBadge } from "react-icons/gi";
-
-interface UserData {
-  user_id: string;
-  first_name?: string;
-  last_name?: string;
-  email?: string;
-  token?: string;
-}
-
-interface StudentProfile {
+interface studentApi {
   name: string;
-  class: string;
-  address: string;
+  last_name: string;
+  mobile: string;
   email: string;
-  phone: string;
-  dateOfBirth: string;
+  current_class: string;
+  dob: string;
+  enroll_id: string;
+  address: string;
+  school_name: string;
+  school_address: string;
+  school_code: string;
+  img?: string;
 }
 
-interface SchoolDetails {
-  schoolName: string;
-  schoolAddress: string;
-  schoolClass: string;
-  schoolCode?: string;
-}
+export default function Profile2() {
+  const [profileData, setProfileData] = useState<studentApi | null>(null);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-export default function ProfilePage() {
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
-  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-
-  // -----------------------------------------
-  // LOAD USER FROM LOCAL STORAGE
-  // -----------------------------------------
   useEffect(() => {
-    // ---- PROFILE IMAGE ----
-    const savedImage = localStorage.getItem("profileImage");
-    if (savedImage) {
-      setProfileImage(savedImage);
-    }
-  
-    // ---- USER DATA ----
-    const user = localStorage.getItem("user");
-  
-    if (user) {
-      const parsed = JSON.parse(user);
-      setUserData(parsed);
-  
-      setStudentProfile({
-        name: `${parsed.first_name || ""} ${parsed.last_name || ""}`.trim(),
-        class: parsed.class || "Not Set",
-        address: parsed.address || "Not Set",
-        email: parsed.email || "Not Set",
-        phone: parsed.mobile || "Not Set",
-        dateOfBirth: parsed.dob || "Not Set",
-      });
-  
-      const savedSchool = localStorage.getItem("schoolDetails");
-      setSchoolDetails(
-        savedSchool
-          ? JSON.parse(savedSchool)
-          : {
-              schoolName: parsed.school_name || "Not Set",
-              schoolAddress: parsed.school_address || "Not Set",
-              schoolClass: parsed.class || "Not Set",
-              schoolCode: parsed.school_code || "Not Set",
-            }
-      );
-    }
-  
-    setLoading(false);
+    getProfileData();
   }, []);
-  
+
+  // ================= GET PROFILE =================
+  async function getProfileData() {
+    const user = localStorage.getItem("user");
+    if (!user) return;
+
+    const userData = JSON.parse(user);
+
+    try {
+      const response = await axios.get(
+        `https://irisinformatics.net/studentyug/wb/getStudent?user_id=${userData.user_id}`
+      );
+      console.log(response)
+
+      setProfileData(response.data.data);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  // ================= HANDLE INPUT CHANGE =================
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setProfileData((prev) =>
+      prev
+        ? {
+          ...prev,
+          [name]: value,
+        }
+        : prev
+    );
+  };
+
+  // ================= HANDLE IMAGE CHANGE =================
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-  
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const img = reader.result as string;
-      setProfileImage(img);
-      localStorage.setItem("profileImage", img); // ✅ persist
-    };
-    reader.readAsDataURL(file);
-  };
-  
 
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-
-    if (user) {
-      const parsed = JSON.parse(user);
-      setUserData(parsed);
-
-      // Student Profile
-      const savedProfile = localStorage.getItem("user");
-      setStudentProfile(
-        savedProfile
-          ? JSON.parse(savedProfile)
-          : {
-              name: `${parsed.first_name || ""} ${parsed.last_name || ""}`.trim(),
-              class: parsed.class || "Not Set",
-              address: parsed.address || "Not Set",
-              email: parsed.email || "Not Set",
-              phone: parsed.mobile || "Not Set",
-              dateOfBirth: parsed.dob || "Not Set",
-            }
-      );
-
-      // School Details
-      const savedSchool = localStorage.getItem("schoolDetails");
-      setSchoolDetails(
-        savedSchool
-          ? JSON.parse(savedSchool)
-          : {
-              schoolName: parsed.school_name || "Not Set",
-              schoolAddress: parsed.school_address || "Not Set",
-              schoolClass: parsed.class || "Not Set",
-              schoolCode: parsed.school_code || "Not Set",
-            }
-      );
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select a valid image");
+      return;
     }
 
-    setLoading(false);
-  }, []);
+    setProfileImage(file);
+    setPreviewImage(URL.createObjectURL(file));
+  };
+  const validateFieldsWithName = () => {
+    if (!profileData) return false;
+  
+    const requiredFields: { key: keyof studentApi; label: string }[] = [
+      { key: "email", label: "Email" },
+      { key: "mobile", label: "Phone" },
+      { key: "address", label: "Address" },
+      { key: "school_name", label: "School Name" },
+      { key: "school_code", label: "School Code" },
+      { key: "school_address", label: "School Address" },
+    ];
+  
+    for (const field of requiredFields) {
+      const value = profileData[field.key];
+  
+      if (!value || value.trim() === "") {
+        toast.error(`${field.label} is required`);
+        return false;
+      }
+    }
+  
+    // Extra mobile validation
+    if (profileData.mobile.length !== 10) {
+      toast.error("Phone must be 10 digits");
+      return false;
+    }
+  
+    return true;
+  };
+  
+  // ================= UPDATE PROFILE =================
+  async function updateProfileData() {
+    const user = localStorage.getItem("user");
+    if (!user || !profileData) return;
+    if (!validateFieldsWithName()) return;
+    const userData = JSON.parse(user);
 
-  // -----------------------------------------
-  // API: UPDATE PROFILE
-  // -----------------------------------------
-  async function updateProfileAPI() {
-    if (!userData || !studentProfile || !schoolDetails) return;
-      console.log(userData.user_id)
     try {
-      const [fname, lname = ""] = studentProfile.name.split(" ");
-
       const formData = new FormData();
 
       formData.append("id", userData.user_id);
-      formData.append("first_name", fname);
-      formData.append("last_name", lname);
-      formData.append("email", studentProfile.email);
-      formData.append("apaar_id", ""); // optional if not used
-      formData.append("mobile", studentProfile.phone);
-      formData.append("class", studentProfile.class);
-      formData.append("dob", studentProfile.dateOfBirth);
-      formData.append("address", studentProfile.address);
-      formData.append("school_name", schoolDetails.schoolName);
-      formData.append("school_address", schoolDetails.schoolAddress);
-      formData.append("school_code", schoolDetails.schoolCode || "");
-
-      
-      const response = await axios.post("https://irisinformatics.net/studentyug/wb/update_profile" , formData)
-     
-      if (response.data.status == "1") {
-        // Update localStorage
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-
-        setUserData(response.data.data);
-
-        alert("Profile updated successfully! 🎉");
-      } else {
-        console.log(response.data)
-        alert("Failed to update profile.");
+      formData.append("first_name", profileData.name);
+      formData.append("last_name", profileData.last_name);
+      formData.append("email", profileData.email);
+      formData.append("apaar_id", profileData.enroll_id);
+      formData.append("mobile", profileData.mobile);
+      formData.append("class", profileData.current_class);
+      formData.append("dob", profileData.dob);
+      formData.append("address", profileData.address);
+      formData.append("school_name", profileData.school_name);
+      formData.append("school_address", profileData.school_address);
+      formData.append("school_code", profileData.school_code);
+      formData.append("img", profileData.img || "");
+      console.log("sdfsdfa" + profileData.img)
+      if (profileImage) {
+        formData.append("img", profileImage);
       }
-    } catch (error) {
-      console.error("API Error:", error);
-      alert("Something went wrong!");
+      console.log(formData)
+      const response = await axios.post(
+        "https://irisinformatics.net/studentyug/wb/update_profile",
+        formData
+      );
+
+      if (response.data.status === "1") {
+        toast.success(response.data.message);
+        const updatedImg =
+          response.data?.data?.img || response.data?.img;
+
+        if (updatedImg) {
+          const updatedUser = {
+            ...userData,
+            img: updatedImg,
+          };
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          window.dispatchEvent(new Event("userUpdated"));
+        }
+
+        setPreviewImage(null);
+        setProfileImage(null);
+        getProfileData();
+
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Profile update failed");
     }
   }
 
-  // -----------------------------------------
-  // SAVE CHANGES
-  // -----------------------------------------
-  const handleSave = () => {
-    if (studentProfile && schoolDetails) {
-      localStorage.setItem("studentProfile", JSON.stringify(studentProfile));
-      localStorage.setItem("schoolDetails", JSON.stringify(schoolDetails));
-
-      updateProfileAPI(); // ⭐ Update server also
-
-      setIsEditing(false);
-    }
-  };
-
-  // -----------------------------------------
-  // INPUT HANDLER
-  // -----------------------------------------
-  const handleInputChange = (
-    section: "student" | "school",
-    field: string,
-    value: string
-  ) => {
-    if (section === "student" && studentProfile) {
-      setStudentProfile({ ...studentProfile, [field]: value });
-    } else if (section === "school" && schoolDetails) {
-      setSchoolDetails({ ...schoolDetails, [field]: value });
-    }
-  };
-
-  // -----------------------------------------
-  // LOADING SCREEN
-  // -----------------------------------------
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#204b73] mb-4"></div>
-          <p className="text-gray-600">Loading profile...</p>
-        </div>
-      </div>
-    );
+  if (!profileData) {
+    return <p className="text-center mt-10">Loading profile...</p>;
   }
-
-  // -----------------------------------------
-  // IF NO USER FOUND
-  // -----------------------------------------
-  if (!userData) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">User not found. Please login again.</p>
-          <button
-            onClick={() => (window.location.href = "/login")}
-            className="px-4 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#1a3a5a] transition-colors"
-          >
-            Go to Login
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // -----------------------------------------
-  // UI START
-  // -----------------------------------------
+  console.log(profileData)
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-            <div className="relative">
-  <img
-    src={profileImage || "/avatar.png"}
-    alt="Profile"
-    className="w-12 h-12 rounded-full object-cover border"
-  />
+    <>
 
-  {isEditing && (
-    <label className="absolute -bottom-1 -right-1 bg-[#204b73] p-1 rounded-full cursor-pointer">
-      <FaEdit className="text-white text-xs" />
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-        className="hidden"
-      />
-    </label>
-  )}
-</div>
-
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-                <p className="text-gray-600">View and manage your profile information</p>
-              </div>
-            </div>
-
-            {!isEditing && (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#1a3a5a] transition-colors duration-200 font-medium"
-              >
-                <FaEdit className="text-sm" />
-                Edit Profile
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* STUDENT INFORMATION */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-[#204b73] rounded-full flex items-center justify-center">
-                <FaUser className="text-white" />
-              </div>
-              <h2 className="text-xl font-bold text-gray-900">Student Information</h2>
-            </div>
-
-            <div className="space-y-4">
-              {/* FULL NAME */}
-              <FormItem
-                label="Full Name"
-                value={studentProfile?.name}
-                editing={isEditing}
-                onChange={(v:any) => handleInputChange("student", "name", v)}
-              />
-
-              {/* CLASS */}
-              <FormItem
-                label="Class"
-                icon={<GiPoliceBadge />}
-                value={studentProfile?.class}
-                editing={isEditing}
-                onChange={(v:any) => handleInputChange("student", "class", v)}
-              />
-
-              {/* EMAIL */}
-              <FormItem
-                label="Email"
-                icon={<FaEnvelope />}
-                value={studentProfile?.email}
-                editing={isEditing}
-                onChange={(v:any) => handleInputChange("student", "email", v)}
-              />
-
-              {/* PHONE */}
-              <FormItem
-                label="Phone Number"
-                icon={<FaPhone />}
-                value={studentProfile?.phone}
-                editing={isEditing}
-                onChange={(v:any) => handleInputChange("student", "phone", v)}
-              />
-
-              {/* ADDRESS */}
-              <FormItem
-                label="Address"
-                icon={<FaMapMarkerAlt />}
-                textarea
-                value={studentProfile?.address}
-                editing={isEditing}
-                onChange={(v:any) => handleInputChange("student", "address", v)}
-              />
-
-              {/* DOB */}
-              <FormItem
-                label="Date of Birth"
-                icon={<FaCalendarAlt />}
-                type="date"
-                value={
-                  studentProfile?.dateOfBirth !== "Not Set"
-                    ? studentProfile?.dateOfBirth
-                    : ""
-                }
-                editing={isEditing}
-                onChange={(v:any) => handleInputChange("student", "dateOfBirth", v)}
-              />
-            </div>
-          </div>
-
-          {/* SCHOOL INFORMATION */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-[#204b73] rounded-full flex items-center justify-center">
-                <FaSchool className="text-white" />
-              </div>
-              <h2 className="text-xl font-bold text-gray-900">School Details</h2>
-            </div>
-
-            <div className="space-y-4">
-              <FormItem
-                label="School Name"
-                icon={<FaSchool />}
-                value={schoolDetails?.schoolName}
-                editing={isEditing}
-                onChange={(v:any) => handleInputChange("school", "schoolName", v)}
-              />
-
-              <FormItem
-                label="Class"
-                icon={<FaGraduationCap />}
-                value={schoolDetails?.schoolClass}
-                editing={isEditing}
-                onChange={(v:any) => handleInputChange("school", "schoolClass", v)}
-              />
-
-              <FormItem
-                label="School Address"
-                icon={<FaMapMarkerAlt />}
-                textarea
-                value={schoolDetails?.schoolAddress}
-                editing={isEditing}
-                onChange={(v:any) => handleInputChange("school", "schoolAddress", v)}
-              />
-
-              <FormItem
-                label="School Code"
-                value={schoolDetails?.schoolCode}
-                editing={isEditing}
-                onChange={(v:any) => handleInputChange("school", "schoolCode", v)}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* ACTION BUTTONS */}
-        {isEditing && (
-          <div className="mt-6 flex gap-3 justify-end">
-            <button
-              onClick={() => setIsEditing(false)}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Cancel
-            </button>
-
-            <button
-              onClick={handleSave}
-              className="px-6 py-2 bg-[#204b73] text-white rounded-lg hover:bg-[#1a3a5a] transition-colors font-medium"
-            >
-              Save Changes
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// -----------------------------------------
-// REUSABLE FORM ITEM COMPONENT
-// -----------------------------------------
-function FormItem({
-  label,
-  icon,
-  value,
-  editing,
-  onChange,
-  textarea,
-  type,
-}: any) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
-        {icon}
-        {label}
-      </label>
-
-      {editing ? (
-        textarea ? (
-          <textarea
-            rows={3}
-            value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
+      {/* ================= PROFILE IMAGE ================= */}
+      <div className="flex flex-col items-center mt-5 gap-3">
+        <div className="relative w-[120px] h-[120px] rounded-full overflow-hidden border">
+          <Image
+            src={
+              previewImage
+                ? previewImage
+                : profileData?.img
+                  ? profileData.img
+                  : "/logo.png"
+            }
+            alt="profile"
+            fill
+            sizes="120px"
+            className="object-cover"
           />
-        ) : (
+        </div>
+
+
+        {/* <img
+  src={`https://irisinformatics.net/studentyug/upload/students/logo.webp`}
+  alt="profile"
+  className="w-[120px] h-[120px] rounded-full border object-cover"
+/> */}
+
+        <label className="cursor-pointer text-sm text-blue-600">
+          Change Profile Photo
           <input
-            type={type || "text"}
-            value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#204b73] focus:border-transparent"
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={handleImageChange}
           />
-        )
-      ) : (
-        <p className="text-gray-900 font-medium">{value || "Not Set"}</p>
-      )}
-    </div>
-  );
+        </label>
+      </div>
+      <div className="p-2">
+        <h1 className="text-xl font-bold">Fixed  Information</h1>
+        <p className="my-5 bg-yellow-200 p-2 text-amber-500 text-center border border-amber-500 rounded">You do not Change some Basic Information</p>
+      </div>
+      <div className="grid grid-cols-2 gap-2 p-2">
+        <div className="flex flex-col">
+          <label>First Name</label>
+          <input className="cursor-no-drop border bg-gray-100 p-2" value={profileData?.name} disabled />
+        </div>
+        <div className="flex flex-col">
+          <label>Last Name</label>
+          <input className="cursor-no-drop border bg-gray-100 p-2" value={profileData?.last_name} disabled />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-2 p-2">
+        <div className="flex flex-col">
+          <label>Aadhaar Id</label>
+          <input type="text" className="cursor-no-drop border bg-gray-100 p-2" value={profileData?.enroll_id} name="enroll_id" onChange={handleChange} disabled />
+        </div>
+        <div className="flex flex-col">
+          <label>DOB</label>
+          <input type="text" className="cursor-no-drop border bg-gray-100 p-2" name="dob" onChange={handleChange} value={profileData?.dob} disabled />
+        </div>
+      </div>
+      <h1 className="text-xl mt-5 px-5 font-bold">Basic Information</h1>
+      <div className="grid grid-cols-2 gap-2 p-2">
+        <div className="flex flex-col">
+          <label>Email<span className="text-red-500">*</span></label>
+          <input type="email" className=" border bg-white p-2" value={profileData?.email} name="email" onChange={handleChange} />
+        </div>
+        <div className="flex flex-col">
+          <label>Phone<span className="text-red-500">*</span></label>
+          <input
+            type="text"
+            className="border bg-white p-2"
+            name="mobile"
+            value={profileData?.mobile || ""}
+            maxLength={10}
+            inputMode="numeric"
+            pattern="[0-9]*"
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, ""); // only numbers
+              if (value.length <= 10) {
+                setProfileData((prev) =>
+                  prev
+                    ? {
+                      ...prev,
+                      mobile: value,
+                    }
+                    : prev
+                );
+              }
+            }}
+          />
+
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-2 p-2">
+        <div className="flex flex-col">
+          <label>Address<span className="text-red-500">*</span></label>
+          <textarea className=" border bg-white p-2" value={profileData?.address} name="address" onChange={handleChange} />
+        </div>
+      </div>
+      <div className="p-2">
+        <h1 className="text-xl font-bold">
+          School Information
+        </h1>
+      </div>
+      <div className="grid grid-cols-2 gap-2 p-2">
+        <div className="flex flex-col">
+          <label>School Name <span className="text-red-500">*</span></label>
+          <input type="text" className=" border bg-white p-2" value={profileData?.school_name} name="school_name" onChange={handleChange} />
+        </div>
+        <div className="flex flex-col">
+          <label>School Code<span className="text-red-500">*</span></label>
+          <input type="text" className=" border bg-white p-2" value={profileData?.school_code} name="school_code" onChange={handleChange} />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-2 p-2">
+        <div className="flex flex-col">
+          <label>School Address<span className="text-red-500">*</span></label>
+          <textarea className=" border bg-white p-2" value={profileData?.school_address} name="school_address" onChange={handleChange} />
+        </div>
+        <div className="my-10 text-center">
+          <button onClick={updateProfileData} className="px-6 py-2 bg-[#204b73] text-white rounded-lg hover:bg-white hover:text-[#204b73] border border-[#204b73]">Submit</button>
+        </div>
+        {/* <div className="flex flex-col">
+                <label></label>
+                <input type="text" className=" border bg-gray-100 p-2" value={"SB0001"} />
+            </div> */}
+      </div>
+    </>
+  )
 }

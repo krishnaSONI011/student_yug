@@ -73,6 +73,8 @@ interface AvailableTree {
   benefits: string[];
   img: string;
   status: string;
+  co2_reduced:string;
+  oxygen_produced:string;
   created_at: string;
   updated_at: string;
 }
@@ -514,10 +516,13 @@ console.log(filteredTrees)
             {filteredTrees.map((tree , index) => (
               <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
                 {/* Tree Image */}
-                <div className="h-48 bg-gradient-to-br ">
-                  {/* <FaTree className="text-6xl text-white" /> */}
-                  <img src={`https://irisinformatics.net/`+tree.image} alt={"image"}  width={100} height={100}/>
-                </div>
+                <div className="h-48 bg-gradient-to-br relative overflow-hidden">
+  <img
+    src={`https://irisinformatics.net/studentyug/${tree.image}`}
+    alt="image"
+    className="w-full h-full object-cover"
+  />
+</div>
 
                 {/* Tree Info */}
                 <div className="p-6">
@@ -569,7 +574,7 @@ console.log(filteredTrees)
                   </div>
 
                   {/* Impact Stats */}
-                  <div className="grid grid-cols-3 gap-2 mb-4">
+                  <div className="grid grid-cols-2 gap-2 mb-4">
                     <div className="cursor-default text-center p-2 bg-gray-50 rounded">
                       <p className="text-xs text-gray-600">CO₂</p>
                       <p className="text-sm font-semibold text-gray-900">{tree.impact.co2Reduced}kg</p>
@@ -578,10 +583,10 @@ console.log(filteredTrees)
                       <p className="text-xs text-gray-600">O₂</p>
                       <p className="text-sm font-semibold text-gray-900">{tree.impact.oxygenProduced}kg</p>
                     </div>
-                    <div className="cursor-default text-center p-2 bg-gray-50 rounded">
+                    {/* <div className="cursor-default text-center p-2 bg-gray-50 rounded">
                       <p className="text-xs text-gray-600">Carbon</p>
                       <p className="text-sm font-semibold text-gray-900">{tree.impact.carbonStored}kg</p>
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Actions */}

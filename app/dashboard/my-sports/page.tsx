@@ -11,6 +11,7 @@ interface Sport {
   sports_name: string;
   category: string;
   sports_name_hi: string
+  sports_img: string;
   level: string;
   achievement: string;
   participation_date: string;
@@ -29,6 +30,7 @@ interface ApiSportsData {
   id?: string;
   user_id?: string;
   sports_id?: string;
+  sports_img: string;
   sports_name_hi?: string;
   sports_name?: string;
   category?: string;
@@ -52,6 +54,7 @@ interface AvailableTree {
   name_hi: string;
   name_sc: string;
   category: string;
+  sports_img: string;
   carbon: string;
   oxygen: string;
   description: string;
@@ -78,27 +81,7 @@ interface PlantTreeFormData {
   image: File | null;
 }
 
-// Transform API data to Sport interface
-const transformApiDataToSport = (apiData: ApiSportsData): Sport => ({
-  id: parseInt(apiData.id || apiData.sports_id || '0') || 0,
-  sports_name: apiData.sports_name || 'Unknown Sport',
-  category: apiData.category || 'General',
-  sports_name_hi: apiData.sports_name_hi || '',
-  level: apiData.level || 'N/A',
-  achievement: apiData.achievement || 'N/A',
-  participation_date: apiData.participation_date || '',
-  class: 'N/A',
-  location: apiData.location || 'Unknown Location',
-  play: apiData.play || 'N/A',
-  status: 'Active',
-  image: '',
-  certificate: apiData.upload_certificate || null,
-  created_at: apiData.created_at || '',
-  updated_at: apiData.updated_at || '',
-  description: ''
-});
 
-// Get user_id from localStorage
 const getUserIdFromStorage = (): string | null => {
   if (typeof window === 'undefined') return null;
 
@@ -114,6 +97,31 @@ const getUserIdFromStorage = (): string | null => {
     return null;
   }
 };
+
+// Transform API data to Sport interface
+const userId = getUserIdFromStorage();
+const transformApiDataToSport = (apiData: ApiSportsData): Sport => ({
+  id: parseInt(apiData.id || apiData.sports_id || '0') || 0,
+  sports_name: apiData.sports_name || 'Unknown Sport',
+  category: apiData.category || 'General',
+  sports_name_hi: apiData.sports_name_hi || '',
+  sports_img: apiData.sports_img || '',
+  level: apiData.level || 'N/A',
+  achievement: apiData.achievement || 'N/A',
+  participation_date: apiData.participation_date || '',
+  class: "na",
+  location: apiData.location || 'Unknown Location',
+  play: apiData.play || 'N/A',
+  status: 'Active',
+  image: '',
+  certificate: apiData.upload_certificate || null,
+  created_at: apiData.created_at || '',
+  updated_at: apiData.updated_at || '',
+  description: ''
+});
+
+// Get user_id from localStorage
+
 
 export default function MySportsPage() {
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -136,13 +144,14 @@ export default function MySportsPage() {
   });
 
   // Fetch sports from API
+  
   useEffect(() => {
     const fetchTrees = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const userId = getUserIdFromStorage();
+        
         if (!userId) {
           setError('User not found. Please login again.');
           setLoading(false);
@@ -448,9 +457,14 @@ export default function MySportsPage() {
           <div className="grid cursor-default  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSports.map((sport) => (
               <div key={sport.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
-                <div className="h-48 bg-linear-to-br from-[#204b73] to-[#204b73] flex items-center justify-center">
-                  <MdSportsBasketball className="text-6xl text-white" />
+                <div className="h-48 bg-gradient-to-br relative overflow-hidden">
+                  <img
+                    src={`https://irisinformatics.net/studentyug/${sport.sports_img}`}
+                    alt="image"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+
 
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
@@ -474,7 +488,7 @@ export default function MySportsPage() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <GiPoliceBadge className="text-gray-400" />
-                      <span>Class: {sport.class}</span>
+                      <span>Class: 10</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <FaMapMarkerAlt className="text-gray-400" />
