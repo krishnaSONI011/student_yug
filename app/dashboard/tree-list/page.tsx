@@ -458,20 +458,15 @@ export default function TreeListPage() {
                 {/* Key Benefits */}
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">Key Benefits:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {
-                      tree.benefits.map((ben, index) => (
-                        <span
-                         key={index}
-                          className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
-                        >
-                          {ben}
-                        </span>
-                      ))
-                    }
+                  <ul className="flex flex-col gap-2">
+  {tree.benefits.map((ben, index) => (
+    <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
+      <FaCheckCircle className="text-blue-600 mt-0.5 flex-shrink-0" />
+      <span>{ben}</span>
+    </li>
+  ))}
+</ul>
 
-
-                  </div>
                 </div>
 
                 {/* Quick Info */}
@@ -483,11 +478,11 @@ export default function TreeListPage() {
                 {/* Environmental Impact Preview */}
                 <div className="grid grid-cols-2 gap-2 mb-4 p-3 bg-gray-50 rounded">
                   <div className="text-center">
-                    <p className="text-xs text-gray-600">CO₂ Reduced</p>
+                    <p className="text-xs text-gray-600 font-semibold">CO₂ Reduced(kg/year)</p>
                     <p className="text-sm font-semibold text-gray-900">{tree.carbon}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-gray-600">O₂ Produced</p>
+                    <p className="text-xs text-gray-600 font-semibold">O₂ Produced(kg/year)</p>
                     <p className="text-sm font-semibold text-gray-900">{tree.oxygen}</p>
                   </div>
                 </div>
@@ -541,12 +536,15 @@ export default function TreeListPage() {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">Benefits</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {selectedTree.benefits.map((benefit, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <FaCheckCircle className="text-green-500 flex-shrink-0" />
-                        <span className="text-gray-700">{benefit}</span>
-                      </div>
-                    ))}
+                  <ul className="space-y-2">
+  {selectedTree.benefits.map((benefit, idx) => (
+    <li key={idx} className="flex items-start gap-2">
+      <FaCheckCircle className="text-green-500 mt-1 flex-shrink-0" />
+      <span className="text-gray-700">{benefit}</span>
+    </li>
+  ))}
+</ul>
+
                   </div>
                 </div>
 

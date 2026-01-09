@@ -398,7 +398,7 @@ export default function MySportsPage() {
                 </div>
                 <div>
                   <p className="cursor-default text-2xl font-bold text-gray-900">{sportsData.length}</p>
-                  <p className="text-sm text-gray-600 cursor-default">Total Sports</p>
+                  <p className="text-sm text-gray-600 cursor-default font-bold">Total Sports</p>
                 </div>
               </div>
             </div>
@@ -409,7 +409,7 @@ export default function MySportsPage() {
                 </div>
                 <div>
                   <p className="cursor-default text-2xl font-bold text-gray-900">{sportsData.filter(s => s.play.toLowerCase() === 'team').length}</p>
-                  <p className="cursor-default text-sm text-gray-600">Team Sports</p>
+                  <p className="cursor-default text-sm text-gray-600 font-bold">Team Sports</p>
                 </div>
               </div>
             </div>
@@ -419,8 +419,8 @@ export default function MySportsPage() {
                   <FaTrophy className="text-yellow-600" />
                 </div>
                 <div>
-                  <p className="cursor-default text-2xl font-bold text-gray-900">{sportsData.filter(s => s.achievement.toLowerCase() !== 'n/a').length}</p>
-                  <p className="text-sm text-gray-600 cursor-default">Level</p>
+                  <p className="cursor-default text-2xl font-semibold text-gray-900">{sportsData[0].level}</p>
+                  <p className="text-sm text-gray-600 cursor-default font-bold">Level</p>
                 </div>
               </div>
             </div>
@@ -488,16 +488,16 @@ export default function MySportsPage() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <GiPoliceBadge className="text-gray-400" />
-                      <span>Class: 10</span>
+                      <span>Class: X</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <FaMapMarkerAlt className="text-gray-400" />
                       <span>{sport.location}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                    {/* <div className="flex items-center gap-2 text-sm text-gray-600">
                       <FaTrophy className="text-gray-400" />
                       <span>Achievement: {sport.achievement}</span>
-                    </div>
+                    </div> */}
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <FaLeaf className="text-gray-400" />
                       <span>Play: {sport.play}</span>

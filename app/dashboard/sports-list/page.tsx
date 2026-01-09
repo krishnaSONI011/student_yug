@@ -6,7 +6,8 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { 
   FaTree, 
-  FaTimes, 
+  FaTimes,
+  FaCheckCircle, 
 } from 'react-icons/fa';
 import { MdSportsBasketball } from 'react-icons/md';
 
@@ -146,25 +147,24 @@ export default function SportsList() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name}({tree.name_hi})</h3>
                 <p className="text-sm text-gray-600 italic mb-3">{tree.category}</p>
-                <p className="text-gray-700 text-sm mb-4 line-clamp-2">{tree.description}</p>
+                <p className="text-gray-700 text-sm mb-4 text-justify">{tree.description}</p>
 
                 {/* Key Benefits */}
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">Key Benefits:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {
-                      tree.benefits.map((ben , index)=>(
-                        <span
-                        key={index}
-                        className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
-                      >
-                       {ben}
-                      </span>
-                      ))
-                    }
+                 <ul className="flex flex-col gap-2">
+                   {tree.benefits.map((ben, index) => (
+                     <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
+                       <FaCheckCircle className="text-blue-600 mt-0.5 flex-shrink-0" />
+                       <span>{ben}</span>
+                     </li>
+                   ))}
+                 </ul>
+                
+
                      
                    
-                  </div>
+                  
                 </div>
 
                 {/* Quick Info */}

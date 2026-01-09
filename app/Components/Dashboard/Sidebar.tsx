@@ -72,8 +72,8 @@ export default function Sidebar() {
     { id: 'trees',classId:"my-tree", label: 'My Trees', Link:"/dashboard/my-trees", icon: FaTree },
     { id: 'sport',classId:"my-sports", label: 'My Sport', Link:"/dashboard/my-sports", icon: MdSportsBasketball },
     
-    { id: 'community',classId:"", label: 'Community', Link:"#", icon: FaUsers },
-    { id: 'achievements', label: 'View Certificate', Link:"#", icon: FaTrophy }, 
+    // { id: 'community',classId:"", label: 'Community', Link:"#", icon: FaUsers },
+    { id: 'achievements', label: 'View Certificate', Link:"/dashboard/certificate", icon: FaTrophy }, 
   
     { id: 'analytics', label: 'Environmental Analysis', Link:"/dashboard/environmental-analysis", icon: FaChartLine },
     { id: 'tree list',classId:"all-tree", label: 'Tree List', Link:"/dashboard/tree-list", icon: FaTree },
