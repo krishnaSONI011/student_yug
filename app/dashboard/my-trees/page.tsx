@@ -565,7 +565,7 @@ console.log(filteredTrees)
                   {/* Health Status */}
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm text-gray-600 cursor-default">Health Status:</span>
-                    <span className={`cursor-default px-2 py-1 rounded-full text-xs font-medium ${tree.health.toLowerCase() === 'excellent' || tree.health.toLowerCase() === 'good'
+                    <span className={`capitalize cursor-default px-2 py-1 rounded-full text-xs font-medium ${tree.health.toLowerCase() === 'excellent' || tree.health.toLowerCase() === 'good'
                       ? 'bg-green-100 text-green-800'
                       : 'bg-yellow-100 text-yellow-800'
                       }`}>
