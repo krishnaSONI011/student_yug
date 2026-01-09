@@ -676,11 +676,11 @@ console.log(filteredTrees)
                       </div>
                       <div className="text-center p-4 bg-blue-50 rounded-lg">
                         <p className="text-sm text-gray-600">O₂ Produced (kg/year)</p>
-                        <p className="text-xl font-bold text-blue-600">{selectedTree.impact.oxygenProduced} kg</p>
+                        <p className="text-xl font-bold text-blue-600">{selectedTree.impact.oxygenProduced} kg/year</p>
                       </div>
                       <div className="text-center p-4 bg-purple-50 rounded-lg">
                         <p className="text-sm text-gray-600">Carbon Stored</p>
-                        <p className="text-xl font-bold text-purple-600">{selectedTree.impact.carbonStored} kg</p>
+                        <p className="text-xl font-bold text-purple-600">{selectedTree.impact.carbonStored} kg/year</p>
                       </div>
                     </div>
                   </div>
