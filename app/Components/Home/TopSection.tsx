@@ -253,7 +253,7 @@ export default function TopSection(){
                          <div className="text-gray-200">Total Students</div>
                      </div>
                      <div className="text-center">
-                         <div className="text-4xl font-bold text-[#83c042] mb-2">{stats?.total_trees}</div>
+                         <div className="text-4xl font-bold text-[#83c042] mb-2">{stats?.planted_tree}</div>
                          <div className="text-gray-200">Total Trees Planted</div>
                      </div> 
                      <div className="text-center">
