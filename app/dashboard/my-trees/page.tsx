@@ -453,7 +453,7 @@ console.log(filteredTrees)
                   <FaLeaf className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{totalImpact.co2Reduced.toFixed(1)} kg</p>
+                  <p className="text-2xl font-bold text-gray-900">{totalImpact.co2Reduced.toFixed(1)} kg/year</p>
                   <p className="text-sm text-gray-600 font-semibold">CO₂ Reduced (kg/year)</p>
                 </div>
               </div>
@@ -465,7 +465,7 @@ console.log(filteredTrees)
                   <FaSeedling className="text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{totalImpact.oxygenProduced.toFixed(1)} kg</p>
+                  <p className="text-2xl font-bold text-gray-900">{totalImpact.oxygenProduced.toFixed(1)} kg/year</p>
                   <p className="text-sm text-gray-600 font-semibold">O₂ Produced (kg/year)</p>
                 </div>
               </div>
