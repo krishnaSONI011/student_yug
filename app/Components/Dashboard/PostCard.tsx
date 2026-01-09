@@ -5,12 +5,12 @@ import {
   FaMapMarkerAlt,
   FaHeart,
   FaComment,
-  FaShare,
+ 
 } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import confetti from "canvas-confetti";
-import { toPng } from "html-to-image";
+
 
 import CommentModal from "./CommentModal";
 
@@ -109,37 +109,37 @@ export default function PostCard({
   }
 
   // ✅ SHARE TO WHATSAPP WITH SCREENSHOT
-  async function sharePostToWhatsApp() {
-    if (!cardRef.current) return;
+  // async function sharePostToWhatsApp() {
+  //   if (!cardRef.current) return;
   
-    try {
-      const dataUrl = await toPng(cardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: "#ffffff",
-      });
+  //   try {
+  //     const dataUrl = await toPng(cardRef.current, {
+  //       cacheBust: true,
+  //       pixelRatio: 2,
+  //       backgroundColor: "#ffffff",
+  //     });
   
-      // Convert to blob
-      const res = await fetch(dataUrl);
-      const blob = await res.blob();
+  //     // Convert to blob
+  //     const res = await fetch(dataUrl);
+  //     const blob = await res.blob();
   
-      const url = URL.createObjectURL(blob);
+  //     const url = URL.createObjectURL(blob);
   
-      // Download image
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "studentyug-post.png";
-      a.click();
+  //     // Download image
+  //     const a = document.createElement("a");
+  //     a.href = url;
+  //     a.download = "studentyug-post.png";
+  //     a.click();
   
-      // Open WhatsApp
-      const text = encodeURIComponent(
-        "🌱 Check out this post on Student Yug!"
-      );
-      window.open(`https://wa.me/?text=${text}`, "_blank");
-    } catch (err) {
-      console.error("Screenshot failed:", err);
-    }
-  }
+  //     // Open WhatsApp
+  //     const text = encodeURIComponent(
+  //       "🌱 Check out this post on Student Yug!"
+  //     );
+  //     window.open(`https://wa.me/?text=${text}`, "_blank");
+  //   } catch (err) {
+  //     console.error("Screenshot failed:", err);
+  //   }
+  // }
   
 
   return (
@@ -215,13 +215,7 @@ export default function PostCard({
               {comment}
             </button>
 
-            <button
-              onClick={sharePostToWhatsApp}
-              className="flex gap-2 items-center text-gray-600 hover:text-green-600"
-            >
-              <FaShare />
-              Share
-            </button>
+            
           </div>
 
           <div className="text-sm text-gray-500">

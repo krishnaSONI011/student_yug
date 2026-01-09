@@ -576,11 +576,11 @@ console.log(filteredTrees)
                   {/* Impact Stats */}
                   <div className="grid grid-cols-2 gap-2 mb-4">
                     <div className="cursor-default text-center p-2 bg-gray-50 rounded">
-                      <p className="text-xs text-gray-600">CO₂</p>
+                      <p className="text-xs text-gray-600 font-semibold">CO₂ Reduce (kg/year)</p>
                       <p className="text-sm font-semibold text-gray-900">{tree.impact.co2Reduced}kg</p>
                     </div>
                     <div className="cursor-default text-center p-2 bg-gray-50 rounded">
-                      <p className="text-xs text-gray-600">O₂</p>
+                      <p className="text-xs text-gray-600 font-semibold">O₂ Product (kg/year)</p>
                       <p className="text-sm font-semibold text-gray-900">{tree.impact.oxygenProduced}kg</p>
                     </div>
                     {/* <div className="cursor-default text-center p-2 bg-gray-50 rounded">
