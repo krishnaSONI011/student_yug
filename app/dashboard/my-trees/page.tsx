@@ -454,7 +454,7 @@ console.log(filteredTrees)
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-900">{totalImpact.co2Reduced.toFixed(1)} kg</p>
-                  <p className="text-sm text-gray-600">CO₂ Reduced</p>
+                  <p className="text-sm text-gray-600 font-semibold">CO₂ Reduced (kg/year)</p>
                 </div>
               </div>
             </div>
@@ -466,7 +466,7 @@ console.log(filteredTrees)
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-900">{totalImpact.oxygenProduced.toFixed(1)} kg</p>
-                  <p className="text-sm text-gray-600">Oxygen Produced</p>
+                  <p className="text-sm text-gray-600 font-semibold">O₂ Produced (kg/year)</p>
                 </div>
               </div>
             </div>
@@ -671,11 +671,11 @@ console.log(filteredTrees)
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">Environmental Impact</h3>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="text-center p-4 bg-green-50 rounded-lg">
-                        <p className="text-sm text-gray-600">CO₂ Reduced</p>
+                        <p className="text-sm text-gray-600">CO₂ Reduced (kg/year)</p>
                         <p className="text-xl font-bold text-green-600">{selectedTree.impact.co2Reduced} kg</p>
                       </div>
                       <div className="text-center p-4 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-gray-600">Oxygen Produced</p>
+                        <p className="text-sm text-gray-600">O₂ Produced (kg/year)</p>
                         <p className="text-xl font-bold text-blue-600">{selectedTree.impact.oxygenProduced} kg</p>
                       </div>
                       <div className="text-center p-4 bg-purple-50 rounded-lg">
