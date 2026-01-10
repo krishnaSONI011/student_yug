@@ -91,7 +91,7 @@ export default function Footer() {
 
           {/* Bottom Text */}
           <div className="border-t border-white/20 mt-8 pt-8 text-center text-gray-200">
-            <p>&copy; 2025 StudentYug. All rights reserved. Growing knowledge, growing nature.</p>
+            <p>&copy; 2026 StudentYug. All rights reserved. Growing knowledge, growing nature.</p>
           </div>
         </div>
       </div>

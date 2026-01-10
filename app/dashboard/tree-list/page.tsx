@@ -478,11 +478,11 @@ export default function TreeListPage() {
                 {/* Environmental Impact Preview */}
                 <div className="grid grid-cols-2 gap-2 mb-4 p-3 bg-gray-50 rounded">
                   <div className="text-center">
-                    <p className="text-xs text-gray-600 font-semibold">CO₂ Reduced(kg/year)</p>
+                    <p className="text-xs text-gray-600 font-semibold">CO₂<br/> Reduced(kg/year)</p>
                     <p className="text-sm font-semibold text-gray-900">{tree.carbon}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-gray-600 font-semibold">O₂ Produced(kg/year)</p>
+                    <p className="text-xs text-gray-600 font-semibold">O₂ <br/>Produced(kg/year)</p>
                     <p className="text-sm font-semibold text-gray-900">{tree.oxygen}</p>
                   </div>
                 </div>

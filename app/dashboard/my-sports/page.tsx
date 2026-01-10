@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { FaTree, FaCalendarAlt, FaMapMarkerAlt, FaLeaf, FaTrophy, FaPlus } from 'react-icons/fa';
 import { FaBaseball } from 'react-icons/fa6';
-import { GiPoliceBadge } from 'react-icons/gi';
+import { GiLevelThreeAdvanced, GiPoliceBadge } from 'react-icons/gi';
 import { MdSportsBasketball } from 'react-icons/md';
 
 interface Sport {
@@ -471,7 +471,7 @@ export default function MySportsPage() {
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">{sport.sports_name}({sport.sports_name_hi})</h3>
                       <p className="text-sm text-gray-600">{sport.category}</p>
-                      <p className="text-xs text-gray-500">Level: {sport.level}</p>
+                     
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${sport.status.toLowerCase() === 'active'
                       ? 'bg-green-100 text-green-800'
@@ -493,6 +493,10 @@ export default function MySportsPage() {
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <FaMapMarkerAlt className="text-gray-400" />
                       <span>{sport.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <GiLevelThreeAdvanced className="text-gray-400" />
+                      <span>Level : {sport.level}</span>
                     </div>
                     {/* <div className="flex items-center gap-2 text-sm text-gray-600">
                       <FaTrophy className="text-gray-400" />
@@ -662,7 +666,7 @@ export default function MySportsPage() {
                   </div>
 
                   {/* Height */}
-                  <div>
+                  {/* <div>
                     <label htmlFor="height" className="block text-sm font-medium text-gray-700 mb-2">
                       Achievement <span className="text-red-500">*</span>
                     </label>
@@ -678,7 +682,7 @@ export default function MySportsPage() {
                       placeholder="1st , 2nd"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
                     />
-                  </div>
+                  </div> */}
 
                   {/* Health */}
                   <div>
@@ -740,7 +744,7 @@ export default function MySportsPage() {
                       value={plantFormData.location}
                       onChange={handleInputChange}
                       required
-                      placeholder="e.g., indore, mp"
+                      placeholder=" indore, mp"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
                     />
                   </div>
@@ -797,7 +801,7 @@ export default function MySportsPage() {
                           Loading...
                         </span>
                       ) : (
-                        'Take Part'
+                        'Submit'
                       )}
                     </button>
                   </div>
