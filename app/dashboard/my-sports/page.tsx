@@ -419,7 +419,7 @@ export default function MySportsPage() {
                   <FaTrophy className="text-yellow-600" />
                 </div>
                 <div>
-                  <p className="cursor-default text-2xl font-semibold text-gray-900">{sportsData[0].level}</p>
+                  <p className="cursor-default text-2xl font-semibold text-gray-900">{sportsData?.[0]?.level || "No Sport Yet"}</p>
                   <p className="text-sm text-gray-600 cursor-default font-bold">Level</p>
                 </div>
               </div>
@@ -496,7 +496,7 @@ export default function MySportsPage() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <GiLevelThreeAdvanced className="text-gray-400" />
-                      <span>Level : {sport.level}</span>
+                      <span>Level : {sport.level === undefined ? "" : sport.level}</span>
                     </div>
                     {/* <div className="flex items-center gap-2 text-sm text-gray-600">
                       <FaTrophy className="text-gray-400" />
