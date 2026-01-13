@@ -452,15 +452,15 @@ export default function TreeListPage() {
               {/* Tree Info */}
               <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{tree.name_en}({tree.name_hi})</h3>
-                <p className="text-sm text-gray-600 italic mb-3"><span className='font-bold'>Scientific Name :</span> {tree.name_sc} </p>
-                <p className="text-gray-700 text-sm mb-4 text-justify">{tree.description}</p>
+                <p className="text-sm text-gray-600 font-semibold italic mb-3"><span className='font-bold'>Scientific Name :</span> {tree.name_sc} </p>
+                <p className="text-gray-700 font-semibold text-sm mb-4 text-justify">{tree.description}</p>
 
                 {/* Key Benefits */}
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">Key Benefits:</h4>
                   <ul className="flex flex-col gap-2">
   {tree.benefits.map((ben, index) => (
-    <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
+    <li key={index} className="flex font-semibold items-start gap-2 text-sm text-gray-700">
       <FaCheckCircle className="text-blue-600 mt-0.5 flex-shrink-0" />
       <span>{ben}</span>
     </li>
@@ -478,11 +478,11 @@ export default function TreeListPage() {
                 {/* Environmental Impact Preview */}
                 <div className="grid grid-cols-2 gap-2 mb-4 p-3 bg-gray-50 rounded">
                   <div className="text-center">
-                    <p className="text-xs text-gray-600 font-semibold">CO₂<br/> Reduced(kg/year)</p>
+                    <p className="text-sm text-gray-600 font-semibold">CO₂<br/> Reduced(kg/year)</p>
                     <p className="text-sm font-semibold text-gray-900">{tree.carbon}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-gray-600 font-semibold">O₂ <br/>Produced(kg/year)</p>
+                    <p className="text-sm text-gray-600 font-semibold">O₂ <br/>Produced(kg/year)</p>
                     <p className="text-sm font-semibold text-gray-900">{tree.oxygen}</p>
                   </div>
                 </div>

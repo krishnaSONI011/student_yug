@@ -786,7 +786,7 @@ console.log(filteredTrees)
                       // onKeyDown={(e) => e.preventDefault()}   // ⛔ blocks typing
                       max="2026-12-31"
                       required
-                      className="w-full cursor-not-allowed px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b]"
+                      className="w-full cursor-not-allowed px-4 py-2 border border-gray-300 bg-gray-100 rounded-lg focus:ring-2 focus:ring-[#1c756b]"
                     />
 
                   </div>

@@ -365,7 +365,7 @@ export default function RegisterPage() {
                         name="dobMonth"
                         value={formData.dobMonth}
                         onChange={handleInputChange}
-                        className="w-full py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
+                        className="w-full py-3 px-1 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
                       >
                         <option value="">Month</option>
                         {months.map((month, index) => (

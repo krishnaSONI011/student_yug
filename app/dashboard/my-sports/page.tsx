@@ -670,7 +670,8 @@ export default function MySportsPage() {
                         value={plantFormData.tree_id}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                        
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2  focus:ring-[#1c756b] focus:border-transparent"
                       >
                         <option value="">Select a Sports</option>
                         {availableTrees.map((tree) => (
@@ -698,7 +699,8 @@ export default function MySportsPage() {
                       onPaste={(e) => e.preventDefault()}
                       inputMode="none"
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
+                      disabled
+                      className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-lg cursor-not-allowed focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
                     />
 
                   </div>

@@ -16,7 +16,7 @@ interface PostData {
 
 interface UserData {
   user_id: string;
-  first_name?: string;
+  name?: string;
   last_name?: string;
   email?: string;
 }
@@ -126,7 +126,7 @@ export default function Dashboard() {
 
         {/* Welcome Section */}
         <div className="bg-gradient-to-r cursor-default from-[#204b73] to-[#204b73] rounded-2xl p-4 sm:p-6 text-white mb-4 sm:mb-6">
-          <h2 className="text-xl sm:text-2xl font-bold mb-2">Welcome back, {userData?.first_name ?? 'User'}! 🌱</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-2">Welcome back, <span className = "capitalize">{userData?.name ?? 'User'}</span>! 🌱</h2>
           <p className="text-sm sm:text-base text-green-100">
             Share your tree planting journey and inspire others to go green!
           </p>
@@ -233,11 +233,24 @@ export default function Dashboard() {
         )}
 
         {/* Posts Feed */}
-        <div className="space-y-4 sm:space-y-6">
-          {posts.map((post, index) => (
-            <PostCard key={index} id={post.id} first_name={post.first_name} description={post.description} img={post.img} location={post.location} />
-          ))}
-        </div>
+        {posts.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-200">
+            <div className="flex flex-col items-center justify-center">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <FaImage className="text-3xl text-gray-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No Posts Yet</h3>
+              <p className="text-gray-600 mb-6">Be the first to share your tree planting journey!</p>
+              
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4 sm:space-y-6">
+            {posts.map((post, index) => (
+              <PostCard key={index} id={post.id} first_name={post.first_name} description={post.description} img={post.img} location={post.location} />
+            ))}
+          </div>
+        )}
 
       </div>
 
