@@ -122,49 +122,50 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard-container min-h-screen">
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-3 sm:p-4 md:p-6">
 
         {/* Welcome Section */}
-        <div className="bg-gradient-to-r cursor-default from-[#204b73] to-[#204b73] rounded-2xl p-6 text-white mb-6">
-          <h2 className="text-2xl font-bold mb-2">Welcome back, {userData?.first_name ?? 'User'}! 🌱</h2>
-          <p className="text-green-100">
+        <div className="bg-gradient-to-r cursor-default from-[#204b73] to-[#204b73] rounded-2xl p-4 sm:p-6 text-white mb-4 sm:mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold mb-2">Welcome back, {userData?.first_name ?? 'User'}! 🌱</h2>
+          <p className="text-sm sm:text-base text-green-100">
             Share your tree planting journey and inspire others to go green!
           </p>
         </div>
 
         {/* Create Post Section */}
-        <div id='post-create' className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="flex items-center gap-4">
+        <div id='post-create' className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-4 sm:mb-6">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Image
               src="/logo.png"
-              width={48}
-              height={48}
+              width={40}
+              height={40}
               alt="Profile"
-              className="rounded-full"
+              className="rounded-full w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0"
             />
 
             <button
               onClick={() => setShowCreatePost(true)}
-              className="flex-1 bg-gray-100 hover:bg-gray-200 rounded-full px-4 py-3 text-left text-gray-500 transition-colors"
+              className="flex-1 bg-gray-100 hover:bg-gray-200 rounded-full px-3 sm:px-4 py-2 sm:py-3 text-left text-sm sm:text-base text-gray-500 transition-colors"
             >
-              Share your tree planting experience...
+              <span className="hidden sm:inline">Share your tree planting experience...</span>
+              <span className="sm:hidden">Share experience...</span>
             </button>
 
             <button
               onClick={() => setShowCreatePost(true)}
-              className="bg-[#204b73] text-white px-6 py-3 rounded-full hover:bg-white hover:text-[#204b73] transition-colors flex items-center gap-2 border border-[#204b73] cursor-pointer"
+              className="bg-[#204b73] text-white px-3 sm:px-6 py-2 sm:py-3 rounded-full hover:bg-white hover:text-[#204b73] transition-colors flex items-center gap-1 sm:gap-2 border border-[#204b73] cursor-pointer text-sm sm:text-base"
             >
-              <FaPlus />
-              Post
+              <FaPlus className="text-sm sm:text-base" />
+              <span className="hidden sm:inline">Post</span>
             </button>
           </div>
         </div>
 
         {/* Create Post Modal */}
         {showCreatePost && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl p-6 w-full max-w-2xl">
-              <h3 className="text-xl font-bold mb-4">Create New Post</h3>
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+              <h3 className="text-lg sm:text-xl font-bold mb-4">Create New Post</h3>
 
               <div className="space-y-4">
                 <textarea
@@ -175,8 +176,8 @@ export default function Dashboard() {
                   rows={4}
                 />
 
-                <div className="flex items-center gap-4">
-                  <label className="flex items-center gap-2 text-gray-600 cursor-pointer">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+                  <label className="flex items-center gap-2 text-sm sm:text-base text-gray-600 cursor-pointer">
                     <FaImage />
                     <span>Add Photo</span>
                     <input
@@ -187,15 +188,15 @@ export default function Dashboard() {
                     />
                   </label>
 
-                  <label className="flex items-center gap-2 text-gray-600 cursor-pointer">
+                  <label className="flex items-center gap-2 text-sm sm:text-base text-gray-600 cursor-pointer">
                     <FaMapMarkerAlt />
-                    <span>Add Location</span>
+                    <span className="whitespace-nowrap">Add Location</span>
                     <input
                       type="text"
                       value={newPost.location}
                       onChange={(e) => setNewPost({ ...newPost, location: e.target.value })}
                       placeholder="Where did you plant?"
-                      className="border border-gray-300 rounded px-2 py-1 text-sm"
+                      className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </label>
                 </div>
@@ -212,17 +213,17 @@ export default function Dashboard() {
                 )}
               </div>
 
-              <div className="flex justify-end gap-3 mt-6">
+              <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-4 sm:mt-6">
                 <button
                   onClick={() => setShowCreatePost(false)}
-                  className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-[#204b73] hover:text-white"
+                  className="w-full sm:w-auto px-4 sm:px-6 py-2 border border-gray-300 rounded-lg hover:bg-[#204b73] hover:text-white text-sm sm:text-base"
                 >
                   Cancel
                 </button>
 
                 <button
                   onClick={handleCreatePost}
-                  className="px-6 py-2 bg-[#204b73] text-white rounded-lg hover:bg-white hover:text-[#204b73] border border-[#204b73]"
+                  className="w-full sm:w-auto px-4 sm:px-6 py-2 bg-[#204b73] text-white rounded-lg hover:bg-white hover:text-[#204b73] border border-[#204b73] text-sm sm:text-base"
                 >
                   Share Post
                 </button>
@@ -232,7 +233,7 @@ export default function Dashboard() {
         )}
 
         {/* Posts Feed */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {posts.map((post, index) => (
             <PostCard key={index} id={post.id} first_name={post.first_name} description={post.description} img={post.img} location={post.location} />
           ))}
@@ -243,9 +244,10 @@ export default function Dashboard() {
       {/* Floating Button */}
       <button
         onClick={() => setShowCreatePost(true)}
-        className="fixed bottom-6 right-6 bg-[#204b73] text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#204b73] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center z-40"
+        aria-label="Create new post"
       >
-        <FaPlus className="text-xl" />
+        <FaPlus className="text-lg sm:text-xl" />
       </button>
 
     </div>

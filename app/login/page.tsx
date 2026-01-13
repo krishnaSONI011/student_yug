@@ -1,6 +1,6 @@
 'use client';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { FaArrowLeft, FaCheckCircle, FaIdCard, FaPhone, FaEnvelope } from 'react-icons/fa';
 import { toast } from 'react-toastify'
@@ -36,8 +36,63 @@ export default function LoginPage() {
     isOtpSent: false,
     otpTimer: 0
   });
+  const [latestOtp, setLatestOtp] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [savedLogins, setSavedLogins] = useState<Array<{
+    type: 'email' | 'apaar';
+    identifier: string;
+    mobile: string;
+    email: string;
+    displayName: string;
+  }>>([]);
+
+  // Load saved logins on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('savedLogins');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setSavedLogins(parsed);
+      } catch (e) {
+        console.error('Error loading saved logins:', e);
+      }
+    }
+  }, []);
+
+  // Timer countdown effect
+  useEffect(() => {
+    // Clear any existing interval first
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
+    }
+
+    // Start new interval if timer is greater than 0
+    if (otpData.otpTimer > 0) {
+      timerIntervalRef.current = setInterval(() => {
+        setOtpData(prev => {
+          if (prev.otpTimer <= 1) {
+            // Clear interval when timer reaches 0
+            if (timerIntervalRef.current) {
+              clearInterval(timerIntervalRef.current);
+              timerIntervalRef.current = null;
+            }
+            return { ...prev, otpTimer: 0 };
+          }
+          return { ...prev, otpTimer: prev.otpTimer - 1 };
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    };
+  }, [otpData.otpTimer]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -98,9 +153,20 @@ export default function LoginPage() {
   };
 
   const handleLoginTypeSelect = (type: 'email' | 'apaar') => {
-
     setLoginType(type);
     setCurrentStep(1);
+  };
+
+  const handleSavedLoginSelect = (savedLogin: typeof savedLogins[0]) => {
+    setLoginType(savedLogin.type);
+    setFormData(prev => ({
+      ...prev,
+      aadhaarId: savedLogin.identifier,
+      mobile: savedLogin.mobile,
+      email: savedLogin.email
+    }));
+    // Skip step 1 and go directly to step 2 (contact method selection)
+    setCurrentStep(2);
   };
 
   const validateStep1 = () => {
@@ -266,13 +332,14 @@ export default function LoginPage() {
 
       if (response.ok) {
         // Success: OTP initiated by server
+        setLatestOtp(data.data?.otp || '');
         setOtpData(prev => ({
           ...prev,
           isOtpSent: true,
           otpTimer: 60 // Set a longer timer for production
         }));
         setCurrentStep(3);
-        alert(`OTP successfully sent via ${formData.contactMethod}! (Demo: Use ${data.data.otp})`);
+        toast.success(`OTP sent via ${formData.contactMethod}`);
       } else {
         setErrors({ general: data.error || 'Failed to send OTP. Please try again.' });
         alert(data.error || 'Failed to send OTP. Please try again.');
@@ -343,6 +410,58 @@ export default function LoginPage() {
             token: data.data.token
           })
         );
+
+        // Save login info for quick access (only if loginType is valid)
+        if (loginType === 'email' || loginType === 'apaar') {
+          const identifier = loginType === 'email' ? formData.aadhaarId.trim() : formData.aadhaarId.replace(/\s/g, '');
+          let displayName = '';
+          
+          if (loginType === 'email') {
+            if (identifier.includes('@')) {
+              displayName = identifier;
+            } else {
+              // Mobile number
+              displayName = identifier.length === 10 ? `+91 ${identifier}` : identifier;
+            }
+          } else {
+            // Aadhaar ID with formatting
+            displayName = identifier.replace(/(\d{4})(?=\d)/g, "$1 ");
+          }
+
+          const loginInfo = {
+            type: loginType as 'email' | 'apaar',
+            identifier: identifier,
+            mobile: formData.mobile,
+            email: formData.email,
+            displayName: displayName
+          };
+
+          // Get existing saved logins
+          const existing = localStorage.getItem('savedLogins');
+          let savedLoginsList: typeof savedLogins = [];
+          
+          if (existing) {
+            try {
+              savedLoginsList = JSON.parse(existing);
+            } catch (e) {
+              console.error('Error parsing saved logins:', e);
+            }
+          }
+
+          // Remove duplicate if exists
+          savedLoginsList = savedLoginsList.filter(
+            login => !(login.type === loginInfo.type && login.identifier === loginInfo.identifier)
+          );
+
+          // Add new login at the beginning (most recent first)
+          savedLoginsList.unshift(loginInfo);
+
+          // Keep only last 3 saved logins
+          savedLoginsList = savedLoginsList.slice(0, 3);
+
+          localStorage.setItem('savedLogins', JSON.stringify(savedLoginsList));
+        }
+
         setTimeout(() => {
           window.location.href = data.redirectUrl || '/dashboard';
         }, 2000)
@@ -375,30 +494,33 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const contactInfo = formData.contactMethod === 'mobile' ? '98xxxxxxxx98' : 'xxxxxx@gmail.com';
-      console.log('Resending OTP to:', contactInfo);
+      const response = await fetch('https://irisinformatics.net/studentyug/wb/send_otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: formData.contactMethod,
+          value: formData.contactMethod === "email" ? formData.email : formData.mobile,
+        }),
+      });
 
-      setOtpData(prev => ({
-        ...prev,
-        otpTimer: 30
-      }));
+      const data = await response.json();
 
-      // Start countdown timer
-      const timer = setInterval(() => {
-        setOtpData(prev => {
-          if (prev.otpTimer <= 1) {
-            clearInterval(timer);
-            return { ...prev, otpTimer: 0 };
-          }
-          return { ...prev, otpTimer: prev.otpTimer - 1 };
-        });
-      }, 1000);
-
-      alert(`OTP resent to ${contactInfo}! (Demo: Use 123456)`);
+      if (response.ok) {
+        setLatestOtp(data.data?.otp || '');
+        setOtpData(prev => ({
+          ...prev,
+          otpTimer: 60 // Reset timer to 60 seconds
+        }));
+        
+        toast.success(`OTP resent via ${formData.contactMethod}!`);
+      } else {
+        setErrors({ general: data.error || 'Failed to resend OTP. Please try again.' });
+        toast.error(data.error || 'Failed to resend OTP. Please try again.');
+      }
     } catch (error) {
       console.error('Resend OTP error:', error);
-      alert('Failed to resend OTP. Please try again.');
+      setErrors({ general: 'Network error. Could not resend OTP.' });
+      toast.error('Network error. Could not resend OTP.');
     } finally {
       setIsLoading(false);
     }
@@ -486,6 +608,50 @@ export default function LoginPage() {
                 <h3 className="text-xl font-semibold text-white mb-2">Choose Login Method</h3>
                 <p className="text-gray-200">Select how you would like to sign in</p>
               </div>
+
+              {/* Saved Logins */}
+              {savedLogins.length > 0 && (
+                <div className="mb-6">
+                  <p className="text-sm text-gray-300 mb-3">Quick Login</p>
+                  <div className="space-y-2">
+                    {savedLogins.map((savedLogin, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleSavedLoginSelect(savedLogin)}
+                        className="flex items-center justify-between p-4 rounded-lg border-2 border-white/30 hover:border-white/50 cursor-pointer transition-all duration-300 bg-white/5"
+                      >
+                        <div className="flex items-center space-x-3">
+                          {savedLogin.type === 'email' ? (
+                            savedLogin.identifier.includes('@') ? (
+                              <FaEnvelope className="text-blue-300 text-xl" />
+                            ) : (
+                              <FaPhone className="text-green-300 text-xl" />
+                            )
+                          ) : (
+                            <FaIdCard className="text-white text-xl" />
+                          )}
+                          <div>
+                            <p className="text-white font-medium text-sm">
+                              {savedLogin.displayName}
+                            </p>
+                            <p className="text-gray-300 text-xs">
+                              {savedLogin.type === 'email' 
+                                ? (savedLogin.identifier.includes('@') ? 'Email' : 'Mobile')
+                                : 'Aadhaar ID'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-white/50">
+                          →
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                    <p className="text-xs text-gray-400 text-center">Or choose a new login method</p>
+                  </div>
+                </div>
+              )}
 
               {/* Login Type Options */}
               <div className="space-y-4">
@@ -595,13 +761,13 @@ export default function LoginPage() {
                       Date of Birth <span className="text-red-300">*</span>
                     </label>
 
-                    <div className="flex justify-evenly">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {/* Day */}
                       <select
                         name="dobDay"
                         value={formData.dobDay}
                         onChange={handleInputChange}
-                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-22"
+                        className="w-full py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
                       >
                         <option value="">Day</option>
                         {days.map(day => (
@@ -614,7 +780,7 @@ export default function LoginPage() {
                         name="dobMonth"
                         value={formData.dobMonth}
                         onChange={handleInputChange}
-                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-42"
+                        className="w-full py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
                       >
                         <option value="">Month</option>
                         {months.map((month, index) => (
@@ -627,7 +793,7 @@ export default function LoginPage() {
                         name="dobYear"
                         value={formData.dobYear}
                         onChange={handleInputChange}
-                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
+                        className="w-full py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
                       >
                         <option value="">Year</option>
                         {years.map(year => (
@@ -802,6 +968,21 @@ export default function LoginPage() {
                     }
                   </span>
                 </p>
+                {latestOtp && (
+                  <div className="mt-4 inline-flex items-center gap-3 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm">
+                    <span className="font-semibold">OTP: {latestOtp}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard?.writeText(latestOtp);
+                        toast.success('OTP copied');
+                      }}
+                      className="px-3 py-1 bg-[#81c243] text-gray-900 font-semibold rounded hover:opacity-90 transition"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -834,7 +1015,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={resendOtp}
-                    className="text-white bg-[#81c243] font-medium"
+                    className="text-white bg-[#81c243] p-3 rounded font-medium"
                   >
                     Resend OTP
                   </button>

@@ -122,8 +122,8 @@ const transformApiDataToTree = (apiData: ApiTreeData): Tree => {
     image: apiData.tree_img || '', // Not available in API response
     description: `${apiData.tree_name_en} (${apiData.tree_name_sc}) planted on ${apiData.planting_date}. ${apiData.tree_category} category.`,
     impact: {
-      co2Reduced: extractNumericValue(apiData.co2_reduced),
-      oxygenProduced: extractNumericValue(apiData.oxygen_produced),
+      co2Reduced: extractNumericValue(apiData.tree_carbon_reduced_per_year),
+      oxygenProduced: extractNumericValue(apiData.tree_oxygen_produced_per_year),
       carbonStored: extractNumericValue(apiData.tree_carbon_reduced_per_year)
     },
     care: {
@@ -453,7 +453,7 @@ console.log(filteredTrees)
                   <FaLeaf className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{totalImpact.co2Reduced.toFixed(1)} kg/year</p>
+                  <p className="text-2xl font-bold text-gray-900">{totalImpact.co2Reduced.toFixed(1)} </p>
                   <p className="text-sm text-gray-600 font-semibold">CO₂ Reduced (kg/year)</p>
                 </div>
               </div>
@@ -465,7 +465,7 @@ console.log(filteredTrees)
                   <FaSeedling className="text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{totalImpact.oxygenProduced.toFixed(1)} kg/year</p>
+                  <p className="text-2xl font-bold text-gray-900">{totalImpact.oxygenProduced.toFixed(1)} </p>
                   <p className="text-sm text-gray-600 font-semibold">O₂ Produced (kg/year)</p>
                 </div>
               </div>
@@ -540,23 +540,23 @@ console.log(filteredTrees)
                   </div>
 
                   <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
+                    <div className="flex items-center font-semibold gap-2 text-sm text-gray-600 cursor-default">
                       <FaCalendarAlt className="text-gray-400" />
                       <span>Planted: {new Date(tree.plantedDate).toLocaleDateString()}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
+                    <div className="flex items-center font-semibold gap-2 text-sm text-gray-600 cursor-default">
                       <LuTestTube className="text-gray-400" />
-                      <span className='font-bold'>Scientific Name: <span className='font-normal'> {tree.scientificName}</span></span>
+                      <span className='font-bold'>Scientific Name: <span className=''> {tree.scientificName}</span></span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
+                    <div className="flex items-center font-semibold gap-2 text-sm text-gray-600 cursor-default">
                       <GiPoliceBadge className="text-gray-400" />
                       <span>Class: {tree.class}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
+                    <div className="flex items-center font-semibold gap-2 text-sm text-gray-600 cursor-default">
                       <FaMapMarkerAlt className="text-gray-400" />
                       <span>{tree.location}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 cursor-default">
+                    <div className="flex items-center font-semibold gap-2 text-sm text-gray-600 cursor-default">
                       <FaTree className="text-gray-400" />
                       <span>Height: {tree.height}</span>
                     </div>
@@ -577,11 +577,11 @@ console.log(filteredTrees)
                   <div className="grid grid-cols-2 gap-2 mb-4">
                     <div className="cursor-default text-center p-2 bg-gray-50 rounded">
                       <p className="text-xs text-gray-600 font-semibold">CO₂ Reduce (kg/year)</p>
-                      <p className="text-sm font-semibold text-gray-900">{tree.impact.co2Reduced}kg</p>
+                      <p className="text-sm font-semibold text-gray-900">{tree.impact.co2Reduced.toFixed(2)} kg</p>
                     </div>
                     <div className="cursor-default text-center p-2 bg-gray-50 rounded">
-                      <p className="text-xs text-gray-600 font-semibold">O₂ Product (kg/year)</p>
-                      <p className="text-sm font-semibold text-gray-900">{tree.impact.oxygenProduced}kg</p>
+                      <p className="text-xs text-gray-600 font-semibold">O₂ Produced (kg/year)</p>
+                      <p className="text-sm font-semibold text-gray-900">{tree.impact.oxygenProduced.toFixed(2)} kg</p>
                     </div>
                     {/* <div className="cursor-default text-center p-2 bg-gray-50 rounded">
                       <p className="text-xs text-gray-600">Carbon</p>
@@ -633,7 +633,7 @@ console.log(filteredTrees)
                         <p className="font-medium">{selectedTree.scientificName}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Planted Date</p>
+                        <p className="text-sm  text-gray-600">Planted Date</p>
                         <p className="font-medium">{new Date(selectedTree.plantedDate).toLocaleDateString()}</p>
                       </div>
                       <div>
@@ -672,15 +672,15 @@ console.log(filteredTrees)
                     <div className="grid grid-cols-3 gap-4">
                       <div className="text-center p-4 bg-green-50 rounded-lg">
                         <p className="text-sm text-gray-600">CO₂ Reduced (kg/year)</p>
-                        <p className="text-xl font-bold text-green-600">{selectedTree.impact.co2Reduced} kg</p>
+                        <p className="text-xl font-bold text-green-600">{selectedTree.impact.co2Reduced.toFixed(2)} kg</p>
                       </div>
                       <div className="text-center p-4 bg-blue-50 rounded-lg">
                         <p className="text-sm text-gray-600">O₂ Produced (kg/year)</p>
-                        <p className="text-xl font-bold text-blue-600">{selectedTree.impact.oxygenProduced} kg/year</p>
+                        <p className="text-xl font-bold text-blue-600">{selectedTree.impact.oxygenProduced.toFixed(2)} kg</p>
                       </div>
                       <div className="text-center p-4 bg-purple-50 rounded-lg">
                         <p className="text-sm text-gray-600">Carbon Stored</p>
-                        <p className="text-xl font-bold text-purple-600">{selectedTree.impact.carbonStored} kg/year</p>
+                        <p className="text-xl font-bold text-purple-600">{selectedTree.impact.carbonStored.toFixed(2)} kg</p>
                       </div>
                     </div>
                   </div>

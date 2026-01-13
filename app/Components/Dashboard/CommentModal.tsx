@@ -91,25 +91,25 @@ export default function CommentModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-5 relative animate-fadeIn">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-3 sm:p-4">
+      <div className="bg-white w-full max-w-md rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-5 relative animate-fadeIn max-h-[90vh] flex flex-col">
 
         {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-black"
+          className="absolute top-2 right-2 sm:top-3 sm:right-3 text-gray-500 hover:text-black p-1"
         >
-          <FaTimes size={22} />
+          <FaTimes size={20} className="sm:w-[22px] sm:h-[22px]" />
         </button>
 
-        <h2 className="text-2xl font-semibold mb-4 text-gray-900 text-center">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-gray-900 text-center">
           Comments
         </h2>
 
         {/* COMMENTS LIST */}
         <div
           ref={commentsRef}
-          className="max-h-72 overflow-y-auto space-y-3 mb-4 p-2 scrollbar-thin"
+          className="flex-1 max-h-64 sm:max-h-72 overflow-y-auto space-y-2 sm:space-y-3 mb-3 sm:mb-4 p-2 scrollbar-thin"
         >
           {comments.length === 0 ? (
             <p className="text-gray-500 text-sm text-center">
@@ -122,23 +122,23 @@ export default function CommentModal({
               return (
                 <div
                   key={i}
-                  className={`flex items-start gap-3 p-3 rounded-xl shadow-sm ${
+                  className={`flex items-start gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg sm:rounded-xl shadow-sm ${
                     isUser
                       ? "bg-blue-100 border border-blue-300"
                       : "bg-gray-100"
                   }`}
                 >
                   {/* Avatar */}
-                  <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-700 font-bold">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-700 font-bold text-xs sm:text-sm flex-shrink-0">
                     {c.first_name?.charAt(0)?.toUpperCase()}
                   </div>
 
                   {/* Text */}
-                  <div>
-                    <p className="text-gray-900 font-semibold text-sm">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-gray-900 font-semibold text-xs sm:text-sm">
                       {c.first_name} {isUser && "(You)"}
                     </p>
-                    <p className="text-gray-700">{c.comments}</p>
+                    <p className="text-gray-700 text-sm sm:text-base break-words">{c.comments}</p>
                   </div>
                 </div>
               );
@@ -147,12 +147,12 @@ export default function CommentModal({
         </div>
 
         {/* QUICK COMMENTS */}
-        <div className="flex flex-wrap gap-2 mb-4 justify-center">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4 justify-center">
           {QUICK_COMMENTS.map((comment) => (
             <button
               key={comment}
               onClick={() => setNewComment(comment)}
-              className={`px-4 py-2 rounded-full border text-sm font-medium transition
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border text-xs sm:text-sm font-medium transition
                 ${
                   newComment === comment
                     ? "bg-[#204b73] text-white border-[#204b73]"
@@ -168,7 +168,7 @@ export default function CommentModal({
         <button
           onClick={addComment}
           disabled={!newComment}
-          className="w-full bg-[#204b73] disabled:opacity-50 hover:bg-[#183a5b] text-white px-4 py-2 rounded-full transition font-medium"
+          className="w-full bg-[#204b73] disabled:opacity-50 hover:bg-[#183a5b] text-white px-4 py-2.5 sm:py-2 rounded-full transition font-medium text-sm sm:text-base"
         >
           Send
         </button>

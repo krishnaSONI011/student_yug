@@ -13,12 +13,17 @@ import {
 import { GiPoliceBadge } from "react-icons/gi";
 
 import { MdSportsBasketball } from "react-icons/md";
+import { FaTimes } from "react-icons/fa";
 import Image from 'next/image';
 import Link from 'next/link';
 import axios from 'axios';
 
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const [treeNumber , setTreeNumber] = useState(0)
   const [sportsNumber , setSportsNumber] = useState(0)
   useEffect( ()=>{
@@ -82,9 +87,21 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col h-screen sticky top-0">
+    <aside
+      className={`fixed lg:sticky top-0 left-0 z-50 w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col h-screen transform transition-transform duration-300 ease-in-out ${
+        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      }`}
+    >
+      {/* Close Button for Mobile */}
+      <button
+        onClick={onClose}
+        className="lg:hidden absolute top-4 right-4 p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+      >
+        <FaTimes className="text-xl" />
+      </button>
+
       {/* User Profile Section */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-4 lg:p-6 border-b border-gray-200">
         <div id="logo" className="flex items-center justify-center gap-3 mb-4">
           <Link href={"/dashboard"}>
           <Image
@@ -100,30 +117,30 @@ export default function Sidebar() {
         
         {/* User Stats */}
         <div className="grid grid-cols-3 gap-2">
-          <div id='plant-tree' className=" bg-[#204b73] p-2 rounded-lg text-white text-center cursor-pointer">
+          <div id='plant-tree' className="bg-[#204b73] p-2 rounded-lg text-white text-center cursor-pointer" onClick={onClose}>
            <Link href={"/dashboard/my-trees"} >
             <div  className="flex items-center justify-center gap-1 mb-1">
               <FaTree className="text-sm" />
-              <span className="text-lg font-bold">{treeNumber}</span>
+              <span className="text-sm lg:text-lg font-bold">{treeNumber}</span>
             </div>
-            <p className="text-xs opacity-90">Trees Planted</p>
+            <p className="text-[10px] lg:text-xs opacity-90">Trees Planted</p>
             </Link>
           </div>
-          <div id="badge-earn" className="bg-[#204b73] cursor-pointer p-3 rounded-lg text-white text-center">
+          <div id="badge-earn" className="bg-[#204b73] cursor-pointer p-2 lg:p-3 rounded-lg text-white text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
             <GiPoliceBadge className="text-sm" />
-             Sliver
+             <span className="text-xs lg:text-sm">Sliver</span>
             </div>
-            <p className="text-xs opacity-90">Badges</p>
+            <p className="text-[10px] lg:text-xs opacity-90">Badges</p>
           </div>
           
-          <div id="sports-part" className="bg-[#204b73] cursor-pointer p-3 rounded-lg text-white text-center">
+          <div id="sports-part" className="bg-[#204b73] cursor-pointer p-2 lg:p-3 rounded-lg text-white text-center" onClick={onClose}>
           <Link href={"/dashboard/my-sports"} >
             <div className="flex items-center justify-center gap-1 mb-1">
             <MdSportsBasketball className="text-sm" />
-             {sportsNumber}
+             <span className="text-sm lg:text-base">{sportsNumber}</span>
             </div>
-            <p className="text-xs opacity-90">Sports</p>
+            <p className="text-[10px] lg:text-xs opacity-90">Sports</p>
             </Link>
           </div>
          
@@ -131,23 +148,26 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation Menu */}
-      <nav className="flex-1 p-4 overflow-y-auto">
+      <nav className="flex-1 p-3 lg:p-4 overflow-y-auto">
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
-              <Link id={item.classId} key={item.id} href={item.Link} className=''>
+              <Link id={item.classId} key={item.id} href={item.Link} className='' onClick={onClose}>
               <li>
                 <button
-                  onClick={() => setActiveTab(item.id)}
-                  className={`cursor-pointer sidebar-item w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-all duration-200 ${
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    if (onClose) onClose();
+                  }}
+                  className={`cursor-pointer sidebar-item w-full flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-2 lg:py-3 rounded-lg text-left transition-all duration-200 ${
                     activeTab === item.id
                       ? 'bg-[#204b73] text-white shadow-md'
                       : 'text-gray-700 hover:bg-gray-100 hover:text-[#204b73]'
                   }`}
                 >
-                  <Icon className="text-lg flex-shrink-0" />
-                  <span className="font-medium">{item.label}</span>
+                  <Icon className="text-base lg:text-lg flex-shrink-0" />
+                  <span className="font-medium text-sm lg:text-base">{item.label}</span>
                 </button>
               </li>
               </Link>

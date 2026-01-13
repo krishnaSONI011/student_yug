@@ -224,7 +224,7 @@ export default function MySportsPage() {
   const handlePlantTree = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!plantFormData.tree_id || !plantFormData.planting_date || !plantFormData.height ||
+    if (!plantFormData.tree_id || !plantFormData.planting_date  ||
       !plantFormData.health || !plantFormData.class || !plantFormData.location) {
       alert('Please fill in all required fields');
       return;
@@ -272,7 +272,7 @@ export default function MySportsPage() {
         tree_id: '',
         planting_date: new Date().toISOString().split('T')[0],
         height: '',
-        health: 'good',
+        health: '',
         class: '',
         location: '',
         image: null
@@ -322,10 +322,13 @@ export default function MySportsPage() {
     }
   };
 
+  const teamCount = sportsData.filter(s => s.play?.toLowerCase() === 'team').length;
+  const individualCount = sportsData.filter(s => s.play?.toLowerCase() === 'individual').length;
+
   const filters = [
     { id: 'all', label: 'All Sports', count: sportsData.length },
-    { id: 'team', label: 'Team', count: sportsData.filter(s => s.play.toLowerCase() === 'team').length },
-    { id: 'individual', label: 'Individual', count: sportsData.filter(s => s.play.toLowerCase() === 'individual').length },
+    { id: 'team', label: 'Team', count: teamCount },
+    { id: 'individual', label: 'Individual', count: individualCount },
   ];
 
   const filteredSports = selectedFilter === 'all'
@@ -390,7 +393,7 @@ export default function MySportsPage() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
               <div className="flex items-center gap-3">
                 <div className="cursor-default w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -408,8 +411,19 @@ export default function MySportsPage() {
                   <FaCalendarAlt className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="cursor-default text-2xl font-bold text-gray-900">{sportsData.filter(s => s.play.toLowerCase() === 'team').length}</p>
+                  <p className="cursor-default text-2xl font-bold text-gray-900">{teamCount}</p>
                   <p className="cursor-default text-sm text-gray-600 font-bold">Team Sports</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <FaBaseball className="text-blue-600" />
+                </div>
+                <div>
+                  <p className="cursor-default text-2xl font-bold text-gray-900">{individualCount}</p>
+                  <p className="cursor-default text-sm text-gray-600 font-bold">Individual Sports</p>
                 </div>
               </div>
             </div>
@@ -419,8 +433,32 @@ export default function MySportsPage() {
                   <FaTrophy className="text-yellow-600" />
                 </div>
                 <div>
-                  <p className="cursor-default text-2xl font-semibold text-gray-900">{sportsData?.[0]?.level || "No Sport Yet"}</p>
-                  <p className="text-sm text-gray-600 cursor-default font-bold">Level</p>
+                  <p className="cursor-default capitalize text-2xl font-semibold text-gray-900">
+                    {sportsData.length > 0 
+                      ? (() => {
+                          const levels = sportsData.map(s => s.level?.toLowerCase()).filter((level): level is string => Boolean(level));
+                          if (levels.length === 0) return "N/A";
+                          // Get the highest level achieved
+                          const levelOrder = ['school', 'district', 'state', 'national', 'international'];
+                          // Find the level with the highest index (highest level)
+                          let highestIndex = -1;
+                          let highestLevel = '';
+                          
+                          for (const level of levels) {
+                            const index = levelOrder.indexOf(level);
+                            if (index !== -1 && index > highestIndex) {
+                              highestIndex = index;
+                              highestLevel = level;
+                            }
+                          }
+                          
+                          return highestLevel 
+                            ? highestLevel.charAt(0).toUpperCase() + highestLevel.slice(1) 
+                            : "N/A";
+                        })()
+                      : "No Sport Yet"}
+                  </p>
+                  <p className="text-sm text-gray-600 cursor-default font-bold">Highest Level</p>
                 </div>
               </div>
             </div>
@@ -470,7 +508,7 @@ export default function MySportsPage() {
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">{sport.sports_name}({sport.sports_name_hi})</h3>
-                      <p className="text-sm text-gray-600">{sport.category}</p>
+                      <p className="text-sm text-gray-600">{sport.category} Game</p>
                      
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${sport.status.toLowerCase() === 'active'
@@ -482,19 +520,19 @@ export default function MySportsPage() {
                   </div>
 
                   <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="flex font-semibold items-center gap-2 text-sm text-gray-600">
                       <FaCalendarAlt className="text-gray-400" />
                       <span>Participation: {sport.participation_date ? new Date(sport.participation_date).toLocaleDateString() : 'N/A'}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="flex font-semibold items-center gap-2 text-sm text-gray-600">
                       <GiPoliceBadge className="text-gray-400" />
                       <span>Class: X</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="flex font-semibold items-center gap-2 text-sm text-gray-600">
                       <FaMapMarkerAlt className="text-gray-400" />
                       <span>{sport.location}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="flex font-semibold items-center gap-2 text-sm text-gray-600">
                       <GiLevelThreeAdvanced className="text-gray-400" />
                       <span>Level : {sport.level === undefined ? "" : sport.level}</span>
                     </div>
@@ -502,7 +540,7 @@ export default function MySportsPage() {
                       <FaTrophy className="text-gray-400" />
                       <span>Achievement: {sport.achievement}</span>
                     </div> */}
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="flex font-semibold items-center gap-2 text-sm text-gray-600">
                       <FaLeaf className="text-gray-400" />
                       <span>Play: {sport.play}</span>
                     </div>

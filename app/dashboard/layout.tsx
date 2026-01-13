@@ -16,6 +16,7 @@ export default function DashboardLayout({
   const startTour = useDriverTour();
 
   const [showTourModal, setShowTourModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -45,12 +46,20 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen flex bg-gray-50">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen">
-        <DashboardHeader />
+      <div className="flex-1 flex flex-col min-h-screen w-full lg:w-auto">
+        <DashboardHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
         <main className="flex-1 overflow-y-auto bg-gray-50">
           {children}

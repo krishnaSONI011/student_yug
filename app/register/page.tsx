@@ -187,15 +187,15 @@ export default function RegisterPage() {
   // ------------------------
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#204b74] via-[#204b74] to-[#204b74] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-15">
-      <div className="max-w-md w-full relative z-10">
+      <div className="max-w-md w-full px-1 sm:px-0 relative z-10">
 
         <div className="text-center mb-6">
           <h2 className="text-3xl font-bold text-white">Join StudentYug!</h2>
           <p className="text-gray-200">Start your journey today</p>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl p-5 sm:p-8 border border-white/20">
+          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
             {
               showWarning ? <p className="bg-[#ffe69c] border-2 border-amber-400 rounded  p-2 text-yellow-600 font-bold "><span>Warning !</span><br/>
               <span className="font-light text-justify">You Are Not Able To Change Your Name Again And Please Enter The Name According To The Apaar / Aadhar Id . </span>
@@ -203,7 +203,7 @@ export default function RegisterPage() {
             }
             
             {/* First / Last Name */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label className="text-white text-sm mb-1 block">First Name</label>
                 <div className="relative">
@@ -309,9 +309,10 @@ export default function RegisterPage() {
             {/* Class */}
             <div>
               <label className="text-white text-sm mb-1 block">Class</label>
-              <select className="bg-white text-black w-full p-3 rounded "
-              name="class"
-              onChange={handleInputChange}
+              <select
+                className="bg-white text-black w-full p-3 rounded border border-white/40"
+                name="class"
+                onChange={handleInputChange}
               >
                 <option>Select Class</option>
                 <option value="I Class">I Class</option>
@@ -345,13 +346,13 @@ export default function RegisterPage() {
                   errors.dob ? "border-red-500" : "border-white/40"
                 }`}
               /> */}
-              <div className="flex justify-evenly">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {/* Day */}
                       <select
                         name="dobDay"
                         value={formData.dobDay}
                         onChange={handleInputChange}
-                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-22"
+                        className="w-full py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
                       >
                         <option value="">Day</option>
                         {days.map(day => (
@@ -364,7 +365,7 @@ export default function RegisterPage() {
                         name="dobMonth"
                         value={formData.dobMonth}
                         onChange={handleInputChange}
-                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900 w-42"
+                        className="w-full py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
                       >
                         <option value="">Month</option>
                         {months.map((month, index) => (
@@ -377,7 +378,7 @@ export default function RegisterPage() {
                         name="dobYear"
                         value={formData.dobYear}
                         onChange={handleInputChange}
-                        className="py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
+                        className="w-full py-3 px-3 rounded-lg bg-white/90 border-2 border-white/30 text-gray-900"
                       >
                         <option value="">Year</option>
                         {years.map(year => (
@@ -408,7 +409,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-[#81c243] text-white font-semibold rounded-lg"
+              className="w-full py-3 bg-[#81c243] text-white font-semibold rounded-lg hover:opacity-90 transition"
             >
               {isLoading ? "Creating Account..." : "Create Account"}
             </button>
