@@ -508,7 +508,7 @@ export default function MySportsPage() {
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">{sport.sports_name}({sport.sports_name_hi})</h3>
-                      <p className="text-sm text-gray-600">{sport.category} Game</p>
+                      <p className="text-sm text-gray-600 font-semibold">{sport.category} (Game)</p>
                      
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${sport.status.toLowerCase() === 'active'
@@ -542,7 +542,7 @@ export default function MySportsPage() {
                     </div> */}
                     <div className="flex font-semibold items-center gap-2 text-sm text-gray-600">
                       <FaLeaf className="text-gray-400" />
-                      <span>Play: {sport.play}</span>
+                      <span>Sports Type: {sport.play}</span>
                     </div>
                   </div>
                 </div>
@@ -588,7 +588,7 @@ export default function MySportsPage() {
                         <p className="font-medium">{selectedSport.achievement}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Play</p>
+                        <p className="text-sm text-gray-600">Sports Type</p>
                         <p className="font-medium">{selectedSport.play}</p>
                       </div>
                       <div>
@@ -725,7 +725,7 @@ export default function MySportsPage() {
                   {/* Health */}
                   <div>
                     <label htmlFor="health" className="block text-sm font-medium text-gray-700 mb-2">
-                      Play <span className="text-red-500">*</span>
+                      Sports Type <span className="text-red-500">*</span>
                     </label>
                     <select
                       id="health"

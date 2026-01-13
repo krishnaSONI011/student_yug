@@ -336,7 +336,7 @@ export default function LoginPage() {
         setOtpData(prev => ({
           ...prev,
           isOtpSent: true,
-          otpTimer: 60 // Set a longer timer for production
+          otpTimer: 30 // Set a longer timer for production
         }));
         setCurrentStep(3);
         toast.success(`OTP sent via ${formData.contactMethod}`);
@@ -509,7 +509,7 @@ export default function LoginPage() {
         setLatestOtp(data.data?.otp || '');
         setOtpData(prev => ({
           ...prev,
-          otpTimer: 60 // Reset timer to 60 seconds
+          otpTimer: 30 // Reset timer to 60 seconds
         }));
         
         toast.success(`OTP resent via ${formData.contactMethod}!`);

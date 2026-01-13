@@ -564,7 +564,7 @@ console.log(filteredTrees)
 
                   {/* Health Status */}
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm text-gray-600 cursor-default">Health Status:</span>
+                    <span className="text-sm font-semibold text-gray-600 cursor-default">Health Status:</span>
                     <span className={`capitalize cursor-default px-2 py-1 rounded-full text-xs font-medium ${tree.health.toLowerCase() === 'excellent' || tree.health.toLowerCase() === 'good'
                       ? 'bg-green-100 text-green-800'
                       : 'bg-yellow-100 text-yellow-800'
@@ -577,11 +577,11 @@ console.log(filteredTrees)
                   <div className="grid grid-cols-2 gap-2 mb-4">
                     <div className="cursor-default text-center p-2 bg-gray-50 rounded">
                       <p className="text-xs text-gray-600 font-semibold">CO₂ Reduce (kg/year)</p>
-                      <p className="text-sm font-semibold text-gray-900">{tree.impact.co2Reduced.toFixed(2)} kg</p>
+                      <p className="text-sm font-semibold text-gray-900">{tree.impact.co2Reduced.toFixed(2)} </p>
                     </div>
                     <div className="cursor-default text-center p-2 bg-gray-50 rounded">
-                      <p className="text-xs text-gray-600 font-semibold">O₂ Produced (kg/year)</p>
-                      <p className="text-sm font-semibold text-gray-900">{tree.impact.oxygenProduced.toFixed(2)} kg</p>
+                      <p className="text-xs text-gray-600 font-bold">O₂ Produced (kg/year)</p>
+                      <p className="text-sm font-semibold text-gray-900">{tree.impact.oxygenProduced.toFixed(2)} </p>
                     </div>
                     {/* <div className="cursor-default text-center p-2 bg-gray-50 rounded">
                       <p className="text-xs text-gray-600">Carbon</p>
@@ -672,7 +672,7 @@ console.log(filteredTrees)
                     <div className="grid grid-cols-3 gap-4">
                       <div className="text-center p-4 bg-green-50 rounded-lg">
                         <p className="text-sm text-gray-600">CO₂ Reduced (kg/year)</p>
-                        <p className="text-xl font-bold text-green-600">{selectedTree.impact.co2Reduced.toFixed(2)} kg</p>
+                        <p className="text-xl font-bold text-green-600">{selectedTree.impact.co2Reduced.toFixed(2)} </p>
                       </div>
                       <div className="text-center p-4 bg-blue-50 rounded-lg">
                         <p className="text-sm text-gray-600">O₂ Produced (kg/year)</p>
@@ -794,7 +794,7 @@ console.log(filteredTrees)
                   {/* Height */}
                   <div>
                     <label htmlFor="height" className="block text-sm font-medium text-gray-700 mb-2">
-                      Height (meters) <span className="text-red-500">*</span>
+                      Height (feet) <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="number"
@@ -805,7 +805,7 @@ console.log(filteredTrees)
                       required
                       min="0"
                       step="0.1"
-                      placeholder="e.g., 3.0"
+                      placeholder=" 3.0"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
                     />
                   </div>
@@ -875,7 +875,7 @@ console.log(filteredTrees)
                       value={plantFormData.location}
                       onChange={handleInputChange}
                       required
-                      placeholder="e.g., indore, mp"
+                      placeholder=" indore, mp"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1c756b] focus:border-transparent"
                     />
                   </div>
