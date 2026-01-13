@@ -242,13 +242,13 @@ export default function Dashboard() {
       </div>
 
       {/* Floating Button */}
-      <button
+      {/* <button
         onClick={() => setShowCreatePost(true)}
         className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#204b73] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center z-40"
         aria-label="Create new post"
       >
         <FaPlus className="text-lg sm:text-xl" />
-      </button>
+      </button> */}
 
     </div>
   );
